@@ -2,38 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>net.trajano</groupId>
-        <artifactId>trajano</artifactId>
-        <version>12</version>
+        <groupId>net.trajano.auth</groupId>
+        <artifactId>jaspic-tester</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <groupId>net.trajano.auth</groupId>
-    <artifactId>jaspic-tester</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>JASPIC Tester</name>
-    <description>This tests JASPIC implementations using a simple JASPIC ServerAuthModule.</description>
-    <inceptionYear>2015</inceptionYear>
-    <modules>
-        <module>test-server-auth-module</module>
-    </modules>
-    <scm>
-        <connection>scm:git:https://github.com/trajano/${project.artifactId}</connection>
-        <developerConnection>scm:git:ssh://git@github.com/trajano/${project.artifactId}.git</developerConnection>
-        <tag>HEAD</tag>
-        <url>http://github.com/trajano/${project.artifactId}</url>
-    </scm>
-    <distributionManagement>
-        <site>
-            <id>gh-pages</id>
-            <name>Trajano Github Pages</name>
-            <url>github:http://site.trajano.net/${project.artifactId}/</url>
-        </site>
-    </distributionManagement>
-    <properties>
-        <jdk.version>1.7</jdk.version>
-        <project.build.sourceEncoding>utf8</project.build.sourceEncoding>
-        <selenium.version>2.45.0</selenium.version>
-    </properties>
+    <artifactId>test-server-auth-module</artifactId>
+    <name>Test Server Auth Module</name>
+    <description>A JASPIC Server Authentication Module used for testing.</description>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
