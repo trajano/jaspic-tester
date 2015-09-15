@@ -7,6 +7,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>test-server-auth-module</artifactId>
+    <packaging>bundle</packaging>
     <name>Test Server Auth Module</name>
     <description>A JASPIC Server Authentication Module used for testing.</description>
     <dependencies>
