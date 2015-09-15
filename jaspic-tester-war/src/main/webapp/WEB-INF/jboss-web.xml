@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web>
+<!--
+To use in JBoss requires the following commands to be sent to via jboss-cli.sh.
+
+/subsystem=security/security-domain=jaspitest:add(cache-type=default)
+/subsystem=security/security-domain=jaspitest/authentication=jaspi:add()
+/subsystem=security/security-domain=jaspitest/authentication=jaspi/login-module-stack=dummy:add()
+/subsystem=security/security-domain=jaspitest/authentication=jaspi/login-module-stack=dummy/login-module=dummy:add(code=Dummy, flag=optional)
+/subsystem=security/security-domain=jaspitest/authentication=jaspi/auth-module=jaspi:add(code=org.wildfly.extension.undertow.security.jaspi.modules.HTTPSchemeServerAuthModule, flag=required)
+
+https://github.com/javaee-samples/javaee7-samples/issues/243#issuecomment-127684544 
+-->
+    <security-domain>jaspitest</security-domain>
+</jboss-web>

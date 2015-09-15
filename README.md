@@ -1,13 +1,13 @@
-Test Server Auth Module
-=======================
+JASPIC Tester
+=============
 
-This is a JASPIC `ServerAuthModule` used for testing purposes.
+This is a JASPIC `ServerAuthModule` used for testing purposes.  It provides
+the `ServerAuthModule`, a WAR file and an EAR file.
 
-The module will detect if the user is not yet authenticated to a simple web
-form that asks for a user name.  It forms a subject with the pattern
+It has been tested on
 
-    https://[username]@test-server-auth-module
-
-The module does not make use of `HttpSession` but instead uses a cookie 
-`X-Encrypted-Subject` to store an encrypted version of the subject.  The 
-encryption key is generated and stored in the `ServletContext`.
+* Glassfish 4.1
+* Payara 4.1.153
+* WebSphere Liberty Profile 8.5.5.7
+* WildFly 9.0.1
+ 
