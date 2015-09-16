@@ -14,7 +14,7 @@ import javax.security.auth.message.config.ServerAuthConfig;
 import javax.security.auth.message.config.ServerAuthContext;
 
 /**
- * Common methods for ServerAuthConfig and ClientAuthConfig.
+ * Configuration for the server auth module.
  */
 public class TestServerAuthModuleAuthConfig implements
     ServerAuthConfig {
@@ -104,13 +104,16 @@ public class TestServerAuthModuleAuthConfig implements
      *            properties to augment with.
      * @return augmented properties
      */
-    @SuppressWarnings("unchecked")
-    protected Map<?, ?> augmentProperties(@SuppressWarnings("rawtypes") final Map properties) {
+    @SuppressWarnings({
+        "unchecked",
+        "rawtypes"
+    })
+    protected Map augmentProperties(final Map properties) {
 
         if (properties == null) {
             return options;
         }
-        final ConcurrentMap<?, ?> augmentedOptions = new ConcurrentHashMap<>(options);
+        final ConcurrentMap augmentedOptions = new ConcurrentHashMap(options);
         augmentedOptions.putAll(properties);
         return augmentedOptions;
 
@@ -138,7 +141,8 @@ public class TestServerAuthModuleAuthConfig implements
         final Subject serviceSubject,
         @SuppressWarnings("rawtypes") final Map properties) throws AuthException {
 
-        final Map<?, ?> augmentedOptions = augmentProperties(properties);
+        @SuppressWarnings("rawtypes")
+        final Map augmentedOptions = augmentProperties(properties);
         final TestServerAuthModule context = new TestServerAuthModule();
 
         if (authContextID == null) {
