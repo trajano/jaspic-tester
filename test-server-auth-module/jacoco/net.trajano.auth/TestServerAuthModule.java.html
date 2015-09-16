@@ -152,7 +152,7 @@ import javax.ws.rs.core.UriBuilder;
 <span class="fc" id="L152">            cookie.setSecure(true);</span>
 <span class="fc" id="L153">            cookie.setHttpOnly(true);</span>
 <span class="fc" id="L154">            resp.addCookie(cookie);</span>
-<span class="fc" id="L155">            resp.sendRedirect(req.getContextPath() + stateUri.toASCIIString());</span>
+<span class="fc" id="L155">            resp.sendRedirect(URI.create(req.getContextPath() + stateUri.toASCIIString()).normalize().toASCIIString());</span>
 <span class="fc" id="L156">            return AuthStatus.SEND_SUCCESS;</span>
         } else {
 <span class="fc" id="L158">            throw new AuthException(&quot;unsupported method&quot;);</span>
@@ -233,7 +233,7 @@ import javax.ws.rs.core.UriBuilder;
 <span class="fc" id="L233">        redirectUriBuilder.append(&quot;?state=&quot;);</span>
 <span class="fc" id="L234">        redirectUriBuilder.append(</span>
             URLEncoder.encode(stateBuilder.toString(), &quot;US-ASCII&quot;));
-<span class="fc" id="L236">        resp.sendRedirect(redirectUriBuilder.toString());</span>
+<span class="fc" id="L236">        resp.sendRedirect(URI.create(redirectUriBuilder.toString()).normalize().toASCIIString());</span>
 
         // The JASPIC spec is ambiguous for this scenario, however
         // SEND_SUCCESS works on the top three application servers.
