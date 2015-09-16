@@ -3,7 +3,6 @@ package net.trajano.auth;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.Iterator;
@@ -153,7 +152,7 @@ public class TestServerAuthModule implements
             cookie.setSecure(true);
             cookie.setHttpOnly(true);
             resp.addCookie(cookie);
-            resp.sendRedirect(req.getContextPath() + URLDecoder.decode(state, "US-ASCII"));
+            resp.sendRedirect(req.getContextPath() + stateUri.toASCIIString());
             return AuthStatus.SEND_SUCCESS;
         } else {
             throw new AuthException("unsupported method");

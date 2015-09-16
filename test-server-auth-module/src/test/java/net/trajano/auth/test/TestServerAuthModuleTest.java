@@ -394,6 +394,47 @@ public class TestServerAuthModuleTest {
 
         final Subject client = new Subject();
         assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, null));
+
+        final ArgumentCaptor<String> redirectUri = ArgumentCaptor.forClass(String.class);
+        verify(servletResponse).sendRedirect(redirectUri.capture());
+        assertEquals("/util/", redirectUri.getValue());
+        verifyZeroInteractions(h);
+    }
+
+    /**
+     * Tests the login endpoint POST operation.
+     */
+    @Test
+    public void testLoginPostWithQuery() throws Exception {
+
+        final TestServerAuthModule module = new TestServerAuthModule();
+        final MessagePolicy mockRequestPolicy = mock(MessagePolicy.class);
+        when(mockRequestPolicy.isMandatory()).thenReturn(true);
+
+        final CallbackHandler h = mock(CallbackHandler.class);
+        module.initialize(mockRequestPolicy, null, h, options);
+
+        final MessageInfo messageInfo = mock(MessageInfo.class);
+
+        final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getMethod()).thenReturn("POST");
+        when(servletRequest.isSecure()).thenReturn(true);
+        when(servletRequest.getRequestURI()).thenReturn("/util/j_security_check");
+        when(servletRequest.getContextPath()).thenReturn("/util");
+        when(servletRequest.getParameter("state")).thenReturn("/securePage?abc=123&doremi=abc123");
+        when(servletRequest.getParameter("j_username")).thenReturn("foofoo");
+        when(servletRequest.getRequestDispatcher(Matchers.anyString())).thenReturn(mock(RequestDispatcher.class));
+        when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+
+        final HttpServletResponse servletResponse = mock(HttpServletResponse.class);
+        when(messageInfo.getResponseMessage()).thenReturn(servletResponse);
+
+        final Subject client = new Subject();
+        assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, null));
+
+        final ArgumentCaptor<String> redirectUri = ArgumentCaptor.forClass(String.class);
+        verify(servletResponse).sendRedirect(redirectUri.capture());
+        assertEquals("/util/securePage?abc=123&doremi=abc123", redirectUri.getValue());
         verifyZeroInteractions(h);
     }
 
