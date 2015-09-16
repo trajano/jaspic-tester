@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pmd version="5.2.3" timestamp="2015-09-16T11:46:15.397">
+<pmd version="5.2.3" timestamp="2015-09-16T11:59:57.174">
 <file name="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/Initializer.java">
-<violation beginline="14" endline="14" begincolumn="34" endcolumn="56" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="Initializer" method="contextDestroyed" variable="sce" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
-Parameter 'sce' is not assigned and could be declared final
-</violation>
-<violation beginline="20" endline="20" begincolumn="40" endcolumn="62" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="Initializer" method="contextInitialized" variable="sce" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
-Parameter 'sce' is not assigned and could be declared final
-</violation>
-<violation beginline="21" endline="21" begincolumn="17" endcolumn="35" rule="UseConcurrentHashMap" ruleset="Controversial" package="net.trajano.auth" class="Initializer" method="contextInitialized" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/controversial.html#UseConcurrentHashMap" priority="3">
+<violation beginline="36" endline="36" begincolumn="15" endcolumn="33" rule="UseConcurrentHashMap" ruleset="Controversial" package="net.trajano.auth" class="Initializer" method="contextInitialized" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/controversial.html#UseConcurrentHashMap" priority="3">
 If you run in Java5 or newer and have concurrent access, you should use the ConcurrentHashMap implementation
-</violation>
-<violation beginline="21" endline="21" begincolumn="17" endcolumn="61" rule="LocalVariableCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="Initializer" method="contextInitialized" variable="options" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#LocalVariableCouldBeFinal" priority="3">
-Local variable 'options' could be declared final
 </violation>
 </file>
 </pmd>

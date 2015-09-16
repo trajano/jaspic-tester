@@ -10,21 +10,34 @@ import javax.servlet.ServletContextListener;
 <span class="nc" id="L10">public class Initializer implements</span>
     ServletContextListener {
 
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-
-<span class="nc" id="L16">        AuthConfigFactory.getFactory().removeRegistration(registration);</span>
-<span class="nc" id="L17">    }</span>
-
-    @Override
-	public void contextInitialized(ServletContextEvent sce) {
-<span class="nc" id="L21">		Map&lt;String, String&gt; options = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L22">		registration = AuthConfigFactory.getFactory().registerConfigProvider(AuthModuleConfigProvider.class.getName(),</span>
-				options, &quot;HttpServlet&quot;, null, null);
-
-<span class="nc" id="L25">	}</span>
-
     private String registration;
+
+    /**
+     * &lt;p&gt;
+     * Removes registration from the factory.
+     * &lt;/p&gt;
+     * {@inheritDoc}
+     */
+    @Override
+    public void contextDestroyed(final ServletContextEvent sce) {
+
+<span class="nc" id="L24">        AuthConfigFactory.getFactory().removeRegistration(registration);</span>
+<span class="nc" id="L25">    }</span>
+
+    /**
+     * &lt;p&gt;
+     * Registers the configuration into the factory.
+     * &lt;/p&gt;
+     * {@inheritDoc}
+     */
+    @Override
+    public void contextInitialized(final ServletContextEvent sce) {
+
+<span class="nc" id="L36">        final Map&lt;String, String&gt; options = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L37">        registration = AuthConfigFactory.getFactory().registerConfigProvider(AuthModuleConfigProvider.class.getName(),</span>
+            options, &quot;HttpServlet&quot;, null, null);
+
+<span class="nc" id="L40">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
