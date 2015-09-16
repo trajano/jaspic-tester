@@ -87,6 +87,8 @@
 <li>use AES encryption using a secret key that is generated in <tt>Initializer</tt>  and put in a distributed cache such as Hazelcast to allow usage in a  distributed system. The key would be passed in via the options <tt>Map</tt></li>
   
 <li>if you are already using sessions, you can store the subject as a  session attribute</li>
+  
+<li>If using a session, handle the <tt>POST</tt> method when a redirect is needed  by storing the <tt>POST</tt> data into a session variable temporarily and then  dispatching it later when recovering.</li>
 </ul></div></div>
 	      </div>
 	    </article>

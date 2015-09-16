@@ -33,13 +33,13 @@ public class AuthModuleConfigProvider implements
      *            configuration factory
      */
     public AuthModuleConfigProvider(final Map&lt;String, String&gt; options,
-<span class="nc" id="L36">        final AuthConfigFactory factory) {</span>
+<span class="fc" id="L36">        final AuthConfigFactory factory) {</span>
 
-<span class="nc" id="L38">        this.options = options;</span>
-<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (factory != null) {</span>
-<span class="nc" id="L40">            factory.registerConfigProvider(this, null, null, &quot;Auto registration&quot;);</span>
+<span class="fc" id="L38">        this.options = options;</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (factory != null) {</span>
+<span class="fc" id="L40">            factory.registerConfigProvider(this, null, null, &quot;Auto registration&quot;);</span>
         }
-<span class="nc" id="L42">    }</span>
+<span class="fc" id="L42">    }</span>
 
     /**
      * &lt;p&gt;
@@ -54,7 +54,7 @@ public class AuthModuleConfigProvider implements
         final String appContext,
         final CallbackHandler handler) throws AuthException {
 
-<span class="nc" id="L57">        return null;</span>
+<span class="fc" id="L57">        return null;</span>
     }
 
     /**
@@ -68,7 +68,7 @@ public class AuthModuleConfigProvider implements
         final String appContext,
         final CallbackHandler handler) throws AuthException {
 
-<span class="nc" id="L71">        return new TestServerAuthModuleAuthConfig(options, layer, appContext, handler);</span>
+<span class="fc" id="L71">        return new TestServerAuthModuleAuthConfig(options, layer, appContext, handler);</span>
     }
 
     /**
@@ -78,7 +78,7 @@ public class AuthModuleConfigProvider implements
     public void refresh() {
 
         // does nothing
-<span class="nc" id="L81">    }</span>
+<span class="fc" id="L81">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

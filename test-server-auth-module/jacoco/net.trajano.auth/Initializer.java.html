@@ -7,7 +7,7 @@ import javax.security.auth.message.config.AuthConfigFactory;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-<span class="nc" id="L10">public class Initializer implements</span>
+<span class="fc" id="L10">public class Initializer implements</span>
     ServletContextListener {
 
     private String registration;
@@ -21,8 +21,8 @@ import javax.servlet.ServletContextListener;
     @Override
     public void contextDestroyed(final ServletContextEvent sce) {
 
-<span class="nc" id="L24">        AuthConfigFactory.getFactory().removeRegistration(registration);</span>
-<span class="nc" id="L25">    }</span>
+<span class="fc" id="L24">        AuthConfigFactory.getFactory().removeRegistration(registration);</span>
+<span class="fc" id="L25">    }</span>
 
     /**
      * &lt;p&gt;
@@ -33,11 +33,11 @@ import javax.servlet.ServletContextListener;
     @Override
     public void contextInitialized(final ServletContextEvent sce) {
 
-<span class="nc" id="L36">        final Map&lt;String, String&gt; options = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L37">        registration = AuthConfigFactory.getFactory().registerConfigProvider(AuthModuleConfigProvider.class.getName(),</span>
+<span class="fc" id="L36">        final Map&lt;String, String&gt; options = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L37">        registration = AuthConfigFactory.getFactory().registerConfigProvider(AuthModuleConfigProvider.class.getName(),</span>
             options, &quot;HttpServlet&quot;, null, null);
 
-<span class="nc" id="L40">    }</span>
+<span class="fc" id="L40">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
