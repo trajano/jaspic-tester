@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Sample Web Application &#x2013; Project Distribution Management</title>
+    <title>Sample Web Application &#x2013; JASPIC Tester Web Application</title>
     <style type="text/css" media="all">
       @import url("./css/maven-base.css");
       @import url("./css/maven-theme.css");
@@ -64,16 +64,41 @@
 	  <div id="content" class="site-content" role="main">
 	    <article class="page type-page status-publish hentry">
 	      <div class="entry-content">
-                <div class="section">
-<h2><a name="Overview"></a>Overview</h2><a name="Overview"></a>
-<p>The following is the distribution management information used by this project.</p>
+                <h1>JASPIC Tester Web Application</h1>
+<p>This is a simple web application that demonstrates the use of <a class="externalLink" href="http://site.trajano.net/jaspic-tester">Test Server Auth Module</a>. It has been tested in the following configurations</p>
 <div class="section">
-<h3><a name="Repository_-_sonatype-nexus-staging"></a>Repository - sonatype-nexus-staging</h3><a name="Repository_-_sonatype-nexus-staging"></a><a class="externalLink" href="https://oss.sonatype.org/service/local/staging/deploy/maven2/">https://oss.sonatype.org/service/local/staging/deploy/maven2/</a></div>
 <div class="section">
-<h3><a name="Snapshot_Repository_-_sonatype-nexus-snapshots"></a>Snapshot Repository - sonatype-nexus-snapshots</h3><a name="Snapshot_Repository_-_sonatype-nexus-snapshots"></a><a class="externalLink" href="https://oss.sonatype.org/content/repositories/snapshots/">https://oss.sonatype.org/content/repositories/snapshots/</a></div>
+<h3><a name="Glassfish_4.1Payara_4.1.153"></a>Glassfish 4.1/Payara 4.1.153</h3>
+
+<ul>
+  
+<li>No extra configuration required. <tt>glassfish-web.xml</tt> registers  the mapping from role to group.</li>
+</ul></div>
 <div class="section">
-<h3><a name="Site_-_gh-pages"></a>Site - gh-pages</h3><a name="Site_-_gh-pages"></a>
-<p>github:http://site.trajano.net/jaspic-tester/jaspic-tester-war/</p></div></div>
+<h3><a name="WebSphere_Liberty_Profile_8.5.5.7"></a>WebSphere Liberty Profile 8.5.5.7</h3>
+
+<ul>
+  
+<li>Requires a Security Role to group binding from <tt>authenticated</tt> to  <tt>authenticated</tt></li>
+  
+<li>A <i>UserRegistry</i>, <i>Basic User Registry</i> would do. The user does not need  to be in the registry, however the group must be <tt>authenticated</tt> as well.</li>
+  
+<li>Automatic redirection to the secure port is not done by WLP when  <tt>security-constraint</tt> is specified.</li>
+</ul></div>
+<div class="section">
+<h3><a name="WildFly_9.0.1"></a>WildFly 9.0.1</h3>
+
+<ul>
+  
+<li>
+<p>Execute the following commands via jboss-cli.sh from <a class="externalLink" href="https://github.com/javaee-samples/javaee7-samples/issues/243#issuecomment-127684544">GitHub</a></p>
+<p>/subsystem=security/security-domain=jaspitest:add(cache-type=default) /subsystem=security/security-domain=jaspitest/authentication=jaspi:add() /subsystem=security/security-domain=jaspitest/authentication=jaspi/login-module-stack=dummy:add() /subsystem=security/security-domain=jaspitest/authentication=jaspi/login-module-stack=dummy/login-module=dummy:add(code=Dummy, flag=optional) /subsystem=security/security-domain=jaspitest/authentication=jaspi/auth-module=jaspi:add(code=org.wildfly.extension.undertow.security.jaspi.modules.HTTPSchemeServerAuthModule, flag=required)</p></li>
+  
+<li>
+<p><a class="externalLink" href="http://www.trajano.net/2015/08/set-up-ssl-with-wildfly/">Enable SSL in WildFly</a></p></li>
+  
+<li>The mapping for the application to the security domain is in <tt>jboss-web.xml</tt></li>
+</ul></div></div>
 	      </div>
 	    </article>
 	  </div>
@@ -99,8 +124,8 @@
                  <h1 class="widget-title">Overview</h1>
                   <ul>
                       <li class="none">
-                          <a href="index.html" title="About">About</a>
-            </li>
+            <strong>About</strong>
+          </li>
                       <li class="none">
                           <a href="scope.html" title="Scope">Scope</a>
             </li>
@@ -114,50 +139,9 @@
       <aside class="widget">
                  <h1 class="widget-title">Project Documentation</h1>
                   <ul>
-                                                                                                                                                                                                                                                                                                          <li class="expanded">
+                                                                                                                                                                                                                                                                                                <li class="collapsed">
                           <a href="project-info.html" title="Project Information">Project Information</a>
-                    <ul>
-                          <li class="none">
-                          <a href="integration.html" title="Continuous Integration">Continuous Integration</a>
-            </li>
-                          <li class="none">
-                          <a href="dependencies.html" title="Dependencies">Dependencies</a>
-            </li>
-                          <li class="none">
-                          <a href="dependency-convergence.html" title="Dependency Convergence">Dependency Convergence</a>
-            </li>
-                          <li class="none">
-                          <a href="dependency-info.html" title="Dependency Information">Dependency Information</a>
-            </li>
-                          <li class="none">
-                          <a href="dependency-management.html" title="Dependency Management">Dependency Management</a>
-            </li>
-                          <li class="none">
-            <strong>Distribution Management</strong>
-          </li>
-                          <li class="none">
-                          <a href="issue-tracking.html" title="Issue Tracking">Issue Tracking</a>
-            </li>
-                          <li class="none">
-                          <a href="license.html" title="Project License">Project License</a>
-            </li>
-                          <li class="none">
-                          <a href="plugin-management.html" title="Plugin Management">Plugin Management</a>
-            </li>
-                          <li class="none">
-                          <a href="plugins.html" title="Project Plugins">Project Plugins</a>
-            </li>
-                          <li class="none">
-                          <a href="team-list.html" title="Project Team">Project Team</a>
-            </li>
-                          <li class="none">
-                          <a href="source-repository.html" title="Source Repository">Source Repository</a>
-            </li>
-                          <li class="none">
-                          <a href="project-summary.html" title="Project Summary">Project Summary</a>
-            </li>
-              </ul>
-        </li>
+                  </li>
                                                                                                                                                                                                                         <li class="collapsed">
                           <a href="project-reports.html" title="Project Reports">Project Reports</a>
                   </li>
