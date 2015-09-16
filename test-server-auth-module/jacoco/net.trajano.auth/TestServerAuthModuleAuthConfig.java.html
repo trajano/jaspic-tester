@@ -123,7 +123,7 @@ public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
     @Override
 	public String getAuthContextID(final MessageInfo messageInfo) {
 <span class="nc" id="L125">        final Object isMandatory = messageInfo.getMap()</span>
-<span class="nc" id="L126">                .get(JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY);</span>
+                .get(JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY);
 <span class="nc bnc" id="L127" title="All 6 branches missed.">        if (isMandatory != null &amp;&amp; isMandatory instanceof String &amp;&amp; Boolean.valueOf((String) isMandatory)) {</span>
 <span class="nc" id="L128">            return messageInfo.toString();</span>
         }
@@ -161,7 +161,7 @@ public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
 <span class="nc" id="L161">			final ServerAuthModule module = (ServerAuthModule) context;</span>
 <span class="nc bnc" id="L162" title="All 2 branches missed.">			if (authContextID == null) {</span>
 <span class="nc" id="L163">				module.initialize(NON_MANDATORY, NON_MANDATORY, getHandler(), augmentedOptions);</span>
-<span class="nc" id="L164">			} else {</span>
+			} else {
 <span class="nc" id="L165">				module.initialize(MANDATORY, MANDATORY, getHandler(), augmentedOptions);</span>
 			}
 		}

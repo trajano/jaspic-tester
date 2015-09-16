@@ -18,7 +18,7 @@ import javax.servlet.ServletContextListener;
 	public void contextInitialized(ServletContextEvent sce) {
 <span class="nc" id="L19">		Map&lt;String, String&gt; options = new HashMap&lt;&gt;();</span>
 <span class="nc" id="L20">		registration = AuthConfigFactory.getFactory().registerConfigProvider(AuthModuleConfigProvider.class.getName(),</span>
-<span class="nc" id="L21">				options, &quot;HttpServlet&quot;, null, null);</span>
+				options, &quot;HttpServlet&quot;, null, null);
 
 <span class="nc" id="L23">	}</span>
 

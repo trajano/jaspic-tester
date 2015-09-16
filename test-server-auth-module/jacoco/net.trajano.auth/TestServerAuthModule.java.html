@@ -114,8 +114,8 @@ import javax.ws.rs.core.UriBuilder;
     public Class[] getSupportedMessageTypes() {
 
 <span class="nc" id="L116">        return new Class&lt;?&gt;[] {</span>
-<span class="nc" id="L117">            HttpServletRequest.class,</span>
-<span class="nc" id="L118">            HttpServletResponse.class };</span>
+            HttpServletRequest.class,
+            HttpServletResponse.class };
     }
 
     /**
@@ -135,17 +135,17 @@ import javax.ws.rs.core.UriBuilder;
     private AuthStatus handleLoginEndpoint(HttpServletRequest req,
         HttpServletResponse resp) throws ServletException, IOException {
 
-<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (&quot;GET&quot;.equals(req.getMethod())</span>
-<span class="nc bnc" id="L139" title="All 4 branches missed.">                &amp;&amp; req.getParameter(STATE) != null &amp;&amp; req.isSecure()) {</span>
+<span class="nc bnc" id="L138" title="All 6 branches missed.">        if (&quot;GET&quot;.equals(req.getMethod())</span>
+                &amp;&amp; req.getParameter(STATE) != null &amp;&amp; req.isSecure()) {
 <span class="nc" id="L140">            System.out.println(&quot;about to dispatch&quot;);</span>
 <span class="nc" id="L141">            req.getRequestDispatcher(&quot;/WEB-INF/login.jsp&quot;).forward(req, resp);</span>
 <span class="nc" id="L142">            System.out.println(&quot;after dispatch&quot;);</span>
 <span class="nc" id="L143">            return AuthStatus.SEND_SUCCESS;</span>
         }
-<span class="nc bnc" id="L145" title="All 2 branches missed.">        if (&quot;POST&quot;.equals(req.getMethod())</span>
-<span class="nc bnc" id="L146" title="All 4 branches missed.">                &amp;&amp; req.getParameter(STATE) != null &amp;&amp; req.isSecure()) {</span>
+<span class="nc bnc" id="L145" title="All 6 branches missed.">        if (&quot;POST&quot;.equals(req.getMethod())</span>
+                &amp;&amp; req.getParameter(STATE) != null &amp;&amp; req.isSecure()) {
 <span class="nc" id="L147">            String subject = UriBuilder.fromUri(&quot;https://test-server-auth-module&quot;).userInfo(req.getParameter(&quot;j_username&quot;))</span>
-<span class="nc" id="L148">                .build().toASCIIString();</span>
+                .build().toASCIIString();
 <span class="nc" id="L149">            Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, subject);</span>
 <span class="nc" id="L150">            cookie.setSecure(true);</span>
 <span class="nc" id="L151">            cookie.setHttpOnly(true);</span>
@@ -276,19 +276,19 @@ import javax.ws.rs.core.UriBuilder;
                 // SEND_SUCCESS works on the top three application servers.
 
 <span class="nc" id="L278">                resp.sendRedirect(UriBuilder.fromUri(req.getContextPath()).path(LOGIN_ENDPOINT)</span>
-<span class="nc" id="L279">                    .queryParam(&quot;state&quot;, localRequestUri).build().toASCIIString());</span>
+                    .queryParam(&quot;state&quot;, localRequestUri).build().toASCIIString());
 <span class="nc" id="L280">                return AuthStatus.SEND_SUCCESS;</span>
             }
 
 <span class="nc" id="L283">            handler.handle(new Callback[] {</span>
-<span class="nc" id="L284">                new CallerPrincipalCallback(client, subject),</span>
-<span class="nc" id="L285">                new GroupPrincipalCallback(client, new String[] {</span>
-<span class="nc" id="L286">                    &quot;authenticated&quot; }) });</span>
+                new CallerPrincipalCallback(client, subject),
+                new GroupPrincipalCallback(client, new String[] {
+                    &quot;authenticated&quot; }) });
 <span class="nc" id="L287">            return AuthStatus.SUCCESS;</span>
 
-        } catch (final IOException
+<span class="nc" id="L289">        } catch (final IOException</span>
                  | ServletException
-<span class="nc" id="L291">                 | UnsupportedCallbackException e) {</span>
+                 | UnsupportedCallbackException e) {
 <span class="nc" id="L292">            e.printStackTrace();</span>
 <span class="nc" id="L293">            throw new AuthException(e.getMessage());</span>
         }
