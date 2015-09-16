@@ -12,7 +12,6 @@ import javax.security.auth.message.MessagePolicy;
 import javax.security.auth.message.MessagePolicy.TargetPolicy;
 import javax.security.auth.message.config.ServerAuthConfig;
 import javax.security.auth.message.config.ServerAuthContext;
-import javax.security.auth.message.module.ServerAuthModule;
 
 /**
  * Common methods for ServerAuthConfig and ClientAuthConfig.
@@ -22,27 +21,25 @@ public class TestServerAuthModuleAuthConfig implements
 
     /**
      * <p>
-     * The {@link MessageInfo} map must contain this key and its associated
-     * value, if and only if authentication is required to perform the resource
-     * access corresponding to the HttpServletRequest to which the
-     * ServerAuthContext will be applied. Authentication is required if use of
-     * the HTTP method of the HttpServletRequest at the resource identified by
-     * the HttpServletRequest is covered by a Servlet authconstraint, or in a
-     * JSR 115 compatible runtime, if the corresponding WebResourcePermission is
-     * NOT granted to an unauthenticated caller. In a JSR 115 compatible
-     * runtime, the corresponding WebResourcePermission may be constructed
-     * directly from the HttpServletRequest as follows:
+     * The {@link javax.security.auth.message.MessageInfo} map must contain this
+     * key and its associated value, if and only if authentication is required
+     * to perform the resource access corresponding to the HttpServletRequest to
+     * which the ServerAuthContext will be applied. Authentication is required
+     * if use of the HTTP method of the HttpServletRequest at the resource
+     * identified by the HttpServletRequest is covered by a Servlet auth
+     * constraint, or in a JSR 115 compatible runtime, if the corresponding
+     * WebResourcePermission is NOT granted to an unauthenticated caller. In a
+     * JSR 115 compatible runtime, the corresponding WebResourcePermission may
+     * be constructed directly from the HttpServletRequest as follows:
      * </p>
-     *
-     * <pre>
-     * public WebResourcePermission(HttpServletRequest request);
-     * </pre>
+     * <blockquote> public WebResourcePermission(HttpServletRequest
+     * request); </blockquote> *
      * <p>
      * The authentication context configuration system must use the value of
      * this property to establish the corresponding value within the
      * requestPolicy passed to the authentication modules of the
      * {@link javax.security.auth.message.config.ServerAuthContext} acquired to
-     * process the {@link MessageInfo}.
+     * process the {@link javax.security.auth.message.MessageInfo}.
      * </p>
      */
     private static final String JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY = "javax.security.auth.message.MessagePolicy.isMandatory";
@@ -78,6 +75,8 @@ public class TestServerAuthModuleAuthConfig implements
     private final Map<String, String> options;
 
     /**
+     * Builds the config.
+     *
      * @param options
      *            options
      * @param layer
@@ -85,7 +84,7 @@ public class TestServerAuthModuleAuthConfig implements
      * @param appContext
      *            application context
      * @param handler
-     *            handler
+     *            callback handler
      */
     public TestServerAuthModuleAuthConfig(final Map<String, String> options,
         final String layer,
@@ -107,6 +106,7 @@ public class TestServerAuthModuleAuthConfig implements
      */
     @SuppressWarnings("unchecked")
     protected Map<?, ?> augmentProperties(@SuppressWarnings("rawtypes") final Map properties) {
+
         if (properties == null) {
             return options;
         }
@@ -116,10 +116,37 @@ public class TestServerAuthModuleAuthConfig implements
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getAppContext() {
 
         return appContext;
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Augments the options with the properties specified and initializes the
+     * module as mandatory or non-mandatory depending on whether the
+     * authContextID is <code>null</code>.
+     * </p>
+     */
+    @Override
+    public ServerAuthContext getAuthContext(final String authContextID,
+        final Subject serviceSubject,
+        @SuppressWarnings("rawtypes") final Map properties) throws AuthException {
+
+        final Map<?, ?> augmentedOptions = augmentProperties(properties);
+        final TestServerAuthModule context = new TestServerAuthModule();
+
+        if (authContextID == null) {
+            context.initialize(NON_MANDATORY, NON_MANDATORY, handler, augmentedOptions);
+        } else {
+            context.initialize(MANDATORY, MANDATORY, handler, augmentedOptions);
+        }
+        return context;
     }
 
     /**
@@ -144,17 +171,20 @@ public class TestServerAuthModuleAuthConfig implements
         return null;
     }
 
-    protected CallbackHandler getHandler() {
-
-        return handler;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getMessageLayer() {
 
         return layer;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return <code>true</code>
+     */
     @Override
     public boolean isProtected() {
 
@@ -166,26 +196,8 @@ public class TestServerAuthModuleAuthConfig implements
      */
     @Override
     public void refresh() {
-        
+
         // does nothing
     }
 
-    @Override
-    public ServerAuthContext getAuthContext(final String authContextID,
-        final Subject serviceSubject,
-        @SuppressWarnings("rawtypes") final Map properties) throws AuthException {
-
-        final Map<?, ?> augmentedOptions = augmentProperties(properties);
-        final ServerAuthContext context = new TestServerAuthModule();
-        if (context instanceof ServerAuthModule) {
-
-            final ServerAuthModule module = (ServerAuthModule) context;
-            if (authContextID == null) {
-                module.initialize(NON_MANDATORY, NON_MANDATORY, getHandler(), augmentedOptions);
-            } else {
-                module.initialize(MANDATORY, MANDATORY, getHandler(), augmentedOptions);
-            }
-        }
-        return context;
-    }
 }
