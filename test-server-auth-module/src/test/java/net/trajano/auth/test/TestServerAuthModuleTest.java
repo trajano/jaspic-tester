@@ -14,10 +14,12 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.message.AuthStatus;
 import javax.security.auth.message.MessageInfo;
 import javax.security.auth.message.MessagePolicy;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Test;
+import org.mockito.Matchers;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -29,6 +31,68 @@ public class TestServerAuthModuleTest {
      * Module options.
      */
     private final Map<String, String> options = ImmutableMap.<String, String> builder().build();
+
+    /**
+     * Tests the login endpoint GET operation.
+     */
+    @Test
+    public void testLogin() throws Exception {
+
+        final TestServerAuthModule module = new TestServerAuthModule();
+        final MessagePolicy mockRequestPolicy = mock(MessagePolicy.class);
+        when(mockRequestPolicy.isMandatory()).thenReturn(true);
+
+        final CallbackHandler h = mock(CallbackHandler.class);
+        module.initialize(mockRequestPolicy, null, h, options);
+
+        final MessageInfo messageInfo = mock(MessageInfo.class);
+
+        final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getMethod()).thenReturn("GET");
+        when(servletRequest.isSecure()).thenReturn(true);
+        when(servletRequest.getRequestURI()).thenReturn("/util/j_security_check");
+        when(servletRequest.getContextPath()).thenReturn("/util");
+        when(servletRequest.getParameter("state")).thenReturn("/");
+        when(servletRequest.getRequestDispatcher(Matchers.anyString())).thenReturn(mock(RequestDispatcher.class));
+        when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+
+        final Subject client = new Subject();
+        assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, null));
+        verifyZeroInteractions(h);
+    }
+
+    /**
+     * Tests the login endpoint POST operation.
+     */
+    @Test
+    public void testLoginPost() throws Exception {
+
+        final TestServerAuthModule module = new TestServerAuthModule();
+        final MessagePolicy mockRequestPolicy = mock(MessagePolicy.class);
+        when(mockRequestPolicy.isMandatory()).thenReturn(true);
+
+        final CallbackHandler h = mock(CallbackHandler.class);
+        module.initialize(mockRequestPolicy, null, h, options);
+
+        final MessageInfo messageInfo = mock(MessageInfo.class);
+
+        final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getMethod()).thenReturn("POST");
+        when(servletRequest.isSecure()).thenReturn(true);
+        when(servletRequest.getRequestURI()).thenReturn("/util/j_security_check");
+        when(servletRequest.getContextPath()).thenReturn("/util");
+        when(servletRequest.getParameter("state")).thenReturn("/");
+        when(servletRequest.getParameter("j_username")).thenReturn("foofoo");
+        when(servletRequest.getRequestDispatcher(Matchers.anyString())).thenReturn(mock(RequestDispatcher.class));
+        when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+
+        final HttpServletResponse servletResponse = mock(HttpServletResponse.class);
+        when(messageInfo.getResponseMessage()).thenReturn(servletResponse);
+
+        final Subject client = new Subject();
+        assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, null));
+        verifyZeroInteractions(h);
+    }
 
     /**
      * The policy has determined it is not mandatory without SSL.

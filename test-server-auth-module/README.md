@@ -28,3 +28,6 @@ production systems.
   distributed system.  The key would be passed in via the options `Map`
 * if you are already using sessions, you can store the subject as a
   session attribute
+* If using a session, handle the `POST` method when a redirect is needed
+  by storing the `POST` data into a session variable temporarily and then
+  dispatching it later when recovering.

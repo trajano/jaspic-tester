@@ -3,6 +3,8 @@ package net.trajano.auth;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import javax.security.auth.Subject;
@@ -129,7 +131,7 @@ public class TestServerAuthModule implements
             cookie.setSecure(true);
             cookie.setHttpOnly(true);
             resp.addCookie(cookie);
-            resp.sendRedirect(req.getContextPath() + state);
+            resp.sendRedirect(req.getContextPath() + URLDecoder.decode(state, "US-ASCII"));
             return AuthStatus.SEND_SUCCESS;
         } else {
             throw new AuthException("unsupported method");
@@ -226,6 +228,47 @@ public class TestServerAuthModule implements
     }
 
     /**
+     * Builds the redirect URI including the assembly of <code>state</code>.
+     *
+     * @param req
+     *            servlet request
+     * @param resp
+     *            servlet response
+     * @return {@link AuthStatus#SEND_SUCCESS}
+     * @throws AuthException
+     *             happens when there is invalid request data
+     * @throws IOException
+     *             servlet error
+     * @throws ServletException
+     *             servlet error
+     */
+    private AuthStatus handleRedirectToLoginEndpoint(final HttpServletRequest req,
+        final HttpServletResponse resp) throws AuthException,
+            ServletException,
+            IOException {
+
+        if (!"GET".equals(req.getMethod())) {
+            throw new AuthException("Only 'GET' method is supported when redirecting to the endpoint");
+        }
+        final StringBuilder stateBuilder = new StringBuilder(req.getRequestURI());
+        if (req.getQueryString() != null) {
+            stateBuilder.append('?');
+            stateBuilder.append(req.getQueryString());
+        }
+        final StringBuilder redirectUriBuilder = new StringBuilder(req.getContextPath());
+        redirectUriBuilder.append(LOGIN_ENDPOINT);
+        redirectUriBuilder.append("?state=");
+        redirectUriBuilder.append(
+            URLEncoder.encode(stateBuilder.toString(), "US-ASCII"));
+        resp.sendRedirect(redirectUriBuilder.toString());
+
+        // The JASPIC spec is ambiguous for this scenario, however
+        // SEND_SUCCESS works on the top three application servers.
+
+        return AuthStatus.SEND_SUCCESS;
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @param requestPolicy
@@ -312,14 +355,9 @@ public class TestServerAuthModule implements
                 }
             }
 
-            // Check if there is no subject
+            // Check if there is no subject then redirect to login endpoint
             if (subject == null) {
-                // The JASPIC spec is ambiguous for this scenario, however
-                // SEND_SUCCESS works on the top three application servers.
-
-                resp.sendRedirect(UriBuilder.fromUri(req.getContextPath()).path(LOGIN_ENDPOINT)
-                    .queryParam("state", localRequestUri).build().toASCIIString());
-                return AuthStatus.SEND_SUCCESS;
+                return handleRedirectToLoginEndpoint(req, resp);
             }
 
             handler.handle(new Callback[] {
