@@ -152,7 +152,7 @@ public class TestServerAuthModule implements
             cookie.setSecure(true);
             cookie.setHttpOnly(true);
             resp.addCookie(cookie);
-            resp.sendRedirect(req.getContextPath() + stateUri.toASCIIString());
+            resp.sendRedirect(URI.create(req.getContextPath() + stateUri.toASCIIString()).normalize().toASCIIString());
             return AuthStatus.SEND_SUCCESS;
         } else {
             throw new AuthException("unsupported method");
@@ -183,9 +183,10 @@ public class TestServerAuthModule implements
         final String postLogoutRedirectUri = req.getParameter(POST_LOGOUT_REDIRECT_URI);
         if (postLogoutRedirectUri != null) {
 
+            final String postLogoutRedirectUriNormalized = URI.create(postLogoutRedirectUri).normalize().toASCIIString();
             // Check that the post logout redirect uri is relative to the application if not fail.
             final String contextUri = URI.create(req.getRequestURL().toString()).resolve(req.getContextPath()).toASCIIString();
-            if (!postLogoutRedirectUri.startsWith(contextUri)) {
+            if (!postLogoutRedirectUriNormalized.startsWith(contextUri)) {
                 throw new AuthException("invalid post_logout_redirect_uri");
             }
 
@@ -193,7 +194,7 @@ public class TestServerAuthModule implements
             cookie.setMaxAge(0);
             cookie.setSecure(true);
             resp.addCookie(cookie);
-            resp.sendRedirect(postLogoutRedirectUri);
+            resp.sendRedirect(postLogoutRedirectUriNormalized);
             return AuthStatus.SEND_SUCCESS;
         }
         throw new AuthException("missing post_logout_redirect_uri");
@@ -232,7 +233,7 @@ public class TestServerAuthModule implements
         redirectUriBuilder.append("?state=");
         redirectUriBuilder.append(
             URLEncoder.encode(stateBuilder.toString(), "US-ASCII"));
-        resp.sendRedirect(redirectUriBuilder.toString());
+        resp.sendRedirect(URI.create(redirectUriBuilder.toString()).normalize().toASCIIString());
 
         // The JASPIC spec is ambiguous for this scenario, however
         // SEND_SUCCESS works on the top three application servers.

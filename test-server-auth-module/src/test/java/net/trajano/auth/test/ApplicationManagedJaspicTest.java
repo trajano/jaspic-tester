@@ -34,6 +34,134 @@ import net.trajano.auth.Initializer;
 public class ApplicationManagedJaspicTest {
 
     @Test
+    public void testContext1() throws Exception {
+
+        final CallbackHandler h = mock(CallbackHandler.class);
+        final Map<String, String> options = new HashMap<>();
+        final AuthModuleConfigProvider provider = new AuthModuleConfigProvider(options, null);
+        assertNull(provider.getClientAuthConfig("HttpServlet", "server1 /", h));
+
+        final ServerAuthConfig serverAuthConfig = provider.getServerAuthConfig("HttpServlet", "server1 /", h);
+        assertNotNull(serverAuthConfig);
+        assertEquals("server1 /", serverAuthConfig.getAppContext());
+        assertEquals("HttpServlet", serverAuthConfig.getMessageLayer());
+
+        final Subject serviceSubject = new Subject();
+
+        assertNull(serverAuthConfig.getAuthContextID(mock(MessageInfo.class)));
+
+        final MessageInfo messageInfoMandatory = mock(MessageInfo.class);
+        when(messageInfoMandatory.getMap()).thenReturn(Collections.singletonMap("javax.security.auth.message.MessagePolicy.isMandatory", "true"));
+
+        final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getMethod()).thenReturn("GET");
+        when(servletRequest.isSecure()).thenReturn(true);
+        when(servletRequest.getRequestURI()).thenReturn("/util/ejb2");
+        when(servletRequest.getContextPath()).thenReturn("/util");
+        when(messageInfoMandatory.getRequestMessage()).thenReturn(servletRequest);
+
+        final HttpServletResponse servletResponse = mock(HttpServletResponse.class);
+        when(messageInfoMandatory.getResponseMessage()).thenReturn(servletResponse);
+
+        final String authContextID = serverAuthConfig.getAuthContextID(messageInfoMandatory);
+        assertNotNull(authContextID);
+
+        final ServerAuthContext authContext = serverAuthConfig.getAuthContext(authContextID, serviceSubject, new HashMap<>());
+        assertNotNull(authContext);
+    }
+
+    @Test
+    public void testContext2() throws Exception {
+
+        final CallbackHandler h = mock(CallbackHandler.class);
+        final Map<String, String> options = new HashMap<>();
+        final AuthModuleConfigProvider provider = new AuthModuleConfigProvider(options, null);
+        assertNull(provider.getClientAuthConfig("HttpServlet", "server1 /", h));
+
+        final ServerAuthConfig serverAuthConfig = provider.getServerAuthConfig("HttpServlet", "server1 /", h);
+        assertNotNull(serverAuthConfig);
+        assertEquals("server1 /", serverAuthConfig.getAppContext());
+        assertEquals("HttpServlet", serverAuthConfig.getMessageLayer());
+
+        final Subject serviceSubject = new Subject();
+
+        assertNull(serverAuthConfig.getAuthContextID(mock(MessageInfo.class)));
+
+        final ServerAuthContext authContext = serverAuthConfig.getAuthContext(null, serviceSubject, null);
+        assertNotNull(authContext);
+    }
+
+    /**
+     * Test when isMandatory value is "false".
+     */
+    @Test
+    public void testContextNonMandatory() throws Exception {
+
+        final CallbackHandler h = mock(CallbackHandler.class);
+        final Map<String, String> options = new HashMap<>();
+        final AuthModuleConfigProvider provider = new AuthModuleConfigProvider(options, null);
+        assertNull(provider.getClientAuthConfig("HttpServlet", "server1 /", h));
+
+        final ServerAuthConfig serverAuthConfig = provider.getServerAuthConfig("HttpServlet", "server1 /", h);
+        assertNotNull(serverAuthConfig);
+        assertEquals("server1 /", serverAuthConfig.getAppContext());
+        assertEquals("HttpServlet", serverAuthConfig.getMessageLayer());
+
+        assertNull(serverAuthConfig.getAuthContextID(mock(MessageInfo.class)));
+
+        final MessageInfo messageInfoMandatory = mock(MessageInfo.class);
+        when(messageInfoMandatory.getMap()).thenReturn(Collections.singletonMap("javax.security.auth.message.MessagePolicy.isMandatory", "false"));
+
+        final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getMethod()).thenReturn("GET");
+        when(servletRequest.isSecure()).thenReturn(true);
+        when(servletRequest.getRequestURI()).thenReturn("/util/ejb2");
+        when(servletRequest.getContextPath()).thenReturn("/util");
+        when(messageInfoMandatory.getRequestMessage()).thenReturn(servletRequest);
+
+        final HttpServletResponse servletResponse = mock(HttpServletResponse.class);
+        when(messageInfoMandatory.getResponseMessage()).thenReturn(servletResponse);
+
+        final String authContextID = serverAuthConfig.getAuthContextID(messageInfoMandatory);
+        assertNull(authContextID);
+    }
+
+    /**
+     * The isMandatory value should be a string "true" not the boolean type.
+     */
+    @Test
+    public void testContextWithInvalidPolicyType() throws Exception {
+
+        final CallbackHandler h = mock(CallbackHandler.class);
+        final Map<String, String> options = new HashMap<>();
+        final AuthModuleConfigProvider provider = new AuthModuleConfigProvider(options, null);
+        assertNull(provider.getClientAuthConfig("HttpServlet", "server1 /", h));
+
+        final ServerAuthConfig serverAuthConfig = provider.getServerAuthConfig("HttpServlet", "server1 /", h);
+        assertNotNull(serverAuthConfig);
+        assertEquals("server1 /", serverAuthConfig.getAppContext());
+        assertEquals("HttpServlet", serverAuthConfig.getMessageLayer());
+
+        assertNull(serverAuthConfig.getAuthContextID(mock(MessageInfo.class)));
+
+        final MessageInfo messageInfoMandatory = mock(MessageInfo.class);
+        when(messageInfoMandatory.getMap()).thenReturn(Collections.singletonMap("javax.security.auth.message.MessagePolicy.isMandatory", true));
+
+        final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getMethod()).thenReturn("GET");
+        when(servletRequest.isSecure()).thenReturn(true);
+        when(servletRequest.getRequestURI()).thenReturn("/util/ejb2");
+        when(servletRequest.getContextPath()).thenReturn("/util");
+        when(messageInfoMandatory.getRequestMessage()).thenReturn(servletRequest);
+
+        final HttpServletResponse servletResponse = mock(HttpServletResponse.class);
+        when(messageInfoMandatory.getResponseMessage()).thenReturn(servletResponse);
+
+        final String authContextID = serverAuthConfig.getAuthContextID(messageInfoMandatory);
+        assertNull(authContextID);
+    }
+
+    @Test
     public void testInitializer() throws Exception {
 
         AuthConfigFactory.setFactory(mock(AuthConfigFactory.class));
@@ -58,9 +186,6 @@ public class ApplicationManagedJaspicTest {
         final Subject serviceSubject = new Subject();
 
         assertNull(serverAuthConfig.getAuthContextID(mock(MessageInfo.class)));
-
-        final ServerAuthContext nonMandatoryAuthContext = serverAuthConfig.getAuthContext(null, serviceSubject, null);
-        assertNotNull(nonMandatoryAuthContext);
 
         final MessageInfo messageInfoMandatory = mock(MessageInfo.class);
         when(messageInfoMandatory.getMap()).thenReturn(Collections.singletonMap("javax.security.auth.message.MessagePolicy.isMandatory", "true"));
