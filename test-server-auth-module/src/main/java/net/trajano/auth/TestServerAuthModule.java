@@ -2,6 +2,7 @@ package net.trajano.auth;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.util.Map;
 
 import javax.security.auth.Subject;
@@ -30,7 +31,7 @@ import javax.ws.rs.core.UriBuilder;
  * The module will detect if the user is not yet authenticated to a simple web
  * form that asks for a user name. It forms a subject with the pattern
  * </p>
- * 
+ *
  * <pre>
  * https://[username]@test-server-auth-module
  * </pre>
@@ -38,10 +39,19 @@ import javax.ws.rs.core.UriBuilder;
  * The module does not make use of <code>HttpSession</code> but instead uses a
  * cookie <code>X-Subject</code> to store the subject.
  * </p>
- * 
+ *
  * @author Archimedes Trajano
  */
-public class TestServerAuthModule implements ServerAuthModule, ServerAuthContext {
+public class TestServerAuthModule implements
+    ServerAuthModule,
+    ServerAuthContext {
+
+    /**
+     * Groups associated to the user.
+     */
+    private static final String[] GROUPS = {
+        "authenticated"
+    };
 
     /**
      * Login endpoint.
@@ -69,6 +79,62 @@ public class TestServerAuthModule implements ServerAuthModule, ServerAuthContext
      * Subject cookie key.
      */
     public static final String SUBJECT_COOKIE_KEY = "X-Subject";
+
+    /**
+     * Handle the login endpoint. This will display the login page and will
+     * handle login POST action.
+     *
+     * @param req
+     *            request
+     * @param resp
+     *            response
+     * @return authentication status
+     * @throws AuthException
+     *             happens when there is invalid request data
+     * @throws IOException
+     *             servlet error
+     * @throws ServletException
+     *             servlet error
+     */
+    private static AuthStatus handleLoginEndpoint(final HttpServletRequest req,
+        final HttpServletResponse resp) throws ServletException,
+            AuthException,
+            IOException {
+
+        if (!req.isSecure()) {
+            throw new AuthException("Secure connection is required");
+        }
+
+        final String state = req.getParameter(STATE);
+        if (state == null) {
+            throw new AuthException("missing 'state' parameter");
+        }
+
+        // Ensure that the state is valid, it should be relative
+        final URI stateUri = URI.create(state).normalize();
+        if (stateUri.isAbsolute()) {
+            throw new AuthException("'state' must not be an absolute URI");
+        }
+        if (!stateUri.getPath().startsWith("/")) {
+            throw new AuthException("'state' must start with '/'");
+        }
+
+        if ("GET".equals(req.getMethod())) {
+            req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
+            return AuthStatus.SEND_SUCCESS;
+        } else if ("POST".equals(req.getMethod())) {
+            final String subject = UriBuilder.fromUri("https://test-server-auth-module").userInfo(req.getParameter("j_username"))
+                .build().toASCIIString();
+            final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, subject);
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
+            resp.addCookie(cookie);
+            resp.sendRedirect(req.getContextPath() + state);
+            return AuthStatus.SEND_SUCCESS;
+        } else {
+            throw new AuthException("unsupported method");
+        }
+    }
 
     /**
      * Callback handler that is passed in initialize by the container. This
@@ -115,72 +181,48 @@ public class TestServerAuthModule implements ServerAuthModule, ServerAuthContext
 
         return new Class<?>[] {
             HttpServletRequest.class,
-            HttpServletResponse.class };
-    }
-
-    /**
-     * Handle the login endpoint. This will display the login page and will
-     * handle login POST action.
-     * 
-     * @param req
-     *            request
-     * @param resp
-     *            response
-     * @return authentication status
-     * @throws IOException
-     *             servlet error
-     * @throws ServletException
-     *             servlet error
-     */
-    private AuthStatus handleLoginEndpoint(HttpServletRequest req,
-        HttpServletResponse resp) throws ServletException, IOException {
-
-        if ("GET".equals(req.getMethod())
-                && req.getParameter(STATE) != null && req.isSecure()) {
-            System.out.println("about to dispatch");
-            req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
-            System.out.println("after dispatch");
-            return AuthStatus.SEND_SUCCESS;
-        }
-        if ("POST".equals(req.getMethod())
-                && req.getParameter(STATE) != null && req.isSecure()) {
-            String subject = UriBuilder.fromUri("https://test-server-auth-module").userInfo(req.getParameter("j_username"))
-                .build().toASCIIString();
-            Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, subject);
-            cookie.setSecure(true);
-            cookie.setHttpOnly(true);
-            resp.addCookie(cookie);
-            resp.sendRedirect(req.getContextPath() + req.getParameter(STATE));
-            return AuthStatus.SEND_SUCCESS;
-        }
-        return AuthStatus.SEND_FAILURE;
+            HttpServletResponse.class
+        };
     }
 
     /**
      * Handle the logout endpoint. This will clear the cookie and redirect to
      * the URI that has been specified.
-     * 
+     *
      * @param req
      *            request
      * @param resp
      *            response
      * @return authentication status
+     * @throws AuthException
+     *             happens when there is invalid request data
      * @throws IOException
      *             servlet error
      * @throws ServletException
      *             servlet error
      */
-    private AuthStatus handleLogoutEndpoint(HttpServletRequest req,
-        HttpServletResponse resp) throws ServletException, IOException {
+    private AuthStatus handleLogoutEndpoint(final HttpServletRequest req,
+        final HttpServletResponse resp) throws AuthException,
+            ServletException,
+            IOException {
 
-        if (req.getParameter(POST_LOGOUT_REDIRECT_URI) != null) {
-            Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, "");
+        final String postLogoutRedirectUri = req.getParameter(POST_LOGOUT_REDIRECT_URI);
+        if (postLogoutRedirectUri != null) {
+
+            // Check that the post logout redirect uri is relative to the application if not fail.
+            final String contextUri = URI.create(req.getRequestURL().toString()).resolve(req.getContextPath()).toASCIIString();
+            if (!postLogoutRedirectUri.startsWith(contextUri)) {
+                throw new AuthException("invalid post_logout_redirect_uri");
+            }
+
+            final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, "");
             cookie.setMaxAge(0);
+            cookie.setSecure(true);
             resp.addCookie(cookie);
-            resp.sendRedirect(req.getParameter(POST_LOGOUT_REDIRECT_URI));
+            resp.sendRedirect(postLogoutRedirectUri);
             return AuthStatus.SEND_SUCCESS;
         }
-        return AuthStatus.SEND_FAILURE;
+        throw new AuthException("missing post_logout_redirect_uri");
     }
 
     /**
@@ -263,7 +305,7 @@ public class TestServerAuthModule implements ServerAuthModule, ServerAuthContext
 
             String subject = null;
             if (req.getCookies() != null) {
-                for (Cookie cookie : req.getCookies()) {
+                for (final Cookie cookie : req.getCookies()) {
                     if (SUBJECT_COOKIE_KEY.equals(cookie.getName())) {
                         subject = cookie.getValue();
                     }
@@ -282,16 +324,14 @@ public class TestServerAuthModule implements ServerAuthModule, ServerAuthContext
 
             handler.handle(new Callback[] {
                 new CallerPrincipalCallback(client, subject),
-                new GroupPrincipalCallback(client, new String[] {
-                    "authenticated" }) });
+                new GroupPrincipalCallback(client, GROUPS)
+            });
             return AuthStatus.SUCCESS;
 
         } catch (final IOException
-                 | ServletException
-                 | UnsupportedCallbackException e) {
-            e.printStackTrace();
+            | ServletException
+            | UnsupportedCallbackException e) {
             throw new AuthException(e.getMessage());
         }
     }
-
 }

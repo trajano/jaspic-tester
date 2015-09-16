@@ -8,69 +8,76 @@ import javax.security.auth.message.config.AuthConfigFactory;
 import javax.security.auth.message.config.AuthConfigProvider;
 import javax.security.auth.message.config.ClientAuthConfig;
 import javax.security.auth.message.config.ServerAuthConfig;
-import javax.security.auth.message.module.ServerAuthModule;
 
 /**
  * This is used to provide the server auth module on the application rather than
  * being globally configured in a container.
  */
-public class AuthModuleConfigProvider implements AuthConfigProvider {
+public class AuthModuleConfigProvider implements
+    AuthConfigProvider {
 
-	/**
-	 * Server auth module class option key.
-	 */
-	public static final String SERVER_AUTH_MODULE_CLASS = ServerAuthModule.class.getName();
+    /**
+     * Options.
+     */
+    private final Map<String, String> options;
 
-	/**
-	 * {@link AuthConfigFactory} passed in through the constructor. This is not
-	 * being used anywhere at the moment.
-	 */
-	@SuppressWarnings("unused")
-	private final AuthConfigFactory authConfigFactory;
+    /**
+     * This is called by
+     * {@link AuthConfigFactory#registerConfigProvider(String, Map, String, String, String)}
+     * when registering the provider.
+     *
+     * @param options
+     *            options to pass to the modules and the name of the module
+     *            classes
+     * @param authConfigFactory
+     *            configuration factory
+     */
+    public AuthModuleConfigProvider(final Map<String, String> options,
+        final AuthConfigFactory factory) {
 
-	/**
-	 * Options.
-	 */
-	private final Map<String, String> options;
+        this.options = options;
+        if (factory != null) {
+            factory.registerConfigProvider(this, null, null, "Auto registration");
+        }
+    }
 
-	/**
-	 * This is called by
-	 * {@link AuthConfigFactory#registerConfigProvider(String, Map, String, String, String)}
-	 * when registering the provider.
-	 *
-	 * @param options
-	 *            options to pass to the modules and the name of the module
-	 *            classes
-	 * @param authConfigFactory
-	 *            configuration factory
-	 */
-	public AuthModuleConfigProvider(final Map<String, String> options, final AuthConfigFactory authConfigFactory) {
+    /**
+     * <p>
+     * Client authentication is not provided.
+     * </p>
+     * {@inheritDoc}
+     *
+     * @return <code>null</code>
+     */
+    @Override
+    public ClientAuthConfig getClientAuthConfig(final String layer,
+        final String appContext,
+        final CallbackHandler handler) throws AuthException {
 
-		this.authConfigFactory = authConfigFactory;
-		this.options = options;
-	}
+        return null;
+    }
 
-	@Override
-	public ClientAuthConfig getClientAuthConfig(final String layer, final String appContext,
-			final CallbackHandler handler) throws AuthException {
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@link TestServerAuthModuleAuthConfig} with the data that was
+     *         provided.
+     */
+    @Override
+    public ServerAuthConfig getServerAuthConfig(final String layer,
+        final String appContext,
+        final CallbackHandler handler) throws AuthException {
 
-		return null;
-	}
+        return new TestServerAuthModuleAuthConfig(options, layer, appContext, handler);
+    }
 
-	@Override
-	public ServerAuthConfig getServerAuthConfig(final String layer, final String appContext,
-			final CallbackHandler handler) throws AuthException {
+    /**
+     * Does nothing.
+     */
+    @Override
+    public void refresh() {
 
-		return new TestServerAuthModuleAuthConfig(options, layer, appContext, handler);
-	}
-
-	/**
-	 * Does nothing.
-	 */
-	@Override
-	public void refresh() {
-
-		// does nothing
-	}
+        // does nothing
+    }
 
 }

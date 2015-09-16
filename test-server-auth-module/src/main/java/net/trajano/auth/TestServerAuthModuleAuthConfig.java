@@ -17,7 +17,9 @@ import javax.security.auth.message.module.ServerAuthModule;
 /**
  * Common methods for ServerAuthConfig and ClientAuthConfig.
  */
-public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
+public class TestServerAuthModuleAuthConfig implements
+    ServerAuthConfig {
+
     /**
      * <p>
      * The {@link MessageInfo} map must contain this key and its associated
@@ -44,26 +46,32 @@ public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
      * </p>
      */
     private static final String JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY = "javax.security.auth.message.MessagePolicy.isMandatory";
+
     /**
      * Mandatory message policy.
      */
     protected static final MessagePolicy MANDATORY = new MessagePolicy(new TargetPolicy[0], true);
+
     /**
      * Non-mandatory message policy.
      */
     protected static final MessagePolicy NON_MANDATORY = new MessagePolicy(new TargetPolicy[0], false);
+
     /**
      * Application context.
      */
     private final String appContext;
+
     /**
      * Callback handler.
      */
     private final CallbackHandler handler;
+
     /**
      * Layer. Usually HttpServlet or SOAPMessage.
      */
     private final String layer;
+
     /**
      * Setup options.
      */
@@ -79,7 +87,11 @@ public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
      * @param handler
      *            handler
      */
-    public TestServerAuthModuleAuthConfig(final Map<String, String> options, final String layer, final String appContext, final CallbackHandler handler) {
+    public TestServerAuthModuleAuthConfig(final Map<String, String> options,
+        final String layer,
+        final String appContext,
+        final CallbackHandler handler) {
+
         this.appContext = appContext;
         this.layer = layer;
         this.options = options;
@@ -105,7 +117,8 @@ public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
     }
 
     @Override
-	public String getAppContext() {
+    public String getAppContext() {
+
         return appContext;
     }
 
@@ -121,9 +134,10 @@ public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
      *         mandatory, <code>null</code> otherwise.
      */
     @Override
-	public String getAuthContextID(final MessageInfo messageInfo) {
+    public String getAuthContextID(final MessageInfo messageInfo) {
+
         final Object isMandatory = messageInfo.getMap()
-                .get(JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY);
+            .get(JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY);
         if (isMandatory != null && isMandatory instanceof String && Boolean.valueOf((String) isMandatory)) {
             return messageInfo.toString();
         }
@@ -131,16 +145,19 @@ public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
     }
 
     protected CallbackHandler getHandler() {
+
         return handler;
     }
 
     @Override
-	public String getMessageLayer() {
+    public String getMessageLayer() {
+
         return layer;
     }
 
     @Override
-	public boolean isProtected() {
+    public boolean isProtected() {
+
         return true;
     }
 
@@ -148,23 +165,26 @@ public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
      * Does nothing as the module does not accept changes at runtime.
      */
     @Override
-	public void refresh() {
-    }
-    
-	@Override
-	public ServerAuthContext getAuthContext(final String authContextID, final Subject serviceSubject,
-			@SuppressWarnings("rawtypes") final Map properties) throws AuthException {
-		final Map<?, ?> augmentedOptions = augmentProperties(properties);
-		final ServerAuthContext context = new TestServerAuthModule();
-		if (context instanceof ServerAuthModule) {
+    public void refresh() {
 
-			final ServerAuthModule module = (ServerAuthModule) context;
-			if (authContextID == null) {
-				module.initialize(NON_MANDATORY, NON_MANDATORY, getHandler(), augmentedOptions);
-			} else {
-				module.initialize(MANDATORY, MANDATORY, getHandler(), augmentedOptions);
-			}
-		}
-		return context;
-	}
+    }
+
+    @Override
+    public ServerAuthContext getAuthContext(final String authContextID,
+        final Subject serviceSubject,
+        @SuppressWarnings("rawtypes") final Map properties) throws AuthException {
+
+        final Map<?, ?> augmentedOptions = augmentProperties(properties);
+        final ServerAuthContext context = new TestServerAuthModule();
+        if (context instanceof ServerAuthModule) {
+
+            final ServerAuthModule module = (ServerAuthModule) context;
+            if (authContextID == null) {
+                module.initialize(NON_MANDATORY, NON_MANDATORY, getHandler(), augmentedOptions);
+            } else {
+                module.initialize(MANDATORY, MANDATORY, getHandler(), augmentedOptions);
+            }
+        }
+        return context;
+    }
 }
