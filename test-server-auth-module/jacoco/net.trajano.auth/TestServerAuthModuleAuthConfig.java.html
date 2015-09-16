@@ -165,7 +165,7 @@ public class TestServerAuthModuleAuthConfig implements
 
 <span class="fc" id="L166">        final Object isMandatory = messageInfo.getMap()</span>
             .get(JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY);
-<span class="pc bpc" id="L168" title="2 of 6 branches missed.">        if (isMandatory != null &amp;&amp; isMandatory instanceof String &amp;&amp; Boolean.valueOf((String) isMandatory)) {</span>
+<span class="fc bfc" id="L168" title="All 6 branches covered.">        if (isMandatory != null &amp;&amp; isMandatory instanceof String &amp;&amp; Boolean.valueOf((String) isMandatory)) {</span>
 <span class="fc" id="L169">            return messageInfo.toString();</span>
         }
 <span class="fc" id="L171">        return null;</span>
