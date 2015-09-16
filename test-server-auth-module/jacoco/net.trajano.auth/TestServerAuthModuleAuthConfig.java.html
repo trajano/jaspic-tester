@@ -14,7 +14,7 @@ import javax.security.auth.message.config.ServerAuthConfig;
 import javax.security.auth.message.config.ServerAuthContext;
 
 /**
- * Common methods for ServerAuthConfig and ClientAuthConfig.
+ * Configuration for the server auth module.
  */
 public class TestServerAuthModuleAuthConfig implements
     ServerAuthConfig {
@@ -104,15 +104,18 @@ public class TestServerAuthModuleAuthConfig implements
      *            properties to augment with.
      * @return augmented properties
      */
-    @SuppressWarnings(&quot;unchecked&quot;)
-    protected Map&lt;?, ?&gt; augmentProperties(@SuppressWarnings(&quot;rawtypes&quot;) final Map properties) {
+    @SuppressWarnings({
+        &quot;unchecked&quot;,
+        &quot;rawtypes&quot;
+    })
+    protected Map augmentProperties(final Map properties) {
 
-<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (properties == null) {</span>
-<span class="fc" id="L111">            return options;</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (properties == null) {</span>
+<span class="fc" id="L114">            return options;</span>
         }
-<span class="fc" id="L113">        final ConcurrentMap&lt;?, ?&gt; augmentedOptions = new ConcurrentHashMap&lt;&gt;(options);</span>
-<span class="fc" id="L114">        augmentedOptions.putAll(properties);</span>
-<span class="fc" id="L115">        return augmentedOptions;</span>
+<span class="fc" id="L116">        final ConcurrentMap augmentedOptions = new ConcurrentHashMap(options);</span>
+<span class="fc" id="L117">        augmentedOptions.putAll(properties);</span>
+<span class="fc" id="L118">        return augmentedOptions;</span>
 
     }
 
@@ -122,7 +125,7 @@ public class TestServerAuthModuleAuthConfig implements
     @Override
     public String getAppContext() {
 
-<span class="fc" id="L125">        return appContext;</span>
+<span class="fc" id="L128">        return appContext;</span>
     }
 
     /**
@@ -138,15 +141,16 @@ public class TestServerAuthModuleAuthConfig implements
         final Subject serviceSubject,
         @SuppressWarnings(&quot;rawtypes&quot;) final Map properties) throws AuthException {
 
-<span class="fc" id="L141">        final Map&lt;?, ?&gt; augmentedOptions = augmentProperties(properties);</span>
-<span class="fc" id="L142">        final TestServerAuthModule context = new TestServerAuthModule();</span>
+        @SuppressWarnings(&quot;rawtypes&quot;)
+<span class="fc" id="L145">        final Map augmentedOptions = augmentProperties(properties);</span>
+<span class="fc" id="L146">        final TestServerAuthModule context = new TestServerAuthModule();</span>
 
-<span class="fc bfc" id="L144" title="All 2 branches covered.">        if (authContextID == null) {</span>
-<span class="fc" id="L145">            context.initialize(NON_MANDATORY, NON_MANDATORY, handler, augmentedOptions);</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        if (authContextID == null) {</span>
+<span class="fc" id="L149">            context.initialize(NON_MANDATORY, NON_MANDATORY, handler, augmentedOptions);</span>
         } else {
-<span class="fc" id="L147">            context.initialize(MANDATORY, MANDATORY, handler, augmentedOptions);</span>
+<span class="fc" id="L151">            context.initialize(MANDATORY, MANDATORY, handler, augmentedOptions);</span>
         }
-<span class="fc" id="L149">        return context;</span>
+<span class="fc" id="L153">        return context;</span>
     }
 
     /**
@@ -163,12 +167,12 @@ public class TestServerAuthModuleAuthConfig implements
     @Override
     public String getAuthContextID(final MessageInfo messageInfo) {
 
-<span class="fc" id="L166">        final Object isMandatory = messageInfo.getMap()</span>
+<span class="fc" id="L170">        final Object isMandatory = messageInfo.getMap()</span>
             .get(JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY);
-<span class="fc bfc" id="L168" title="All 6 branches covered.">        if (isMandatory != null &amp;&amp; isMandatory instanceof String &amp;&amp; Boolean.valueOf((String) isMandatory)) {</span>
-<span class="fc" id="L169">            return messageInfo.toString();</span>
+<span class="fc bfc" id="L172" title="All 6 branches covered.">        if (isMandatory != null &amp;&amp; isMandatory instanceof String &amp;&amp; Boolean.valueOf((String) isMandatory)) {</span>
+<span class="fc" id="L173">            return messageInfo.toString();</span>
         }
-<span class="fc" id="L171">        return null;</span>
+<span class="fc" id="L175">        return null;</span>
     }
 
     /**
@@ -177,7 +181,7 @@ public class TestServerAuthModuleAuthConfig implements
     @Override
     public String getMessageLayer() {
 
-<span class="fc" id="L180">        return layer;</span>
+<span class="fc" id="L184">        return layer;</span>
     }
 
     /**
@@ -188,7 +192,7 @@ public class TestServerAuthModuleAuthConfig implements
     @Override
     public boolean isProtected() {
 
-<span class="fc" id="L191">        return true;</span>
+<span class="fc" id="L195">        return true;</span>
     }
 
     /**
@@ -198,7 +202,7 @@ public class TestServerAuthModuleAuthConfig implements
     public void refresh() {
 
         // does nothing
-<span class="fc" id="L201">    }</span>
+<span class="fc" id="L205">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
