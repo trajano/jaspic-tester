@@ -7,6 +7,14 @@ import javax.security.auth.message.config.AuthConfigFactory;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+/**
+ * <p>
+ * This initializes the Server Auth Module Auth Config for the servlet context.
+ * It is registered in the web.xml file as a listener.
+ * </p>
+ *
+ * @author Archimedes Trajano
+ */
 public class Initializer implements
     ServletContextListener {
 
