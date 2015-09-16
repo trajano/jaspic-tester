@@ -27,7 +27,7 @@ under the License.
     <item>
       <title>File: 5,
              Errors: 0,
-             Warnings: 3,
+             Warnings: 1,
              Infos: 0
       </title>
             <link>http://site.trajano.net/trajano/jaspic-tester/test-server-auth-module//checkstyle.html</link>
@@ -108,7 +108,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
