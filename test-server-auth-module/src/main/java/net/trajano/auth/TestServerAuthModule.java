@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
@@ -55,6 +56,11 @@ public class TestServerAuthModule implements
     private static final String[] GROUPS = {
         "authenticated"
     };
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = Logger.getLogger(TestServerAuthModule.class.getName());
 
     /**
      * Login endpoint.
@@ -398,6 +404,7 @@ public class TestServerAuthModule implements
         } catch (final IOException
             | ServletException
             | UnsupportedCallbackException e) {
+            LOG.throwing(TestServerAuthModule.class.getName(), "validateRequest", e);
             throw new AuthException(e.getMessage());
         }
     }

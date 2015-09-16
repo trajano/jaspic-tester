@@ -1,7 +1,9 @@
 /**
- * 
+ *
  */
 package net.trajano.auth.sample;
+
+import java.util.logging.Logger;
 
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSessionEvent;
@@ -14,29 +16,28 @@ import javax.servlet.http.HttpSessionListener;
 public class SessionListener implements
     HttpSessionListener {
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http
-     * .HttpSessionEvent)
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = Logger.getLogger(SessionListener.class.getName());
+
+    /**
+     * {@inheritDoc}
      */
     @Override
-    public void sessionCreated(HttpSessionEvent hse) {
+    public void sessionCreated(final HttpSessionEvent hse) {
 
-        System.out.println("session created source=" + hse.getSource());
+        LOG.info("session created source=" + hse.getSource() + " session=" + hse.getSession());
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * javax.servlet.http.HttpSessionListener#sessionDestroyed(javax.servlet
-     * .http.HttpSessionEvent)
+    /**
+     * {@inheritDoc}
      */
     @Override
-    public void sessionDestroyed(HttpSessionEvent hse) {
+    public void sessionDestroyed(final HttpSessionEvent hse) {
 
-        System.out.println("session destroyed");
+        LOG.info("session destroyed=" + hse.getSession());
     }
 
 }
