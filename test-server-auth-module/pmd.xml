@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pmd version="5.2.3" timestamp="2015-09-16T02:36:25.775">
+<pmd version="5.2.3" timestamp="2015-09-16T02:54:03.086">
 <file name="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/Initializer.java">
 <violation beginline="13" endline="13" begincolumn="38" endcolumn="60" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="Initializer" method="contextDestroyed" variable="sce" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
 Parameter 'sce' is not assigned and could be declared final
