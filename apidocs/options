@@ -1,0 +1,29 @@
+-classpath
+'P:/jaspic-tester/test-server-auth-module/target/classes;P:/jaspic-tester/jaspic-tester-war/target/classes;P:/jaspic-tester/jaspic-tester-ear/target/classes;C:/Users/Archimedes/.m2/repository/com/sun/mail/javax.mail/1.5.0/javax.mail-1.5.0.jar;C:/Users/Archimedes/.m2/repository/javax/javaee-api/7.0/javaee-api-7.0.jar;C:/Users/Archimedes/.m2/repository/javax/activation/activation/1.1/activation-1.1.jar;P:/jaspic-tester/test-server-auth-module/target/classes;C:/Program Files/Java/jdk8/jre/../lib/tools.jar'
+-doclet
+'org.umlgraph.doclet.UmlGraphDoc'
+-docletpath
+'C:/Users/Archimedes/.m2/repository/org/umlgraph/umlgraph/5.6.6/umlgraph-5.6.6.jar;C:/Program Files/Java/jdk8/jre/../lib/tools.jar'
+-encoding
+'utf8'
+-private
+-quiet
+-sourcepath
+'P:/jaspic-tester/test-server-auth-module/src/main/java;P:/jaspic-tester/test-server-auth-module/target/generated-sources/annotations;P:/jaspic-tester/jaspic-tester-war/src/main/java;P:/jaspic-tester/jaspic-tester-war/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2015 <a href="http://www.trajano.net/">Trajano</a>. All rights reserved.'
+-charset
+'utf-8'
+-d
+'P:/jaspic-tester/target/site/apidocs'
+-docencoding
+'utf-8'
+-doctitle
+'JASPIC Tester 1.0.0-SNAPSHOT API'
+-linkoffline
+'http://docs.oracle.com/javase/7/docs/api' 'P:/jaspic-tester/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'JASPIC Tester 1.0.0-SNAPSHOT API'
