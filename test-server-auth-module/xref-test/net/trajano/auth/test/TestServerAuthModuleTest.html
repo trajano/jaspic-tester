@@ -402,237 +402,278 @@
 <a class="jxr_linenumber" name="L394" href="#L394">394</a> 
 <a class="jxr_linenumber" name="L395" href="#L395">395</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
 <a class="jxr_linenumber" name="L396" href="#L396">396</a>         assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L397" href="#L397">397</a>         verifyZeroInteractions(h);
-<a class="jxr_linenumber" name="L398" href="#L398">398</a>     }
-<a class="jxr_linenumber" name="L399" href="#L399">399</a> 
-<a class="jxr_linenumber" name="L400" href="#L400">400</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L401" href="#L401">401</a> <em class="jxr_javadoccomment">     * Tests the logout endpoint GET operation.</em>
-<a class="jxr_linenumber" name="L402" href="#L402">402</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L403" href="#L403">403</a>     @Test
-<a class="jxr_linenumber" name="L404" href="#L404">404</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testLogout() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L405" href="#L405">405</a> 
-<a class="jxr_linenumber" name="L406" href="#L406">406</a>         <strong class="jxr_keyword">final</strong> TestServerAuthModule module = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
-<a class="jxr_linenumber" name="L407" href="#L407">407</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L408" href="#L408">408</a>         when(mockRequestPolicy.isMandatory()).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L397" href="#L397">397</a> 
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>         <strong class="jxr_keyword">final</strong> ArgumentCaptor&lt;String&gt; redirectUri = ArgumentCaptor.forClass(String.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>         verify(servletResponse).sendRedirect(redirectUri.capture());
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>         assertEquals(<span class="jxr_string">"/util/"</span>, redirectUri.getValue());
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>         verifyZeroInteractions(h);
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>     }
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> 
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> <em class="jxr_javadoccomment">     * Tests the login endpoint POST operation.</em>
+<a class="jxr_linenumber" name="L406" href="#L406">406</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>     @Test
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testLoginPostWithQuery() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L409" href="#L409">409</a> 
-<a class="jxr_linenumber" name="L410" href="#L410">410</a>         <strong class="jxr_keyword">final</strong> CallbackHandler h = mock(CallbackHandler.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L411" href="#L411">411</a>         module.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, h, options);
-<a class="jxr_linenumber" name="L412" href="#L412">412</a> 
-<a class="jxr_linenumber" name="L413" href="#L413">413</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L414" href="#L414">414</a> 
-<a class="jxr_linenumber" name="L415" href="#L415">415</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L416" href="#L416">416</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"GET"</span>);
-<a class="jxr_linenumber" name="L417" href="#L417">417</a>         when(servletRequest.isSecure()).thenReturn(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L418" href="#L418">418</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/j_logout"</span>);
-<a class="jxr_linenumber" name="L419" href="#L419">419</a>         when(servletRequest.getRequestURL()).thenReturn(<strong class="jxr_keyword">new</strong> StringBuffer(<span class="jxr_string">"https://www.trajano.net/util/j_logout"</span>));
-<a class="jxr_linenumber" name="L420" href="#L420">420</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
-<a class="jxr_linenumber" name="L421" href="#L421">421</a>         when(servletRequest.getParameter(<span class="jxr_string">"post_logout_redirect_uri"</span>)).thenReturn(<span class="jxr_string">"https://www.trajano.net/util/"</span>);
-<a class="jxr_linenumber" name="L422" href="#L422">422</a>         when(servletRequest.getRequestDispatcher(Matchers.anyString())).thenReturn(mock(RequestDispatcher.<strong class="jxr_keyword">class</strong>));
-<a class="jxr_linenumber" name="L423" href="#L423">423</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
-<a class="jxr_linenumber" name="L424" href="#L424">424</a> 
-<a class="jxr_linenumber" name="L425" href="#L425">425</a>         <strong class="jxr_keyword">final</strong> HttpServletResponse servletResponse = mock(HttpServletResponse.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L426" href="#L426">426</a>         when(messageInfo.getResponseMessage()).thenReturn(servletResponse);
-<a class="jxr_linenumber" name="L427" href="#L427">427</a> 
-<a class="jxr_linenumber" name="L428" href="#L428">428</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
-<a class="jxr_linenumber" name="L429" href="#L429">429</a>         assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L430" href="#L430">430</a>         verifyZeroInteractions(h);
-<a class="jxr_linenumber" name="L431" href="#L431">431</a>     }
-<a class="jxr_linenumber" name="L432" href="#L432">432</a> 
-<a class="jxr_linenumber" name="L433" href="#L433">433</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L434" href="#L434">434</a> <em class="jxr_javadoccomment">     * The policy has determined it is not mandatory without SSL.</em>
-<a class="jxr_linenumber" name="L435" href="#L435">435</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L436" href="#L436">436</a>     @Test
-<a class="jxr_linenumber" name="L437" href="#L437">437</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testNoAuthNeededWithoutSSL() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L438" href="#L438">438</a> 
-<a class="jxr_linenumber" name="L439" href="#L439">439</a>         <strong class="jxr_keyword">final</strong> TestServerAuthModule module = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
-<a class="jxr_linenumber" name="L440" href="#L440">440</a>         <strong class="jxr_keyword">final</strong> CallbackHandler h = mock(CallbackHandler.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L441" href="#L441">441</a> 
-<a class="jxr_linenumber" name="L442" href="#L442">442</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L443" href="#L443">443</a>         when(mockRequestPolicy.isMandatory()).thenReturn(false);
-<a class="jxr_linenumber" name="L444" href="#L444">444</a> 
-<a class="jxr_linenumber" name="L445" href="#L445">445</a>         module.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, h, options);
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>         <strong class="jxr_keyword">final</strong> TestServerAuthModule module = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>         when(mockRequestPolicy.isMandatory()).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L413" href="#L413">413</a> 
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>         <strong class="jxr_keyword">final</strong> CallbackHandler h = mock(CallbackHandler.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>         module.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, h, options);
+<a class="jxr_linenumber" name="L416" href="#L416">416</a> 
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L418" href="#L418">418</a> 
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"POST"</span>);
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>         when(servletRequest.isSecure()).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/j_security_check"</span>);
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>         when(servletRequest.getParameter(<span class="jxr_string">"state"</span>)).thenReturn(<span class="jxr_string">"/securePage?abc=123&amp;doremi=abc123"</span>);
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>         when(servletRequest.getParameter(<span class="jxr_string">"j_username"</span>)).thenReturn(<span class="jxr_string">"foofoo"</span>);
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>         when(servletRequest.getRequestDispatcher(Matchers.anyString())).thenReturn(mock(RequestDispatcher.<strong class="jxr_keyword">class</strong>));
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+<a class="jxr_linenumber" name="L428" href="#L428">428</a> 
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>         <strong class="jxr_keyword">final</strong> HttpServletResponse servletResponse = mock(HttpServletResponse.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>         when(messageInfo.getResponseMessage()).thenReturn(servletResponse);
+<a class="jxr_linenumber" name="L431" href="#L431">431</a> 
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>         assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L434" href="#L434">434</a> 
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>         <strong class="jxr_keyword">final</strong> ArgumentCaptor&lt;String&gt; redirectUri = ArgumentCaptor.forClass(String.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>         verify(servletResponse).sendRedirect(redirectUri.capture());
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>         assertEquals(<span class="jxr_string">"/util/securePage?abc=123&amp;doremi=abc123"</span>, redirectUri.getValue());
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>         verifyZeroInteractions(h);
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>     }
+<a class="jxr_linenumber" name="L440" href="#L440">440</a> 
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L442" href="#L442">442</a> <em class="jxr_javadoccomment">     * Tests the logout endpoint GET operation.</em>
+<a class="jxr_linenumber" name="L443" href="#L443">443</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>     @Test
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testLogout() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L446" href="#L446">446</a> 
-<a class="jxr_linenumber" name="L447" href="#L447">447</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L448" href="#L448">448</a> 
-<a class="jxr_linenumber" name="L449" href="#L449">449</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L450" href="#L450">450</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"GET"</span>);
-<a class="jxr_linenumber" name="L451" href="#L451">451</a>         when(servletRequest.isSecure()).thenReturn(false);
-<a class="jxr_linenumber" name="L452" href="#L452">452</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/ejb2"</span>);
-<a class="jxr_linenumber" name="L453" href="#L453">453</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
-<a class="jxr_linenumber" name="L454" href="#L454">454</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>         <strong class="jxr_keyword">final</strong> TestServerAuthModule module = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>         when(mockRequestPolicy.isMandatory()).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L450" href="#L450">450</a> 
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>         <strong class="jxr_keyword">final</strong> CallbackHandler h = mock(CallbackHandler.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>         module.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, h, options);
+<a class="jxr_linenumber" name="L453" href="#L453">453</a> 
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L455" href="#L455">455</a> 
-<a class="jxr_linenumber" name="L456" href="#L456">456</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
-<a class="jxr_linenumber" name="L457" href="#L457">457</a>         assertEquals(AuthStatus.SUCCESS, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L458" href="#L458">458</a>         verifyZeroInteractions(h);
-<a class="jxr_linenumber" name="L459" href="#L459">459</a>     }
-<a class="jxr_linenumber" name="L460" href="#L460">460</a> 
-<a class="jxr_linenumber" name="L461" href="#L461">461</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L462" href="#L462">462</a> <em class="jxr_javadoccomment">     * The policy has determined it is not mandatory.</em>
-<a class="jxr_linenumber" name="L463" href="#L463">463</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L464" href="#L464">464</a>     @Test
-<a class="jxr_linenumber" name="L465" href="#L465">465</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testNoAuthNeededWithSSL() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L466" href="#L466">466</a> 
-<a class="jxr_linenumber" name="L467" href="#L467">467</a>         <strong class="jxr_keyword">final</strong> TestServerAuthModule module = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
-<a class="jxr_linenumber" name="L468" href="#L468">468</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L469" href="#L469">469</a>         when(mockRequestPolicy.isMandatory()).thenReturn(false);
-<a class="jxr_linenumber" name="L470" href="#L470">470</a> 
-<a class="jxr_linenumber" name="L471" href="#L471">471</a>         <strong class="jxr_keyword">final</strong> CallbackHandler h = mock(CallbackHandler.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L472" href="#L472">472</a>         module.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, h, options);
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"GET"</span>);
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>         when(servletRequest.isSecure()).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/j_logout"</span>);
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>         when(servletRequest.getRequestURL()).thenReturn(<strong class="jxr_keyword">new</strong> StringBuffer(<span class="jxr_string">"https://www.trajano.net/util/j_logout"</span>));
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>         when(servletRequest.getParameter(<span class="jxr_string">"post_logout_redirect_uri"</span>)).thenReturn(<span class="jxr_string">"https://www.trajano.net/util/"</span>);
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>         when(servletRequest.getRequestDispatcher(Matchers.anyString())).thenReturn(mock(RequestDispatcher.<strong class="jxr_keyword">class</strong>));
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+<a class="jxr_linenumber" name="L465" href="#L465">465</a> 
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>         <strong class="jxr_keyword">final</strong> HttpServletResponse servletResponse = mock(HttpServletResponse.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>         when(messageInfo.getResponseMessage()).thenReturn(servletResponse);
+<a class="jxr_linenumber" name="L468" href="#L468">468</a> 
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>         assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>         verifyZeroInteractions(h);
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>     }
 <a class="jxr_linenumber" name="L473" href="#L473">473</a> 
-<a class="jxr_linenumber" name="L474" href="#L474">474</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L475" href="#L475">475</a> 
-<a class="jxr_linenumber" name="L476" href="#L476">476</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L477" href="#L477">477</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"GET"</span>);
-<a class="jxr_linenumber" name="L478" href="#L478">478</a>         when(servletRequest.isSecure()).thenReturn(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L479" href="#L479">479</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/ejb2"</span>);
-<a class="jxr_linenumber" name="L480" href="#L480">480</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
-<a class="jxr_linenumber" name="L481" href="#L481">481</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L475" href="#L475">475</a> <em class="jxr_javadoccomment">     * The policy has determined it is not mandatory without SSL.</em>
+<a class="jxr_linenumber" name="L476" href="#L476">476</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>     @Test
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testNoAuthNeededWithoutSSL() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L479" href="#L479">479</a> 
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>         <strong class="jxr_keyword">final</strong> TestServerAuthModule module = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>         <strong class="jxr_keyword">final</strong> CallbackHandler h = mock(CallbackHandler.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L482" href="#L482">482</a> 
-<a class="jxr_linenumber" name="L483" href="#L483">483</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
-<a class="jxr_linenumber" name="L484" href="#L484">484</a>         assertEquals(AuthStatus.SUCCESS, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L485" href="#L485">485</a>         verifyZeroInteractions(h);
-<a class="jxr_linenumber" name="L486" href="#L486">486</a>     }
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>         when(mockRequestPolicy.isMandatory()).thenReturn(false);
+<a class="jxr_linenumber" name="L485" href="#L485">485</a> 
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>         module.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, h, options);
 <a class="jxr_linenumber" name="L487" href="#L487">487</a> 
-<a class="jxr_linenumber" name="L488" href="#L488">488</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L489" href="#L489">489</a> <em class="jxr_javadoccomment">     * Tests the redirect to login.</em>
-<a class="jxr_linenumber" name="L490" href="#L490">490</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L491" href="#L491">491</a>     @Test
-<a class="jxr_linenumber" name="L492" href="#L492">492</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testRedirectToLogin() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L493" href="#L493">493</a> 
-<a class="jxr_linenumber" name="L494" href="#L494">494</a>         <strong class="jxr_keyword">final</strong> TestServerAuthModule module = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
-<a class="jxr_linenumber" name="L495" href="#L495">495</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L496" href="#L496">496</a>         when(mockRequestPolicy.isMandatory()).thenReturn(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L497" href="#L497">497</a> 
-<a class="jxr_linenumber" name="L498" href="#L498">498</a>         <strong class="jxr_keyword">final</strong> CallbackHandler h = mock(CallbackHandler.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L499" href="#L499">499</a>         module.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, h, options);
-<a class="jxr_linenumber" name="L500" href="#L500">500</a> 
-<a class="jxr_linenumber" name="L501" href="#L501">501</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L502" href="#L502">502</a> 
-<a class="jxr_linenumber" name="L503" href="#L503">503</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L504" href="#L504">504</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"GET"</span>);
-<a class="jxr_linenumber" name="L505" href="#L505">505</a>         when(servletRequest.isSecure()).thenReturn(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L506" href="#L506">506</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/securePage"</span>);
-<a class="jxr_linenumber" name="L507" href="#L507">507</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
-<a class="jxr_linenumber" name="L508" href="#L508">508</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
-<a class="jxr_linenumber" name="L509" href="#L509">509</a> 
-<a class="jxr_linenumber" name="L510" href="#L510">510</a>         <strong class="jxr_keyword">final</strong> HttpServletResponse servletResponse = mock(HttpServletResponse.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L511" href="#L511">511</a>         when(messageInfo.getResponseMessage()).thenReturn(servletResponse);
-<a class="jxr_linenumber" name="L512" href="#L512">512</a> 
-<a class="jxr_linenumber" name="L513" href="#L513">513</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
-<a class="jxr_linenumber" name="L514" href="#L514">514</a>         <strong class="jxr_keyword">final</strong> ArgumentCaptor&lt;String&gt; redirectUri = ArgumentCaptor.forClass(String.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L515" href="#L515">515</a>         assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L516" href="#L516">516</a>         verify(servletResponse).sendRedirect(redirectUri.capture());
-<a class="jxr_linenumber" name="L517" href="#L517">517</a>         assertEquals(<span class="jxr_string">"/util/j_security_check?state=%2Futil%2FsecurePage"</span>, redirectUri.getValue());
-<a class="jxr_linenumber" name="L518" href="#L518">518</a>         verifyZeroInteractions(h);
-<a class="jxr_linenumber" name="L519" href="#L519">519</a>     }
-<a class="jxr_linenumber" name="L520" href="#L520">520</a> 
-<a class="jxr_linenumber" name="L521" href="#L521">521</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L522" href="#L522">522</a> <em class="jxr_javadoccomment">     * Tests the redirect to login.</em>
-<a class="jxr_linenumber" name="L523" href="#L523">523</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L524" href="#L524">524</a>     @Test
-<a class="jxr_linenumber" name="L525" href="#L525">525</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testRedirectToLoginWithQueryString() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L526" href="#L526">526</a> 
-<a class="jxr_linenumber" name="L527" href="#L527">527</a>         <strong class="jxr_keyword">final</strong> TestServerAuthModule module = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
-<a class="jxr_linenumber" name="L528" href="#L528">528</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L529" href="#L529">529</a>         when(mockRequestPolicy.isMandatory()).thenReturn(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L530" href="#L530">530</a> 
-<a class="jxr_linenumber" name="L531" href="#L531">531</a>         <strong class="jxr_keyword">final</strong> CallbackHandler h = mock(CallbackHandler.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L532" href="#L532">532</a>         module.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, h, options);
-<a class="jxr_linenumber" name="L533" href="#L533">533</a> 
-<a class="jxr_linenumber" name="L534" href="#L534">534</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L535" href="#L535">535</a> 
-<a class="jxr_linenumber" name="L536" href="#L536">536</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L537" href="#L537">537</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"GET"</span>);
-<a class="jxr_linenumber" name="L538" href="#L538">538</a>         when(servletRequest.isSecure()).thenReturn(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L539" href="#L539">539</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/securePage"</span>);
-<a class="jxr_linenumber" name="L540" href="#L540">540</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
-<a class="jxr_linenumber" name="L541" href="#L541">541</a>         when(servletRequest.getQueryString()).thenReturn(<span class="jxr_string">"abc=123&amp;doremi=abc123"</span>);
-<a class="jxr_linenumber" name="L542" href="#L542">542</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L489" href="#L489">489</a> 
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"GET"</span>);
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>         when(servletRequest.isSecure()).thenReturn(false);
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/ejb2"</span>);
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+<a class="jxr_linenumber" name="L496" href="#L496">496</a> 
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>         assertEquals(AuthStatus.SUCCESS, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>         verifyZeroInteractions(h);
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>     }
+<a class="jxr_linenumber" name="L501" href="#L501">501</a> 
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L503" href="#L503">503</a> <em class="jxr_javadoccomment">     * The policy has determined it is not mandatory.</em>
+<a class="jxr_linenumber" name="L504" href="#L504">504</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>     @Test
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testNoAuthNeededWithSSL() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L507" href="#L507">507</a> 
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>         <strong class="jxr_keyword">final</strong> TestServerAuthModule module = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L510" href="#L510">510</a>         when(mockRequestPolicy.isMandatory()).thenReturn(false);
+<a class="jxr_linenumber" name="L511" href="#L511">511</a> 
+<a class="jxr_linenumber" name="L512" href="#L512">512</a>         <strong class="jxr_keyword">final</strong> CallbackHandler h = mock(CallbackHandler.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>         module.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, h, options);
+<a class="jxr_linenumber" name="L514" href="#L514">514</a> 
+<a class="jxr_linenumber" name="L515" href="#L515">515</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L516" href="#L516">516</a> 
+<a class="jxr_linenumber" name="L517" href="#L517">517</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"GET"</span>);
+<a class="jxr_linenumber" name="L519" href="#L519">519</a>         when(servletRequest.isSecure()).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/ejb2"</span>);
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+<a class="jxr_linenumber" name="L523" href="#L523">523</a> 
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>         assertEquals(AuthStatus.SUCCESS, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>         verifyZeroInteractions(h);
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>     }
+<a class="jxr_linenumber" name="L528" href="#L528">528</a> 
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L530" href="#L530">530</a> <em class="jxr_javadoccomment">     * Tests the redirect to login.</em>
+<a class="jxr_linenumber" name="L531" href="#L531">531</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L532" href="#L532">532</a>     @Test
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testRedirectToLogin() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L534" href="#L534">534</a> 
+<a class="jxr_linenumber" name="L535" href="#L535">535</a>         <strong class="jxr_keyword">final</strong> TestServerAuthModule module = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
+<a class="jxr_linenumber" name="L536" href="#L536">536</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>         when(mockRequestPolicy.isMandatory()).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L538" href="#L538">538</a> 
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>         <strong class="jxr_keyword">final</strong> CallbackHandler h = mock(CallbackHandler.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L540" href="#L540">540</a>         module.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, h, options);
+<a class="jxr_linenumber" name="L541" href="#L541">541</a> 
+<a class="jxr_linenumber" name="L542" href="#L542">542</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L543" href="#L543">543</a> 
-<a class="jxr_linenumber" name="L544" href="#L544">544</a>         <strong class="jxr_keyword">final</strong> HttpServletResponse servletResponse = mock(HttpServletResponse.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L545" href="#L545">545</a>         when(messageInfo.getResponseMessage()).thenReturn(servletResponse);
-<a class="jxr_linenumber" name="L546" href="#L546">546</a> 
-<a class="jxr_linenumber" name="L547" href="#L547">547</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
-<a class="jxr_linenumber" name="L548" href="#L548">548</a>         <strong class="jxr_keyword">final</strong> ArgumentCaptor&lt;String&gt; redirectUri = ArgumentCaptor.forClass(String.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L549" href="#L549">549</a>         assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L550" href="#L550">550</a>         verify(servletResponse).sendRedirect(redirectUri.capture());
-<a class="jxr_linenumber" name="L551" href="#L551">551</a>         assertEquals(<span class="jxr_string">"/util/j_security_check?state=%2Futil%2FsecurePage%3Fabc%3D123%26doremi%3Dabc123"</span>, redirectUri.getValue());
-<a class="jxr_linenumber" name="L552" href="#L552">552</a>         <strong class="jxr_keyword">final</strong> String decoded = URLDecoder.decode(URI.create(redirectUri.getValue()).getRawQuery().substring(<span class="jxr_string">"state="</span>.length()), <span class="jxr_string">"US-ASCII"</span>);
-<a class="jxr_linenumber" name="L553" href="#L553">553</a>         assertEquals(<span class="jxr_string">"/util/securePage?abc=123&amp;doremi=abc123"</span>, decoded);
-<a class="jxr_linenumber" name="L554" href="#L554">554</a>         verifyZeroInteractions(h);
-<a class="jxr_linenumber" name="L555" href="#L555">555</a>     }
-<a class="jxr_linenumber" name="L556" href="#L556">556</a> 
-<a class="jxr_linenumber" name="L557" href="#L557">557</a>     @Test
-<a class="jxr_linenumber" name="L558" href="#L558">558</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSecureMessage() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L559" href="#L559">559</a> 
-<a class="jxr_linenumber" name="L560" href="#L560">560</a>         <strong class="jxr_keyword">final</strong> Subject subject = <strong class="jxr_keyword">new</strong> Subject();
+<a class="jxr_linenumber" name="L544" href="#L544">544</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L545" href="#L545">545</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"GET"</span>);
+<a class="jxr_linenumber" name="L546" href="#L546">546</a>         when(servletRequest.isSecure()).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L547" href="#L547">547</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/securePage"</span>);
+<a class="jxr_linenumber" name="L548" href="#L548">548</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
+<a class="jxr_linenumber" name="L549" href="#L549">549</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+<a class="jxr_linenumber" name="L550" href="#L550">550</a> 
+<a class="jxr_linenumber" name="L551" href="#L551">551</a>         <strong class="jxr_keyword">final</strong> HttpServletResponse servletResponse = mock(HttpServletResponse.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L552" href="#L552">552</a>         when(messageInfo.getResponseMessage()).thenReturn(servletResponse);
+<a class="jxr_linenumber" name="L553" href="#L553">553</a> 
+<a class="jxr_linenumber" name="L554" href="#L554">554</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
+<a class="jxr_linenumber" name="L555" href="#L555">555</a>         <strong class="jxr_keyword">final</strong> ArgumentCaptor&lt;String&gt; redirectUri = ArgumentCaptor.forClass(String.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L556" href="#L556">556</a>         assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L557" href="#L557">557</a>         verify(servletResponse).sendRedirect(redirectUri.capture());
+<a class="jxr_linenumber" name="L558" href="#L558">558</a>         assertEquals(<span class="jxr_string">"/util/j_security_check?state=%2Futil%2FsecurePage"</span>, redirectUri.getValue());
+<a class="jxr_linenumber" name="L559" href="#L559">559</a>         verifyZeroInteractions(h);
+<a class="jxr_linenumber" name="L560" href="#L560">560</a>     }
 <a class="jxr_linenumber" name="L561" href="#L561">561</a> 
-<a class="jxr_linenumber" name="L562" href="#L562">562</a>         <strong class="jxr_keyword">final</strong> Principal groupPrincipal = mock(Principal.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L563" href="#L563">563</a>         when(groupPrincipal.getName()).thenReturn(<span class="jxr_string">"authenticated"</span>);
-<a class="jxr_linenumber" name="L564" href="#L564">564</a>         subject.getPrincipals().add(groupPrincipal);
-<a class="jxr_linenumber" name="L565" href="#L565">565</a> 
-<a class="jxr_linenumber" name="L566" href="#L566">566</a>         <strong class="jxr_keyword">final</strong> Principal userPrincipal = mock(Principal.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L567" href="#L567">567</a>         when(userPrincipal.getName()).thenReturn(<span class="jxr_string">"https://foo@test-server-auth-module"</span>);
-<a class="jxr_linenumber" name="L568" href="#L568">568</a>         subject.getPrincipals().add(userPrincipal);
-<a class="jxr_linenumber" name="L569" href="#L569">569</a> 
-<a class="jxr_linenumber" name="L570" href="#L570">570</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L562" href="#L562">562</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L563" href="#L563">563</a> <em class="jxr_javadoccomment">     * Tests the redirect to login.</em>
+<a class="jxr_linenumber" name="L564" href="#L564">564</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L565" href="#L565">565</a>     @Test
+<a class="jxr_linenumber" name="L566" href="#L566">566</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testRedirectToLoginWithQueryString() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L567" href="#L567">567</a> 
+<a class="jxr_linenumber" name="L568" href="#L568">568</a>         <strong class="jxr_keyword">final</strong> TestServerAuthModule module = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
+<a class="jxr_linenumber" name="L569" href="#L569">569</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L570" href="#L570">570</a>         when(mockRequestPolicy.isMandatory()).thenReturn(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L571" href="#L571">571</a> 
-<a class="jxr_linenumber" name="L572" href="#L572">572</a>         <strong class="jxr_keyword">final</strong> Cookie[] cookies = <strong class="jxr_keyword">new</strong> Cookie[] {
-<a class="jxr_linenumber" name="L573" href="#L573">573</a>             <strong class="jxr_keyword">new</strong> Cookie(<span class="jxr_string">"X-Subject"</span>, <span class="jxr_string">"https://foo@test-server-auth-module"</span>),
-<a class="jxr_linenumber" name="L574" href="#L574">574</a>             <strong class="jxr_keyword">new</strong> Cookie(<span class="jxr_string">"not-relevant"</span>, <span class="jxr_string">"foo"</span>)
-<a class="jxr_linenumber" name="L575" href="#L575">575</a>         };
-<a class="jxr_linenumber" name="L576" href="#L576">576</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L577" href="#L577">577</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"POST"</span>);
-<a class="jxr_linenumber" name="L578" href="#L578">578</a>         when(servletRequest.isSecure()).thenReturn(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L579" href="#L579">579</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/secure_page"</span>);
-<a class="jxr_linenumber" name="L580" href="#L580">580</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
-<a class="jxr_linenumber" name="L581" href="#L581">581</a>         when(servletRequest.getCookies()).thenReturn(cookies);
-<a class="jxr_linenumber" name="L582" href="#L582">582</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
-<a class="jxr_linenumber" name="L583" href="#L583">583</a> 
-<a class="jxr_linenumber" name="L584" href="#L584">584</a>         <strong class="jxr_keyword">final</strong> CallbackHandler h = mock(CallbackHandler.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L585" href="#L585">585</a> 
-<a class="jxr_linenumber" name="L586" href="#L586">586</a>         <strong class="jxr_keyword">final</strong> ServerAuthModule sam = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
+<a class="jxr_linenumber" name="L572" href="#L572">572</a>         <strong class="jxr_keyword">final</strong> CallbackHandler h = mock(CallbackHandler.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L573" href="#L573">573</a>         module.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, h, options);
+<a class="jxr_linenumber" name="L574" href="#L574">574</a> 
+<a class="jxr_linenumber" name="L575" href="#L575">575</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L576" href="#L576">576</a> 
+<a class="jxr_linenumber" name="L577" href="#L577">577</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L578" href="#L578">578</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"GET"</span>);
+<a class="jxr_linenumber" name="L579" href="#L579">579</a>         when(servletRequest.isSecure()).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L580" href="#L580">580</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/securePage"</span>);
+<a class="jxr_linenumber" name="L581" href="#L581">581</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
+<a class="jxr_linenumber" name="L582" href="#L582">582</a>         when(servletRequest.getQueryString()).thenReturn(<span class="jxr_string">"abc=123&amp;doremi=abc123"</span>);
+<a class="jxr_linenumber" name="L583" href="#L583">583</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+<a class="jxr_linenumber" name="L584" href="#L584">584</a> 
+<a class="jxr_linenumber" name="L585" href="#L585">585</a>         <strong class="jxr_keyword">final</strong> HttpServletResponse servletResponse = mock(HttpServletResponse.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L586" href="#L586">586</a>         when(messageInfo.getResponseMessage()).thenReturn(servletResponse);
 <a class="jxr_linenumber" name="L587" href="#L587">587</a> 
-<a class="jxr_linenumber" name="L588" href="#L588">588</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L589" href="#L589">589</a>         when(mockRequestPolicy.isMandatory()).thenReturn(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L590" href="#L590">590</a> 
-<a class="jxr_linenumber" name="L591" href="#L591">591</a>         sam.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, h, options);
-<a class="jxr_linenumber" name="L592" href="#L592">592</a> 
-<a class="jxr_linenumber" name="L593" href="#L593">593</a>         assertEquals(AuthStatus.SUCCESS, sam.validateRequest(messageInfo, <strong class="jxr_keyword">null</strong>, subject));
-<a class="jxr_linenumber" name="L594" href="#L594">594</a>     }
-<a class="jxr_linenumber" name="L595" href="#L595">595</a> 
-<a class="jxr_linenumber" name="L596" href="#L596">596</a>     @Test
-<a class="jxr_linenumber" name="L597" href="#L597">597</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSSLRequired() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L598" href="#L598">598</a> 
-<a class="jxr_linenumber" name="L599" href="#L599">599</a>         <strong class="jxr_keyword">final</strong> TestServerAuthModule module = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
-<a class="jxr_linenumber" name="L600" href="#L600">600</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L601" href="#L601">601</a>         when(mockRequestPolicy.isMandatory()).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L588" href="#L588">588</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
+<a class="jxr_linenumber" name="L589" href="#L589">589</a>         <strong class="jxr_keyword">final</strong> ArgumentCaptor&lt;String&gt; redirectUri = ArgumentCaptor.forClass(String.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L590" href="#L590">590</a>         assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L591" href="#L591">591</a>         verify(servletResponse).sendRedirect(redirectUri.capture());
+<a class="jxr_linenumber" name="L592" href="#L592">592</a>         assertEquals(<span class="jxr_string">"/util/j_security_check?state=%2Futil%2FsecurePage%3Fabc%3D123%26doremi%3Dabc123"</span>, redirectUri.getValue());
+<a class="jxr_linenumber" name="L593" href="#L593">593</a>         <strong class="jxr_keyword">final</strong> String decoded = URLDecoder.decode(URI.create(redirectUri.getValue()).getRawQuery().substring(<span class="jxr_string">"state="</span>.length()), <span class="jxr_string">"US-ASCII"</span>);
+<a class="jxr_linenumber" name="L594" href="#L594">594</a>         assertEquals(<span class="jxr_string">"/util/securePage?abc=123&amp;doremi=abc123"</span>, decoded);
+<a class="jxr_linenumber" name="L595" href="#L595">595</a>         verifyZeroInteractions(h);
+<a class="jxr_linenumber" name="L596" href="#L596">596</a>     }
+<a class="jxr_linenumber" name="L597" href="#L597">597</a> 
+<a class="jxr_linenumber" name="L598" href="#L598">598</a>     @Test
+<a class="jxr_linenumber" name="L599" href="#L599">599</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSecureMessage() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L600" href="#L600">600</a> 
+<a class="jxr_linenumber" name="L601" href="#L601">601</a>         <strong class="jxr_keyword">final</strong> Subject subject = <strong class="jxr_keyword">new</strong> Subject();
 <a class="jxr_linenumber" name="L602" href="#L602">602</a> 
-<a class="jxr_linenumber" name="L603" href="#L603">603</a>         module.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, options);
-<a class="jxr_linenumber" name="L604" href="#L604">604</a> 
-<a class="jxr_linenumber" name="L605" href="#L605">605</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L603" href="#L603">603</a>         <strong class="jxr_keyword">final</strong> Principal groupPrincipal = mock(Principal.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L604" href="#L604">604</a>         when(groupPrincipal.getName()).thenReturn(<span class="jxr_string">"authenticated"</span>);
+<a class="jxr_linenumber" name="L605" href="#L605">605</a>         subject.getPrincipals().add(groupPrincipal);
 <a class="jxr_linenumber" name="L606" href="#L606">606</a> 
-<a class="jxr_linenumber" name="L607" href="#L607">607</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L608" href="#L608">608</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"GET"</span>);
-<a class="jxr_linenumber" name="L609" href="#L609">609</a>         when(servletRequest.isSecure()).thenReturn(false);
-<a class="jxr_linenumber" name="L610" href="#L610">610</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/ejb2"</span>);
-<a class="jxr_linenumber" name="L611" href="#L611">611</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
-<a class="jxr_linenumber" name="L612" href="#L612">612</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
-<a class="jxr_linenumber" name="L613" href="#L613">613</a> 
-<a class="jxr_linenumber" name="L614" href="#L614">614</a>         <strong class="jxr_keyword">final</strong> HttpServletResponse servletResponse = mock(HttpServletResponse.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L615" href="#L615">615</a>         when(messageInfo.getResponseMessage()).thenReturn(servletResponse);
-<a class="jxr_linenumber" name="L616" href="#L616">616</a> 
-<a class="jxr_linenumber" name="L617" href="#L617">617</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
-<a class="jxr_linenumber" name="L618" href="#L618">618</a>         assertEquals(AuthStatus.SEND_FAILURE, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L619" href="#L619">619</a>         verify(servletResponse).sendError(HttpURLConnection.HTTP_FORBIDDEN, <span class="jxr_string">"SSL Required"</span>);
-<a class="jxr_linenumber" name="L620" href="#L620">620</a>     }
-<a class="jxr_linenumber" name="L621" href="#L621">621</a> 
-<a class="jxr_linenumber" name="L622" href="#L622">622</a>     @Test
-<a class="jxr_linenumber" name="L623" href="#L623">623</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSupportedMessageTypes() {
+<a class="jxr_linenumber" name="L607" href="#L607">607</a>         <strong class="jxr_keyword">final</strong> Principal userPrincipal = mock(Principal.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L608" href="#L608">608</a>         when(userPrincipal.getName()).thenReturn(<span class="jxr_string">"https://foo@test-server-auth-module"</span>);
+<a class="jxr_linenumber" name="L609" href="#L609">609</a>         subject.getPrincipals().add(userPrincipal);
+<a class="jxr_linenumber" name="L610" href="#L610">610</a> 
+<a class="jxr_linenumber" name="L611" href="#L611">611</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L612" href="#L612">612</a> 
+<a class="jxr_linenumber" name="L613" href="#L613">613</a>         <strong class="jxr_keyword">final</strong> Cookie[] cookies = <strong class="jxr_keyword">new</strong> Cookie[] {
+<a class="jxr_linenumber" name="L614" href="#L614">614</a>             <strong class="jxr_keyword">new</strong> Cookie(<span class="jxr_string">"X-Subject"</span>, <span class="jxr_string">"https://foo@test-server-auth-module"</span>),
+<a class="jxr_linenumber" name="L615" href="#L615">615</a>             <strong class="jxr_keyword">new</strong> Cookie(<span class="jxr_string">"not-relevant"</span>, <span class="jxr_string">"foo"</span>)
+<a class="jxr_linenumber" name="L616" href="#L616">616</a>         };
+<a class="jxr_linenumber" name="L617" href="#L617">617</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L618" href="#L618">618</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"POST"</span>);
+<a class="jxr_linenumber" name="L619" href="#L619">619</a>         when(servletRequest.isSecure()).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L620" href="#L620">620</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/secure_page"</span>);
+<a class="jxr_linenumber" name="L621" href="#L621">621</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
+<a class="jxr_linenumber" name="L622" href="#L622">622</a>         when(servletRequest.getCookies()).thenReturn(cookies);
+<a class="jxr_linenumber" name="L623" href="#L623">623</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
 <a class="jxr_linenumber" name="L624" href="#L624">624</a> 
-<a class="jxr_linenumber" name="L625" href="#L625">625</a>         assertEquals(2, <strong class="jxr_keyword">new</strong> TestServerAuthModule().getSupportedMessageTypes().length);
-<a class="jxr_linenumber" name="L626" href="#L626">626</a>     }
-<a class="jxr_linenumber" name="L627" href="#L627">627</a> }
+<a class="jxr_linenumber" name="L625" href="#L625">625</a>         <strong class="jxr_keyword">final</strong> CallbackHandler h = mock(CallbackHandler.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L626" href="#L626">626</a> 
+<a class="jxr_linenumber" name="L627" href="#L627">627</a>         <strong class="jxr_keyword">final</strong> ServerAuthModule sam = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
+<a class="jxr_linenumber" name="L628" href="#L628">628</a> 
+<a class="jxr_linenumber" name="L629" href="#L629">629</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L630" href="#L630">630</a>         when(mockRequestPolicy.isMandatory()).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L631" href="#L631">631</a> 
+<a class="jxr_linenumber" name="L632" href="#L632">632</a>         sam.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, h, options);
+<a class="jxr_linenumber" name="L633" href="#L633">633</a> 
+<a class="jxr_linenumber" name="L634" href="#L634">634</a>         assertEquals(AuthStatus.SUCCESS, sam.validateRequest(messageInfo, <strong class="jxr_keyword">null</strong>, subject));
+<a class="jxr_linenumber" name="L635" href="#L635">635</a>     }
+<a class="jxr_linenumber" name="L636" href="#L636">636</a> 
+<a class="jxr_linenumber" name="L637" href="#L637">637</a>     @Test
+<a class="jxr_linenumber" name="L638" href="#L638">638</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSSLRequired() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L639" href="#L639">639</a> 
+<a class="jxr_linenumber" name="L640" href="#L640">640</a>         <strong class="jxr_keyword">final</strong> TestServerAuthModule module = <strong class="jxr_keyword">new</strong> TestServerAuthModule();
+<a class="jxr_linenumber" name="L641" href="#L641">641</a>         <strong class="jxr_keyword">final</strong> MessagePolicy mockRequestPolicy = mock(MessagePolicy.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L642" href="#L642">642</a>         when(mockRequestPolicy.isMandatory()).thenReturn(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L643" href="#L643">643</a> 
+<a class="jxr_linenumber" name="L644" href="#L644">644</a>         module.initialize(mockRequestPolicy, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, options);
+<a class="jxr_linenumber" name="L645" href="#L645">645</a> 
+<a class="jxr_linenumber" name="L646" href="#L646">646</a>         <strong class="jxr_keyword">final</strong> MessageInfo messageInfo = mock(MessageInfo.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L647" href="#L647">647</a> 
+<a class="jxr_linenumber" name="L648" href="#L648">648</a>         <strong class="jxr_keyword">final</strong> HttpServletRequest servletRequest = mock(HttpServletRequest.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L649" href="#L649">649</a>         when(servletRequest.getMethod()).thenReturn(<span class="jxr_string">"GET"</span>);
+<a class="jxr_linenumber" name="L650" href="#L650">650</a>         when(servletRequest.isSecure()).thenReturn(false);
+<a class="jxr_linenumber" name="L651" href="#L651">651</a>         when(servletRequest.getRequestURI()).thenReturn(<span class="jxr_string">"/util/ejb2"</span>);
+<a class="jxr_linenumber" name="L652" href="#L652">652</a>         when(servletRequest.getContextPath()).thenReturn(<span class="jxr_string">"/util"</span>);
+<a class="jxr_linenumber" name="L653" href="#L653">653</a>         when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+<a class="jxr_linenumber" name="L654" href="#L654">654</a> 
+<a class="jxr_linenumber" name="L655" href="#L655">655</a>         <strong class="jxr_keyword">final</strong> HttpServletResponse servletResponse = mock(HttpServletResponse.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L656" href="#L656">656</a>         when(messageInfo.getResponseMessage()).thenReturn(servletResponse);
+<a class="jxr_linenumber" name="L657" href="#L657">657</a> 
+<a class="jxr_linenumber" name="L658" href="#L658">658</a>         <strong class="jxr_keyword">final</strong> Subject client = <strong class="jxr_keyword">new</strong> Subject();
+<a class="jxr_linenumber" name="L659" href="#L659">659</a>         assertEquals(AuthStatus.SEND_FAILURE, module.validateRequest(messageInfo, client, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L660" href="#L660">660</a>         verify(servletResponse).sendError(HttpURLConnection.HTTP_FORBIDDEN, <span class="jxr_string">"SSL Required"</span>);
+<a class="jxr_linenumber" name="L661" href="#L661">661</a>     }
+<a class="jxr_linenumber" name="L662" href="#L662">662</a> 
+<a class="jxr_linenumber" name="L663" href="#L663">663</a>     @Test
+<a class="jxr_linenumber" name="L664" href="#L664">664</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSupportedMessageTypes() {
+<a class="jxr_linenumber" name="L665" href="#L665">665</a> 
+<a class="jxr_linenumber" name="L666" href="#L666">666</a>         assertEquals(2, <strong class="jxr_keyword">new</strong> TestServerAuthModule().getSupportedMessageTypes().length);
+<a class="jxr_linenumber" name="L667" href="#L667">667</a>     }
+<a class="jxr_linenumber" name="L668" href="#L668">668</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2015 <a href="http://www.trajano.net/">Trajano</a>. All rights reserved.</div>
