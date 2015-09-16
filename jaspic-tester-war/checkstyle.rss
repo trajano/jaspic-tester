@@ -27,7 +27,7 @@ under the License.
     <item>
       <title>File: 1,
              Errors: 0,
-             Warnings: 7,
+             Warnings: 1,
              Infos: 0
       </title>
             <link>http://site.trajano.net/trajano/jaspic-tester/jaspic-tester-war//checkstyle.html</link>
@@ -52,7 +52,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  7
+                  1
                 </td>
                 <td>
                   0
