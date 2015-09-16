@@ -1,52 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pmd version="5.2.3" timestamp="2015-09-16T02:54:03.086">
+<pmd version="5.2.3" timestamp="2015-09-16T11:46:15.397">
 <file name="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/Initializer.java">
-<violation beginline="13" endline="13" begincolumn="38" endcolumn="60" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="Initializer" method="contextDestroyed" variable="sce" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
+<violation beginline="14" endline="14" begincolumn="34" endcolumn="56" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="Initializer" method="contextDestroyed" variable="sce" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
 Parameter 'sce' is not assigned and could be declared final
 </violation>
-<violation beginline="18" endline="18" begincolumn="40" endcolumn="62" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="Initializer" method="contextInitialized" variable="sce" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
+<violation beginline="20" endline="20" begincolumn="40" endcolumn="62" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="Initializer" method="contextInitialized" variable="sce" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
 Parameter 'sce' is not assigned and could be declared final
 </violation>
-<violation beginline="19" endline="19" begincolumn="17" endcolumn="35" rule="UseConcurrentHashMap" ruleset="Controversial" package="net.trajano.auth" class="Initializer" method="contextInitialized" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/controversial.html#UseConcurrentHashMap" priority="3">
+<violation beginline="21" endline="21" begincolumn="17" endcolumn="35" rule="UseConcurrentHashMap" ruleset="Controversial" package="net.trajano.auth" class="Initializer" method="contextInitialized" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/controversial.html#UseConcurrentHashMap" priority="3">
 If you run in Java5 or newer and have concurrent access, you should use the ConcurrentHashMap implementation
 </violation>
-<violation beginline="19" endline="19" begincolumn="17" endcolumn="61" rule="LocalVariableCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="Initializer" method="contextInitialized" variable="options" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#LocalVariableCouldBeFinal" priority="3">
+<violation beginline="21" endline="21" begincolumn="17" endcolumn="61" rule="LocalVariableCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="Initializer" method="contextInitialized" variable="options" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#LocalVariableCouldBeFinal" priority="3">
 Local variable 'options' could be declared final
-</violation>
-</file>
-<file name="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java">
-<violation beginline="135" endline="135" begincolumn="44" endcolumn="65" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="TestServerAuthModule" method="handleLoginEndpoint" variable="req" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
-Parameter 'req' is not assigned and could be declared final
-</violation>
-<violation beginline="136" endline="136" begincolumn="9" endcolumn="32" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="TestServerAuthModule" method="handleLoginEndpoint" variable="resp" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
-Parameter 'resp' is not assigned and could be declared final
-</violation>
-<violation beginline="140" endline="140" begincolumn="13" endcolumn="30" rule="SystemPrintln" ruleset="Java Logging" package="net.trajano.auth" class="TestServerAuthModule" method="handleLoginEndpoint" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/logging-java.html#SystemPrintln" priority="2">
-System.out.println is used
-</violation>
-<violation beginline="142" endline="142" begincolumn="13" endcolumn="30" rule="SystemPrintln" ruleset="Java Logging" package="net.trajano.auth" class="TestServerAuthModule" method="handleLoginEndpoint" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/logging-java.html#SystemPrintln" priority="2">
-System.out.println is used
-</violation>
-<violation beginline="147" endline="148" begincolumn="13" endcolumn="40" rule="LocalVariableCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="TestServerAuthModule" method="handleLoginEndpoint" variable="subject" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#LocalVariableCouldBeFinal" priority="3">
-Local variable 'subject' could be declared final
-</violation>
-<violation beginline="149" endline="149" begincolumn="13" endcolumn="67" rule="LocalVariableCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="TestServerAuthModule" method="handleLoginEndpoint" variable="cookie" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#LocalVariableCouldBeFinal" priority="3">
-Local variable 'cookie' could be declared final
-</violation>
-<violation beginline="173" endline="173" begincolumn="45" endcolumn="66" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="TestServerAuthModule" method="handleLogoutEndpoint" variable="req" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
-Parameter 'req' is not assigned and could be declared final
-</violation>
-<violation beginline="174" endline="174" begincolumn="9" endcolumn="32" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="TestServerAuthModule" method="handleLogoutEndpoint" variable="resp" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
-Parameter 'resp' is not assigned and could be declared final
-</violation>
-<violation beginline="177" endline="177" begincolumn="13" endcolumn="62" rule="LocalVariableCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="TestServerAuthModule" method="handleLogoutEndpoint" variable="cookie" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#LocalVariableCouldBeFinal" priority="3">
-Local variable 'cookie' could be declared final
-</violation>
-<violation beginline="266" endline="266" begincolumn="22" endcolumn="34" rule="LocalVariableCouldBeFinal" ruleset="Optimization" package="net.trajano.auth" class="TestServerAuthModule" method="validateRequest" variable="cookie" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#LocalVariableCouldBeFinal" priority="3">
-Local variable 'cookie' could be declared final
-</violation>
-<violation beginline="292" endline="292" begincolumn="13" endcolumn="31" rule="AvoidPrintStackTrace" ruleset="Java Logging" package="net.trajano.auth" class="TestServerAuthModule" method="validateRequest" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/logging-java.html#AvoidPrintStackTrace" priority="3">
-Avoid printStackTrace(); use a logger call instead.
 </violation>
 </file>
 </pmd>

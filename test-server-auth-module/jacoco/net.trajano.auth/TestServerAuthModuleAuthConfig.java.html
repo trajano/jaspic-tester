@@ -17,7 +17,9 @@ import javax.security.auth.message.module.ServerAuthModule;
 /**
  * Common methods for ServerAuthConfig and ClientAuthConfig.
  */
-public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
+public class TestServerAuthModuleAuthConfig implements
+    ServerAuthConfig {
+
     /**
      * &lt;p&gt;
      * The {@link MessageInfo} map must contain this key and its associated
@@ -44,26 +46,32 @@ public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
      * &lt;/p&gt;
      */
     private static final String JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY = &quot;javax.security.auth.message.MessagePolicy.isMandatory&quot;;
+
     /**
      * Mandatory message policy.
      */
-<span class="nc" id="L50">    protected static final MessagePolicy MANDATORY = new MessagePolicy(new TargetPolicy[0], true);</span>
+<span class="nc" id="L53">    protected static final MessagePolicy MANDATORY = new MessagePolicy(new TargetPolicy[0], true);</span>
+
     /**
      * Non-mandatory message policy.
      */
-<span class="nc" id="L54">    protected static final MessagePolicy NON_MANDATORY = new MessagePolicy(new TargetPolicy[0], false);</span>
+<span class="nc" id="L58">    protected static final MessagePolicy NON_MANDATORY = new MessagePolicy(new TargetPolicy[0], false);</span>
+
     /**
      * Application context.
      */
     private final String appContext;
+
     /**
      * Callback handler.
      */
     private final CallbackHandler handler;
+
     /**
      * Layer. Usually HttpServlet or SOAPMessage.
      */
     private final String layer;
+
     /**
      * Setup options.
      */
@@ -79,12 +87,16 @@ public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
      * @param handler
      *            handler
      */
-<span class="nc" id="L82">    public TestServerAuthModuleAuthConfig(final Map&lt;String, String&gt; options, final String layer, final String appContext, final CallbackHandler handler) {</span>
-<span class="nc" id="L83">        this.appContext = appContext;</span>
-<span class="nc" id="L84">        this.layer = layer;</span>
-<span class="nc" id="L85">        this.options = options;</span>
-<span class="nc" id="L86">        this.handler = handler;</span>
-<span class="nc" id="L87">    }</span>
+    public TestServerAuthModuleAuthConfig(final Map&lt;String, String&gt; options,
+        final String layer,
+        final String appContext,
+<span class="nc" id="L93">        final CallbackHandler handler) {</span>
+
+<span class="nc" id="L95">        this.appContext = appContext;</span>
+<span class="nc" id="L96">        this.layer = layer;</span>
+<span class="nc" id="L97">        this.options = options;</span>
+<span class="nc" id="L98">        this.handler = handler;</span>
+<span class="nc" id="L99">    }</span>
 
     /**
      * Augments the properties with additional properties.
@@ -95,18 +107,19 @@ public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
      */
     @SuppressWarnings(&quot;unchecked&quot;)
     protected Map&lt;?, ?&gt; augmentProperties(@SuppressWarnings(&quot;rawtypes&quot;) final Map properties) {
-<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (properties == null) {</span>
-<span class="nc" id="L99">            return options;</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (properties == null) {</span>
+<span class="nc" id="L111">            return options;</span>
         }
-<span class="nc" id="L101">        final ConcurrentMap&lt;?, ?&gt; augmentedOptions = new ConcurrentHashMap&lt;&gt;(options);</span>
-<span class="nc" id="L102">        augmentedOptions.putAll(properties);</span>
-<span class="nc" id="L103">        return augmentedOptions;</span>
+<span class="nc" id="L113">        final ConcurrentMap&lt;?, ?&gt; augmentedOptions = new ConcurrentHashMap&lt;&gt;(options);</span>
+<span class="nc" id="L114">        augmentedOptions.putAll(properties);</span>
+<span class="nc" id="L115">        return augmentedOptions;</span>
 
     }
 
     @Override
-	public String getAppContext() {
-<span class="nc" id="L109">        return appContext;</span>
+    public String getAppContext() {
+
+<span class="nc" id="L122">        return appContext;</span>
     }
 
     /**
@@ -121,51 +134,58 @@ public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
      *         mandatory, &lt;code&gt;null&lt;/code&gt; otherwise.
      */
     @Override
-	public String getAuthContextID(final MessageInfo messageInfo) {
-<span class="nc" id="L125">        final Object isMandatory = messageInfo.getMap()</span>
-                .get(JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY);
-<span class="nc bnc" id="L127" title="All 6 branches missed.">        if (isMandatory != null &amp;&amp; isMandatory instanceof String &amp;&amp; Boolean.valueOf((String) isMandatory)) {</span>
-<span class="nc" id="L128">            return messageInfo.toString();</span>
+    public String getAuthContextID(final MessageInfo messageInfo) {
+
+<span class="nc" id="L139">        final Object isMandatory = messageInfo.getMap()</span>
+            .get(JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY);
+<span class="nc bnc" id="L141" title="All 6 branches missed.">        if (isMandatory != null &amp;&amp; isMandatory instanceof String &amp;&amp; Boolean.valueOf((String) isMandatory)) {</span>
+<span class="nc" id="L142">            return messageInfo.toString();</span>
         }
-<span class="nc" id="L130">        return null;</span>
+<span class="nc" id="L144">        return null;</span>
     }
 
     protected CallbackHandler getHandler() {
-<span class="nc" id="L134">        return handler;</span>
+
+<span class="nc" id="L149">        return handler;</span>
     }
 
     @Override
-	public String getMessageLayer() {
-<span class="nc" id="L139">        return layer;</span>
+    public String getMessageLayer() {
+
+<span class="nc" id="L155">        return layer;</span>
     }
 
     @Override
-	public boolean isProtected() {
-<span class="nc" id="L144">        return true;</span>
+    public boolean isProtected() {
+
+<span class="nc" id="L161">        return true;</span>
     }
 
     /**
      * Does nothing as the module does not accept changes at runtime.
      */
     @Override
-	public void refresh() {
-<span class="nc" id="L152">    }</span>
-    
-	@Override
-	public ServerAuthContext getAuthContext(final String authContextID, final Subject serviceSubject,
-			@SuppressWarnings(&quot;rawtypes&quot;) final Map properties) throws AuthException {
-<span class="nc" id="L157">		final Map&lt;?, ?&gt; augmentedOptions = augmentProperties(properties);</span>
-<span class="nc" id="L158">		final ServerAuthContext context = new TestServerAuthModule();</span>
-<span class="nc bnc" id="L159" title="All 2 branches missed.">		if (context instanceof ServerAuthModule) {</span>
+    public void refresh() {
 
-<span class="nc" id="L161">			final ServerAuthModule module = (ServerAuthModule) context;</span>
-<span class="nc bnc" id="L162" title="All 2 branches missed.">			if (authContextID == null) {</span>
-<span class="nc" id="L163">				module.initialize(NON_MANDATORY, NON_MANDATORY, getHandler(), augmentedOptions);</span>
-			} else {
-<span class="nc" id="L165">				module.initialize(MANDATORY, MANDATORY, getHandler(), augmentedOptions);</span>
-			}
-		}
-<span class="nc" id="L168">		return context;</span>
-	}
+<span class="nc" id="L170">    }</span>
+
+    @Override
+    public ServerAuthContext getAuthContext(final String authContextID,
+        final Subject serviceSubject,
+        @SuppressWarnings(&quot;rawtypes&quot;) final Map properties) throws AuthException {
+
+<span class="nc" id="L177">        final Map&lt;?, ?&gt; augmentedOptions = augmentProperties(properties);</span>
+<span class="nc" id="L178">        final ServerAuthContext context = new TestServerAuthModule();</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">        if (context instanceof ServerAuthModule) {</span>
+
+<span class="nc" id="L181">            final ServerAuthModule module = (ServerAuthModule) context;</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">            if (authContextID == null) {</span>
+<span class="nc" id="L183">                module.initialize(NON_MANDATORY, NON_MANDATORY, getHandler(), augmentedOptions);</span>
+            } else {
+<span class="nc" id="L185">                module.initialize(MANDATORY, MANDATORY, getHandler(), augmentedOptions);</span>
+            }
+        }
+<span class="nc" id="L188">        return context;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

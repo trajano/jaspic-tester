@@ -1,5 +1,5 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-Test Server Auth Module,net.trajano.auth,TestServerAuthModule,220,48,25,5,39,14,19,4,5,3
-Test Server Auth Module,net.trajano.auth,AuthModuleConfigProvider,25,0,0,0,8,0,5,0,5,0
+Test Server Auth Module,net.trajano.auth,TestServerAuthModule,236,56,23,5,45,15,18,5,5,4
+Test Server Auth Module,net.trajano.auth,AuthModuleConfigProvider,27,0,2,0,8,0,5,0,4,0
 Test Server Auth Module,net.trajano.auth,Initializer,24,0,0,0,6,0,3,0,3,0
 Test Server Auth Module,net.trajano.auth,TestServerAuthModuleAuthConfig,111,0,12,0,30,0,16,0,10,0

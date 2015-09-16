@@ -8,70 +8,77 @@ import javax.security.auth.message.config.AuthConfigFactory;
 import javax.security.auth.message.config.AuthConfigProvider;
 import javax.security.auth.message.config.ClientAuthConfig;
 import javax.security.auth.message.config.ServerAuthConfig;
-import javax.security.auth.message.module.ServerAuthModule;
 
 /**
  * This is used to provide the server auth module on the application rather than
  * being globally configured in a container.
  */
-public class AuthModuleConfigProvider implements AuthConfigProvider {
+public class AuthModuleConfigProvider implements
+    AuthConfigProvider {
 
-	/**
-	 * Server auth module class option key.
-	 */
-<span class="nc" id="L22">	public static final String SERVER_AUTH_MODULE_CLASS = ServerAuthModule.class.getName();</span>
+    /**
+     * Options.
+     */
+    private final Map&lt;String, String&gt; options;
 
-	/**
-	 * {@link AuthConfigFactory} passed in through the constructor. This is not
-	 * being used anywhere at the moment.
-	 */
-	@SuppressWarnings(&quot;unused&quot;)
-	private final AuthConfigFactory authConfigFactory;
+    /**
+     * This is called by
+     * {@link AuthConfigFactory#registerConfigProvider(String, Map, String, String, String)}
+     * when registering the provider.
+     *
+     * @param options
+     *            options to pass to the modules and the name of the module
+     *            classes
+     * @param authConfigFactory
+     *            configuration factory
+     */
+    public AuthModuleConfigProvider(final Map&lt;String, String&gt; options,
+<span class="nc" id="L36">        final AuthConfigFactory factory) {</span>
 
-	/**
-	 * Options.
-	 */
-	private final Map&lt;String, String&gt; options;
+<span class="nc" id="L38">        this.options = options;</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (factory != null) {</span>
+<span class="nc" id="L40">            factory.registerConfigProvider(this, null, null, &quot;Auto registration&quot;);</span>
+        }
+<span class="nc" id="L42">    }</span>
 
-	/**
-	 * This is called by
-	 * {@link AuthConfigFactory#registerConfigProvider(String, Map, String, String, String)}
-	 * when registering the provider.
-	 *
-	 * @param options
-	 *            options to pass to the modules and the name of the module
-	 *            classes
-	 * @param authConfigFactory
-	 *            configuration factory
-	 */
-<span class="nc" id="L47">	public AuthModuleConfigProvider(final Map&lt;String, String&gt; options, final AuthConfigFactory authConfigFactory) {</span>
+    /**
+     * &lt;p&gt;
+     * Client authentication is not provided.
+     * &lt;/p&gt;
+     * {@inheritDoc}
+     *
+     * @return &lt;code&gt;null&lt;/code&gt;
+     */
+    @Override
+    public ClientAuthConfig getClientAuthConfig(final String layer,
+        final String appContext,
+        final CallbackHandler handler) throws AuthException {
 
-<span class="nc" id="L49">		this.authConfigFactory = authConfigFactory;</span>
-<span class="nc" id="L50">		this.options = options;</span>
-<span class="nc" id="L51">	}</span>
+<span class="nc" id="L57">        return null;</span>
+    }
 
-	@Override
-	public ClientAuthConfig getClientAuthConfig(final String layer, final String appContext,
-			final CallbackHandler handler) throws AuthException {
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@link TestServerAuthModuleAuthConfig} with the data that was
+     *         provided.
+     */
+    @Override
+    public ServerAuthConfig getServerAuthConfig(final String layer,
+        final String appContext,
+        final CallbackHandler handler) throws AuthException {
 
-<span class="nc" id="L57">		return null;</span>
-	}
+<span class="nc" id="L71">        return new TestServerAuthModuleAuthConfig(options, layer, appContext, handler);</span>
+    }
 
-	@Override
-	public ServerAuthConfig getServerAuthConfig(final String layer, final String appContext,
-			final CallbackHandler handler) throws AuthException {
+    /**
+     * Does nothing.
+     */
+    @Override
+    public void refresh() {
 
-<span class="nc" id="L64">		return new TestServerAuthModuleAuthConfig(options, layer, appContext, handler);</span>
-	}
-
-	/**
-	 * Does nothing.
-	 */
-	@Override
-	public void refresh() {
-
-		// does nothing
-<span class="nc" id="L74">	}</span>
+        // does nothing
+<span class="nc" id="L81">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
