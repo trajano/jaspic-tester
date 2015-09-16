@@ -166,26 +166,27 @@ public class TestServerAuthModuleAuthConfig implements
      */
     @Override
     public void refresh() {
-
-<span class="fc" id="L170">    }</span>
+        
+        // does nothing
+<span class="fc" id="L171">    }</span>
 
     @Override
     public ServerAuthContext getAuthContext(final String authContextID,
         final Subject serviceSubject,
         @SuppressWarnings(&quot;rawtypes&quot;) final Map properties) throws AuthException {
 
-<span class="fc" id="L177">        final Map&lt;?, ?&gt; augmentedOptions = augmentProperties(properties);</span>
-<span class="fc" id="L178">        final ServerAuthContext context = new TestServerAuthModule();</span>
-<span class="pc bpc" id="L179" title="1 of 2 branches missed.">        if (context instanceof ServerAuthModule) {</span>
+<span class="fc" id="L178">        final Map&lt;?, ?&gt; augmentedOptions = augmentProperties(properties);</span>
+<span class="fc" id="L179">        final ServerAuthContext context = new TestServerAuthModule();</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">        if (context instanceof ServerAuthModule) {</span>
 
-<span class="fc" id="L181">            final ServerAuthModule module = (ServerAuthModule) context;</span>
-<span class="fc bfc" id="L182" title="All 2 branches covered.">            if (authContextID == null) {</span>
-<span class="fc" id="L183">                module.initialize(NON_MANDATORY, NON_MANDATORY, getHandler(), augmentedOptions);</span>
+<span class="fc" id="L182">            final ServerAuthModule module = (ServerAuthModule) context;</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">            if (authContextID == null) {</span>
+<span class="fc" id="L184">                module.initialize(NON_MANDATORY, NON_MANDATORY, getHandler(), augmentedOptions);</span>
             } else {
-<span class="fc" id="L185">                module.initialize(MANDATORY, MANDATORY, getHandler(), augmentedOptions);</span>
+<span class="fc" id="L186">                module.initialize(MANDATORY, MANDATORY, getHandler(), augmentedOptions);</span>
             }
         }
-<span class="fc" id="L188">        return context;</span>
+<span class="fc" id="L189">        return context;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
