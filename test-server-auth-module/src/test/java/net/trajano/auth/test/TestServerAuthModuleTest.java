@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.security.auth.Subject;
@@ -30,8 +31,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 
-import com.google.common.collect.ImmutableMap;
-
 import net.trajano.auth.TestServerAuthModule;
 
 public class TestServerAuthModuleTest {
@@ -39,7 +38,7 @@ public class TestServerAuthModuleTest {
     /**
      * Module options.
      */
-    private final Map<String, String> options = ImmutableMap.<String, String> builder().build();
+    private final Map<String, String> options = new HashMap<>();
 
     @Test
     public void testCleanSubject() throws Exception {
