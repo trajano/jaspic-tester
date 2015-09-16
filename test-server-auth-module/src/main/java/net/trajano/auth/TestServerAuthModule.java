@@ -85,6 +85,26 @@ public class TestServerAuthModule implements
     public static final String SUBJECT_COOKIE_KEY = "X-Subject";
 
     /**
+     * Obtains the subject from the cookies in the HttpServletRequest.
+     *
+     * @param req
+     *            servlet request
+     * @return subject may be null if not found
+     */
+    private static String getSubject(final HttpServletRequest req) {
+
+        String subjectCookie = null;
+        if (req.getCookies() != null) {
+            for (final Cookie cookie : req.getCookies()) {
+                if (SUBJECT_COOKIE_KEY.equals(cookie.getName())) {
+                    subjectCookie = cookie.getValue();
+                }
+            }
+        }
+        return subjectCookie;
+    }
+
+    /**
      * Handle the login endpoint. This will display the login page and will
      * handle login POST action.
      *
@@ -246,14 +266,7 @@ public class TestServerAuthModule implements
         final Subject subject) throws AuthException {
 
         final HttpServletRequest req = (HttpServletRequest) messageInfo.getRequestMessage();
-        String subjectCookie = null;
-        if (req.getCookies() != null) {
-            for (final Cookie cookie : req.getCookies()) {
-                if (SUBJECT_COOKIE_KEY.equals(cookie.getName())) {
-                    subjectCookie = cookie.getValue();
-                }
-            }
-        }
+        final String subjectCookie = getSubject(req);
 
         final Iterator<Principal> iterator = subject.getPrincipals().iterator();
         while (iterator.hasNext()) {
@@ -369,14 +382,7 @@ public class TestServerAuthModule implements
                 return AuthStatus.SEND_FAILURE;
             }
 
-            String subject = null;
-            if (req.getCookies() != null) {
-                for (final Cookie cookie : req.getCookies()) {
-                    if (SUBJECT_COOKIE_KEY.equals(cookie.getName())) {
-                        subject = cookie.getValue();
-                    }
-                }
-            }
+            final String subject = getSubject(req);
 
             // Check if there is no subject then redirect to login endpoint
             if (subject == null) {
