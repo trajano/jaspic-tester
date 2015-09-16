@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pmd version="5.2.3" timestamp="2015-09-16T01:58:02.113">
+<pmd version="5.2.3" timestamp="2015-09-16T02:16:04.620">
 <file name="P:\jaspic-tester\jaspic-tester-war\src\main\java\net\trajano\auth\sample\SessionListener.java">
 <violation beginline="20" endline="20" begincolumn="32" endcolumn="51" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth.sample" class="SessionListener" method="sessionCreated" variable="hse" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
 Parameter 'hse' is not assigned and could be declared final
