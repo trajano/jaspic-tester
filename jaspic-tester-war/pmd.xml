@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pmd version="5.2.3" timestamp="2015-09-16T02:55:44.019">
+<pmd version="5.2.3" timestamp="2015-09-16T11:47:56.434">
 <file name="/var/lib/jenkins/jobs/jaspic-tester/workspace/jaspic-tester-war/src/main/java/net/trajano/auth/sample/SessionListener.java">
-<violation beginline="20" endline="20" begincolumn="32" endcolumn="51" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth.sample" class="SessionListener" method="sessionCreated" variable="hse" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
+<violation beginline="24" endline="24" begincolumn="32" endcolumn="51" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth.sample" class="SessionListener" method="sessionCreated" variable="hse" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
 Parameter 'hse' is not assigned and could be declared final
 </violation>
-<violation beginline="22" endline="22" begincolumn="9" endcolumn="26" rule="SystemPrintln" ruleset="Java Logging" package="net.trajano.auth.sample" class="SessionListener" method="sessionCreated" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/logging-java.html#SystemPrintln" priority="2">
+<violation beginline="26" endline="26" begincolumn="9" endcolumn="26" rule="SystemPrintln" ruleset="Java Logging" package="net.trajano.auth.sample" class="SessionListener" method="sessionCreated" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/logging-java.html#SystemPrintln" priority="2">
 System.out.println is used
 </violation>
-<violation beginline="30" endline="30" begincolumn="34" endcolumn="53" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth.sample" class="SessionListener" method="sessionDestroyed" variable="hse" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
+<violation beginline="37" endline="37" begincolumn="34" endcolumn="53" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="net.trajano.auth.sample" class="SessionListener" method="sessionDestroyed" variable="hse" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
 Parameter 'hse' is not assigned and could be declared final
 </violation>
-<violation beginline="32" endline="32" begincolumn="9" endcolumn="26" rule="SystemPrintln" ruleset="Java Logging" package="net.trajano.auth.sample" class="SessionListener" method="sessionDestroyed" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/logging-java.html#SystemPrintln" priority="2">
+<violation beginline="39" endline="39" begincolumn="9" endcolumn="26" rule="SystemPrintln" ruleset="Java Logging" package="net.trajano.auth.sample" class="SessionListener" method="sessionDestroyed" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/logging-java.html#SystemPrintln" priority="2">
 System.out.println is used
 </violation>
 </file>
