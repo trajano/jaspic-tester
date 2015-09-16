@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TestServerAuthModuleAuthConfig.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test Server Auth Module</a> &gt; <a href="index.source.html" class="el_package">net.trajano.auth</a> &gt; <span class="el_source">TestServerAuthModuleAuthConfig.java</span></div><h1>TestServerAuthModuleAuthConfig.java</h1><pre class="source lang-java linenums">package net.trajano.auth;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+import javax.security.auth.Subject;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.message.AuthException;
+import javax.security.auth.message.MessageInfo;
+import javax.security.auth.message.MessagePolicy;
+import javax.security.auth.message.MessagePolicy.TargetPolicy;
+import javax.security.auth.message.config.ServerAuthConfig;
+import javax.security.auth.message.config.ServerAuthContext;
+import javax.security.auth.message.module.ServerAuthModule;
+
+/**
+ * Common methods for ServerAuthConfig and ClientAuthConfig.
+ */
+public  class TestServerAuthModuleAuthConfig implements ServerAuthConfig{
+    /**
+     * &lt;p&gt;
+     * The {@link MessageInfo} map must contain this key and its associated
+     * value, if and only if authentication is required to perform the resource
+     * access corresponding to the HttpServletRequest to which the
+     * ServerAuthContext will be applied. Authentication is required if use of
+     * the HTTP method of the HttpServletRequest at the resource identified by
+     * the HttpServletRequest is covered by a Servlet authconstraint, or in a
+     * JSR 115 compatible runtime, if the corresponding WebResourcePermission is
+     * NOT granted to an unauthenticated caller. In a JSR 115 compatible
+     * runtime, the corresponding WebResourcePermission may be constructed
+     * directly from the HttpServletRequest as follows:
+     * &lt;/p&gt;
+     *
+     * &lt;pre&gt;
+     * public WebResourcePermission(HttpServletRequest request);
+     * &lt;/pre&gt;
+     * &lt;p&gt;
+     * The authentication context configuration system must use the value of
+     * this property to establish the corresponding value within the
+     * requestPolicy passed to the authentication modules of the
+     * {@link javax.security.auth.message.config.ServerAuthContext} acquired to
+     * process the {@link MessageInfo}.
+     * &lt;/p&gt;
+     */
+    private static final String JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY = &quot;javax.security.auth.message.MessagePolicy.isMandatory&quot;;
+    /**
+     * Mandatory message policy.
+     */
+<span class="nc" id="L50">    protected static final MessagePolicy MANDATORY = new MessagePolicy(new TargetPolicy[0], true);</span>
+    /**
+     * Non-mandatory message policy.
+     */
+<span class="nc" id="L54">    protected static final MessagePolicy NON_MANDATORY = new MessagePolicy(new TargetPolicy[0], false);</span>
+    /**
+     * Application context.
+     */
+    private final String appContext;
+    /**
+     * Callback handler.
+     */
+    private final CallbackHandler handler;
+    /**
+     * Layer. Usually HttpServlet or SOAPMessage.
+     */
+    private final String layer;
+    /**
+     * Setup options.
+     */
+    private final Map&lt;String, String&gt; options;
+
+    /**
+     * @param options
+     *            options
+     * @param layer
+     *            layer
+     * @param appContext
+     *            application context
+     * @param handler
+     *            handler
+     */
+<span class="nc" id="L82">    public TestServerAuthModuleAuthConfig(final Map&lt;String, String&gt; options, final String layer, final String appContext, final CallbackHandler handler) {</span>
+<span class="nc" id="L83">        this.appContext = appContext;</span>
+<span class="nc" id="L84">        this.layer = layer;</span>
+<span class="nc" id="L85">        this.options = options;</span>
+<span class="nc" id="L86">        this.handler = handler;</span>
+<span class="nc" id="L87">    }</span>
+
+    /**
+     * Augments the properties with additional properties.
+     *
+     * @param properties
+     *            properties to augment with.
+     * @return augmented properties
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    protected Map&lt;?, ?&gt; augmentProperties(@SuppressWarnings(&quot;rawtypes&quot;) final Map properties) {
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (properties == null) {</span>
+<span class="nc" id="L99">            return options;</span>
+        }
+<span class="nc" id="L101">        final ConcurrentMap&lt;?, ?&gt; augmentedOptions = new ConcurrentHashMap&lt;&gt;(options);</span>
+<span class="nc" id="L102">        augmentedOptions.putAll(properties);</span>
+<span class="nc" id="L103">        return augmentedOptions;</span>
+
+    }
+
+    @Override
+	public String getAppContext() {
+<span class="nc" id="L109">        return appContext;</span>
+    }
+
+    /**
+     * Checks for the presence of
+     * {@value #JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY} in the
+     * map.
+     *
+     * @param messageInfo
+     *            contains the message request, response and some system
+     *            populated map.
+     * @return the string representation of the {@link MessageInfo} if it is
+     *         mandatory, &lt;code&gt;null&lt;/code&gt; otherwise.
+     */
+    @Override
+	public String getAuthContextID(final MessageInfo messageInfo) {
+<span class="nc" id="L125">        final Object isMandatory = messageInfo.getMap()</span>
+<span class="nc" id="L126">                .get(JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY);</span>
+<span class="nc bnc" id="L127" title="All 6 branches missed.">        if (isMandatory != null &amp;&amp; isMandatory instanceof String &amp;&amp; Boolean.valueOf((String) isMandatory)) {</span>
+<span class="nc" id="L128">            return messageInfo.toString();</span>
+        }
+<span class="nc" id="L130">        return null;</span>
+    }
+
+    protected CallbackHandler getHandler() {
+<span class="nc" id="L134">        return handler;</span>
+    }
+
+    @Override
+	public String getMessageLayer() {
+<span class="nc" id="L139">        return layer;</span>
+    }
+
+    @Override
+	public boolean isProtected() {
+<span class="nc" id="L144">        return true;</span>
+    }
+
+    /**
+     * Does nothing as the module does not accept changes at runtime.
+     */
+    @Override
+	public void refresh() {
+<span class="nc" id="L152">    }</span>
+    
+	@Override
+	public ServerAuthContext getAuthContext(final String authContextID, final Subject serviceSubject,
+			@SuppressWarnings(&quot;rawtypes&quot;) final Map properties) throws AuthException {
+<span class="nc" id="L157">		final Map&lt;?, ?&gt; augmentedOptions = augmentProperties(properties);</span>
+<span class="nc" id="L158">		final ServerAuthContext context = new TestServerAuthModule();</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">		if (context instanceof ServerAuthModule) {</span>
+
+<span class="nc" id="L161">			final ServerAuthModule module = (ServerAuthModule) context;</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">			if (authContextID == null) {</span>
+<span class="nc" id="L163">				module.initialize(NON_MANDATORY, NON_MANDATORY, getHandler(), augmentedOptions);</span>
+<span class="nc" id="L164">			} else {</span>
+<span class="nc" id="L165">				module.initialize(MANDATORY, MANDATORY, getHandler(), augmentedOptions);</span>
+			}
+		}
+<span class="nc" id="L168">		return context;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

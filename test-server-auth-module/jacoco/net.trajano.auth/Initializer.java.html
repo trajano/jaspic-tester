@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Initializer.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test Server Auth Module</a> &gt; <a href="index.source.html" class="el_package">net.trajano.auth</a> &gt; <span class="el_source">Initializer.java</span></div><h1>Initializer.java</h1><pre class="source lang-java linenums">package net.trajano.auth;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.security.auth.message.config.AuthConfigFactory;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+<span class="nc" id="L10">public class Initializer implements ServletContextListener {</span>
+
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+<span class="nc" id="L14">		AuthConfigFactory.getFactory().removeRegistration(registration);</span>
+<span class="nc" id="L15">	}</span>
+
+	@Override
+	public void contextInitialized(ServletContextEvent sce) {
+<span class="nc" id="L19">		Map&lt;String, String&gt; options = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L20">		registration = AuthConfigFactory.getFactory().registerConfigProvider(AuthModuleConfigProvider.class.getName(),</span>
+<span class="nc" id="L21">				options, &quot;HttpServlet&quot;, null, null);</span>
+
+<span class="nc" id="L23">	}</span>
+
+	private String registration;
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
