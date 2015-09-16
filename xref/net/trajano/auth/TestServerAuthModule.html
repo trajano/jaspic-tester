@@ -160,7 +160,7 @@
 <a class="jxr_linenumber" name="L152" href="#L152">152</a>             cookie.setSecure(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>             cookie.setHttpOnly(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>             resp.addCookie(cookie);
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>             resp.sendRedirect(req.getContextPath() + stateUri.toASCIIString());
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>             resp.sendRedirect(URI.create(req.getContextPath() + stateUri.toASCIIString()).normalize().toASCIIString());
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>             <strong class="jxr_keyword">return</strong> AuthStatus.SEND_SUCCESS;
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>         } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> AuthException(<span class="jxr_string">"unsupported method"</span>);
@@ -241,7 +241,7 @@
 <a class="jxr_linenumber" name="L233" href="#L233">233</a>         redirectUriBuilder.append(<span class="jxr_string">"?state="</span>);
 <a class="jxr_linenumber" name="L234" href="#L234">234</a>         redirectUriBuilder.append(
 <a class="jxr_linenumber" name="L235" href="#L235">235</a>             URLEncoder.encode(stateBuilder.toString(), <span class="jxr_string">"US-ASCII"</span>));
-<a class="jxr_linenumber" name="L236" href="#L236">236</a>         resp.sendRedirect(redirectUriBuilder.toString());
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>         resp.sendRedirect(URI.create(redirectUriBuilder.toString()).normalize().toASCIIString());
 <a class="jxr_linenumber" name="L237" href="#L237">237</a> 
 <a class="jxr_linenumber" name="L238" href="#L238">238</a>         <em class="jxr_comment">// The JASPIC spec is ambiguous for this scenario, however</em>
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>         <em class="jxr_comment">// SEND_SUCCESS works on the top three application servers.</em>
