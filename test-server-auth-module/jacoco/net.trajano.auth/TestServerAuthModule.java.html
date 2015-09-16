@@ -101,28 +101,38 @@ import javax.ws.rs.core.UriBuilder;
             AuthException,
             IOException {
 
-<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (req.getParameter(STATE) == null) {</span>
-<span class="nc" id="L105">            throw new AuthException(&quot;missing 'state' parameter&quot;);</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (!req.isSecure()) {</span>
+<span class="nc" id="L105">            throw new AuthException(&quot;Secure connection is required&quot;);</span>
         }
 
-<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (!req.isSecure()) {</span>
-<span class="nc" id="L109">            throw new AuthException(&quot;Secure connection is required&quot;);</span>
+<span class="nc" id="L108">        final String state = req.getParameter(STATE);</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        if (state == null) {</span>
+<span class="nc" id="L110">            throw new AuthException(&quot;missing 'state' parameter&quot;);</span>
         }
 
-<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (&quot;GET&quot;.equals(req.getMethod())) {</span>
-<span class="nc" id="L113">            req.getRequestDispatcher(&quot;/WEB-INF/login.jsp&quot;).forward(req, resp);</span>
-<span class="nc" id="L114">            return AuthStatus.SEND_SUCCESS;</span>
-<span class="nc bnc" id="L115" title="All 2 branches missed.">        } else if (&quot;POST&quot;.equals(req.getMethod())) {</span>
-<span class="nc" id="L116">            final String subject = UriBuilder.fromUri(&quot;https://test-server-auth-module&quot;).userInfo(req.getParameter(&quot;j_username&quot;))</span>
+        // Ensure that the state is valid, it should be relative
+<span class="nc" id="L114">        final URI stateUri = URI.create(state).normalize();</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (stateUri.isAbsolute()) {</span>
+<span class="nc" id="L116">            throw new AuthException(&quot;'state' must not be an absolute URI&quot;);</span>
+        }
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (!stateUri.getPath().startsWith(&quot;/&quot;)) {</span>
+<span class="nc" id="L119">            throw new AuthException(&quot;'state' must start with '/'&quot;);</span>
+        }
+
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (&quot;GET&quot;.equals(req.getMethod())) {</span>
+<span class="nc" id="L123">            req.getRequestDispatcher(&quot;/WEB-INF/login.jsp&quot;).forward(req, resp);</span>
+<span class="nc" id="L124">            return AuthStatus.SEND_SUCCESS;</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        } else if (&quot;POST&quot;.equals(req.getMethod())) {</span>
+<span class="nc" id="L126">            final String subject = UriBuilder.fromUri(&quot;https://test-server-auth-module&quot;).userInfo(req.getParameter(&quot;j_username&quot;))</span>
                 .build().toASCIIString();
-<span class="nc" id="L118">            final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, subject);</span>
-<span class="nc" id="L119">            cookie.setSecure(true);</span>
-<span class="nc" id="L120">            cookie.setHttpOnly(true);</span>
-<span class="nc" id="L121">            resp.addCookie(cookie);</span>
-<span class="nc" id="L122">            resp.sendRedirect(req.getContextPath() + req.getParameter(STATE));</span>
-<span class="nc" id="L123">            return AuthStatus.SEND_SUCCESS;</span>
+<span class="nc" id="L128">            final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, subject);</span>
+<span class="nc" id="L129">            cookie.setSecure(true);</span>
+<span class="nc" id="L130">            cookie.setHttpOnly(true);</span>
+<span class="nc" id="L131">            resp.addCookie(cookie);</span>
+<span class="nc" id="L132">            resp.sendRedirect(req.getContextPath() + state);</span>
+<span class="nc" id="L133">            return AuthStatus.SEND_SUCCESS;</span>
         } else {
-<span class="nc" id="L125">            throw new AuthException(&quot;unsupported method&quot;);</span>
+<span class="nc" id="L135">            throw new AuthException(&quot;unsupported method&quot;);</span>
         }
     }
 
@@ -150,7 +160,7 @@ import javax.ws.rs.core.UriBuilder;
         final Subject subject) throws AuthException {
 
         // Does nothing.
-<span class="nc" id="L153">    }</span>
+<span class="nc" id="L163">    }</span>
 
     /**
      * &lt;p&gt;
@@ -169,7 +179,7 @@ import javax.ws.rs.core.UriBuilder;
     @Override
     public Class[] getSupportedMessageTypes() {
 
-<span class="nc" id="L172">        return new Class&lt;?&gt;[] {</span>
+<span class="nc" id="L182">        return new Class&lt;?&gt;[] {</span>
             HttpServletRequest.class,
             HttpServletResponse.class
         };
@@ -196,23 +206,23 @@ import javax.ws.rs.core.UriBuilder;
             ServletException,
             IOException {
 
-<span class="nc" id="L199">        final String postLogoutRedirectUri = req.getParameter(POST_LOGOUT_REDIRECT_URI);</span>
-<span class="nc bnc" id="L200" title="All 2 branches missed.">        if (postLogoutRedirectUri != null) {</span>
+<span class="nc" id="L209">        final String postLogoutRedirectUri = req.getParameter(POST_LOGOUT_REDIRECT_URI);</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (postLogoutRedirectUri != null) {</span>
 
             // Check that the post logout redirect uri is relative to the application if not fail.
-<span class="nc" id="L203">            final String contextUri = URI.create(req.getRequestURL().toString()).resolve(req.getContextPath()).toASCIIString();</span>
-<span class="nc bnc" id="L204" title="All 2 branches missed.">            if (!postLogoutRedirectUri.startsWith(contextUri)) {</span>
-<span class="nc" id="L205">                throw new AuthException(&quot;invalid post_logout_redirect_uri&quot;);</span>
+<span class="nc" id="L213">            final String contextUri = URI.create(req.getRequestURL().toString()).resolve(req.getContextPath()).toASCIIString();</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">            if (!postLogoutRedirectUri.startsWith(contextUri)) {</span>
+<span class="nc" id="L215">                throw new AuthException(&quot;invalid post_logout_redirect_uri&quot;);</span>
             }
 
-<span class="nc" id="L208">            final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, &quot;&quot;);</span>
-<span class="nc" id="L209">            cookie.setMaxAge(0);</span>
-<span class="nc" id="L210">            cookie.setSecure(true);</span>
-<span class="nc" id="L211">            resp.addCookie(cookie);</span>
-<span class="nc" id="L212">            resp.sendRedirect(postLogoutRedirectUri);</span>
-<span class="nc" id="L213">            return AuthStatus.SEND_SUCCESS;</span>
+<span class="nc" id="L218">            final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, &quot;&quot;);</span>
+<span class="nc" id="L219">            cookie.setMaxAge(0);</span>
+<span class="nc" id="L220">            cookie.setSecure(true);</span>
+<span class="nc" id="L221">            resp.addCookie(cookie);</span>
+<span class="nc" id="L222">            resp.sendRedirect(postLogoutRedirectUri);</span>
+<span class="nc" id="L223">            return AuthStatus.SEND_SUCCESS;</span>
         }
-<span class="nc" id="L215">        throw new AuthException(&quot;missing post_logout_redirect_uri&quot;);</span>
+<span class="nc" id="L225">        throw new AuthException(&quot;missing post_logout_redirect_uri&quot;);</span>
     }
 
     /**
@@ -233,9 +243,9 @@ import javax.ws.rs.core.UriBuilder;
         final CallbackHandler h,
         @SuppressWarnings(&quot;rawtypes&quot;) final Map options) throws AuthException {
 
-<span class="fc" id="L236">        handler = h;</span>
-<span class="fc" id="L237">        mandatory = requestPolicy.isMandatory();</span>
-<span class="fc" id="L238">    }</span>
+<span class="fc" id="L246">        handler = h;</span>
+<span class="fc" id="L247">        mandatory = requestPolicy.isMandatory();</span>
+<span class="fc" id="L248">    }</span>
 
     /**
      * Return {@link AuthStatus#SEND_SUCCESS}.
@@ -252,7 +262,7 @@ import javax.ws.rs.core.UriBuilder;
     public AuthStatus secureResponse(final MessageInfo messageInfo,
         final Subject subject) throws AuthException {
 
-<span class="nc" id="L255">        return AuthStatus.SEND_SUCCESS;</span>
+<span class="nc" id="L265">        return AuthStatus.SEND_SUCCESS;</span>
     }
 
     /**
@@ -268,60 +278,60 @@ import javax.ws.rs.core.UriBuilder;
         final Subject serviceSubject)
             throws AuthException {
 
-<span class="fc" id="L271">        final HttpServletRequest req = (HttpServletRequest) messageInfo.getRequestMessage();</span>
-<span class="fc" id="L272">        final HttpServletResponse resp = (HttpServletResponse) messageInfo.getResponseMessage();</span>
+<span class="fc" id="L281">        final HttpServletRequest req = (HttpServletRequest) messageInfo.getRequestMessage();</span>
+<span class="fc" id="L282">        final HttpServletResponse resp = (HttpServletResponse) messageInfo.getResponseMessage();</span>
         try {
 
-<span class="fc" id="L275">            final String localRequestUri = req.getRequestURI().substring(req.getContextPath().length());</span>
+<span class="fc" id="L285">            final String localRequestUri = req.getRequestURI().substring(req.getContextPath().length());</span>
 
-<span class="pc bpc" id="L277" title="1 of 2 branches missed.">            if (LOGIN_ENDPOINT.equals(localRequestUri)) {</span>
-<span class="nc" id="L278">                return handleLoginEndpoint(req, resp);</span>
+<span class="pc bpc" id="L287" title="1 of 2 branches missed.">            if (LOGIN_ENDPOINT.equals(localRequestUri)) {</span>
+<span class="nc" id="L288">                return handleLoginEndpoint(req, resp);</span>
             }
 
-<span class="pc bpc" id="L281" title="1 of 2 branches missed.">            if (LOGOUT_ENDPOINT.equals(localRequestUri)) {</span>
-<span class="nc" id="L282">                return handleLogoutEndpoint(req, resp);</span>
+<span class="pc bpc" id="L291" title="1 of 2 branches missed.">            if (LOGOUT_ENDPOINT.equals(localRequestUri)) {</span>
+<span class="nc" id="L292">                return handleLogoutEndpoint(req, resp);</span>
             }
 
             // Allow if authentication is not required.
-<span class="fc bfc" id="L286" title="All 2 branches covered.">            if (!mandatory) {</span>
-<span class="fc" id="L287">                return AuthStatus.SUCCESS;</span>
+<span class="fc bfc" id="L296" title="All 2 branches covered.">            if (!mandatory) {</span>
+<span class="fc" id="L297">                return AuthStatus.SUCCESS;</span>
             }
 
             // require SSL if mandatory
-<span class="pc bpc" id="L291" title="1 of 2 branches missed.">            if (!req.isSecure()) {</span>
-<span class="fc" id="L292">                resp.sendError(HttpURLConnection.HTTP_FORBIDDEN, &quot;SSL Required&quot;);</span>
-<span class="fc" id="L293">                return AuthStatus.SEND_FAILURE;</span>
+<span class="pc bpc" id="L301" title="1 of 2 branches missed.">            if (!req.isSecure()) {</span>
+<span class="fc" id="L302">                resp.sendError(HttpURLConnection.HTTP_FORBIDDEN, &quot;SSL Required&quot;);</span>
+<span class="fc" id="L303">                return AuthStatus.SEND_FAILURE;</span>
             }
 
-<span class="nc" id="L296">            String subject = null;</span>
-<span class="nc bnc" id="L297" title="All 2 branches missed.">            if (req.getCookies() != null) {</span>
-<span class="nc bnc" id="L298" title="All 2 branches missed.">                for (final Cookie cookie : req.getCookies()) {</span>
-<span class="nc bnc" id="L299" title="All 2 branches missed.">                    if (SUBJECT_COOKIE_KEY.equals(cookie.getName())) {</span>
-<span class="nc" id="L300">                        subject = cookie.getValue();</span>
+<span class="nc" id="L306">            String subject = null;</span>
+<span class="nc bnc" id="L307" title="All 2 branches missed.">            if (req.getCookies() != null) {</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">                for (final Cookie cookie : req.getCookies()) {</span>
+<span class="nc bnc" id="L309" title="All 2 branches missed.">                    if (SUBJECT_COOKIE_KEY.equals(cookie.getName())) {</span>
+<span class="nc" id="L310">                        subject = cookie.getValue();</span>
                     }
                 }
             }
 
             // Check if there is no subject
-<span class="nc bnc" id="L306" title="All 2 branches missed.">            if (subject == null) {</span>
+<span class="nc bnc" id="L316" title="All 2 branches missed.">            if (subject == null) {</span>
                 // The JASPIC spec is ambiguous for this scenario, however
                 // SEND_SUCCESS works on the top three application servers.
 
-<span class="nc" id="L310">                resp.sendRedirect(UriBuilder.fromUri(req.getContextPath()).path(LOGIN_ENDPOINT)</span>
+<span class="nc" id="L320">                resp.sendRedirect(UriBuilder.fromUri(req.getContextPath()).path(LOGIN_ENDPOINT)</span>
                     .queryParam(&quot;state&quot;, localRequestUri).build().toASCIIString());
-<span class="nc" id="L312">                return AuthStatus.SEND_SUCCESS;</span>
+<span class="nc" id="L322">                return AuthStatus.SEND_SUCCESS;</span>
             }
 
-<span class="nc" id="L315">            handler.handle(new Callback[] {</span>
+<span class="nc" id="L325">            handler.handle(new Callback[] {</span>
                 new CallerPrincipalCallback(client, subject),
                 new GroupPrincipalCallback(client, GROUPS)
             });
-<span class="nc" id="L319">            return AuthStatus.SUCCESS;</span>
+<span class="nc" id="L329">            return AuthStatus.SUCCESS;</span>
 
-<span class="nc" id="L321">        } catch (final IOException</span>
+<span class="nc" id="L331">        } catch (final IOException</span>
             | ServletException
             | UnsupportedCallbackException e) {
-<span class="nc" id="L324">            throw new AuthException(e.getMessage());</span>
+<span class="nc" id="L334">            throw new AuthException(e.getMessage());</span>
         }
     }
 }
