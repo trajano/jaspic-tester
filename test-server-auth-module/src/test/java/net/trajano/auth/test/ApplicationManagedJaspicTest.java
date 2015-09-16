@@ -13,10 +13,13 @@ import java.util.Map;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.message.AuthStatus;
 import javax.security.auth.message.MessageInfo;
 import javax.security.auth.message.config.AuthConfigFactory;
 import javax.security.auth.message.config.ServerAuthConfig;
 import javax.security.auth.message.config.ServerAuthContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Test;
 
@@ -61,15 +64,34 @@ public class ApplicationManagedJaspicTest {
 
         final MessageInfo messageInfoMandatory = mock(MessageInfo.class);
         when(messageInfoMandatory.getMap()).thenReturn(Collections.singletonMap("javax.security.auth.message.MessagePolicy.isMandatory", "true"));
+
+        final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getMethod()).thenReturn("GET");
+        when(servletRequest.isSecure()).thenReturn(true);
+        when(servletRequest.getRequestURI()).thenReturn("/util/ejb2");
+        when(servletRequest.getContextPath()).thenReturn("/util");
+        when(messageInfoMandatory.getRequestMessage()).thenReturn(servletRequest);
+
+        final HttpServletResponse servletResponse = mock(HttpServletResponse.class);
+        when(messageInfoMandatory.getResponseMessage()).thenReturn(servletResponse);
+
         final String authContextID = serverAuthConfig.getAuthContextID(messageInfoMandatory);
         assertNotNull(authContextID);
 
         final ServerAuthContext authContext = serverAuthConfig.getAuthContext(authContextID, serviceSubject, new HashMap<>());
         assertNotNull(authContext);
+        final AuthStatus validateRequest = authContext.validateRequest(messageInfoMandatory, null, serviceSubject);
+        assertEquals(AuthStatus.SEND_SUCCESS, validateRequest);
+
+        final AuthStatus secureResponse = authContext.secureResponse(messageInfoMandatory, serviceSubject);
+        assertEquals(AuthStatus.SEND_SUCCESS, secureResponse);
+
+        authContext.cleanSubject(messageInfoMandatory, serviceSubject);
 
         assertTrue(serverAuthConfig.isProtected());
         serverAuthConfig.refresh();
         provider.refresh();
+
     }
 
     @Test

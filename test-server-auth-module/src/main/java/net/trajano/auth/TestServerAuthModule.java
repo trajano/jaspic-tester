@@ -5,6 +5,8 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.Principal;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.security.auth.Subject;
@@ -139,55 +141,6 @@ public class TestServerAuthModule implements
     }
 
     /**
-     * Callback handler that is passed in initialize by the container. This
-     * processes the callbacks which are objects that populate the "subject".
-     */
-    private CallbackHandler handler;
-
-    /**
-     * Mandatory flag.
-     */
-    private boolean mandatory;
-
-    /**
-     * Does nothing.
-     *
-     * @param messageInfo
-     *            message info
-     * @param subject
-     *            subject
-     */
-    @Override
-    public void cleanSubject(final MessageInfo messageInfo,
-        final Subject subject) throws AuthException {
-
-        // Does nothing.
-    }
-
-    /**
-     * <p>
-     * Supported message types. For our case we only need to deal with HTTP
-     * servlet request and responses. On Java EE 7 this will handle WebSockets
-     * as well.
-     * </p>
-     * <p>
-     * This creates a new array for security at the expense of performance.
-     * </p>
-     *
-     * @return {@link HttpServletRequest} and {@link HttpServletResponse}
-     *         classes.
-     */
-    @SuppressWarnings("rawtypes")
-    @Override
-    public Class[] getSupportedMessageTypes() {
-
-        return new Class<?>[] {
-            HttpServletRequest.class,
-            HttpServletResponse.class
-        };
-    }
-
-    /**
      * Handle the logout endpoint. This will clear the cookie and redirect to
      * the URI that has been specified.
      *
@@ -203,7 +156,7 @@ public class TestServerAuthModule implements
      * @throws ServletException
      *             servlet error
      */
-    private AuthStatus handleLogoutEndpoint(final HttpServletRequest req,
+    private static AuthStatus handleLogoutEndpoint(final HttpServletRequest req,
         final HttpServletResponse resp) throws AuthException,
             ServletException,
             IOException {
@@ -242,7 +195,7 @@ public class TestServerAuthModule implements
      * @throws ServletException
      *             servlet error
      */
-    private AuthStatus handleRedirectToLoginEndpoint(final HttpServletRequest req,
+    private static AuthStatus handleRedirectToLoginEndpoint(final HttpServletRequest req,
         final HttpServletResponse resp) throws AuthException,
             ServletException,
             IOException {
@@ -266,6 +219,76 @@ public class TestServerAuthModule implements
         // SEND_SUCCESS works on the top three application servers.
 
         return AuthStatus.SEND_SUCCESS;
+    }
+
+    /**
+     * Callback handler that is passed in initialize by the container. This
+     * processes the callbacks which are objects that populate the "subject".
+     */
+    private CallbackHandler handler;
+
+    /**
+     * Mandatory flag.
+     */
+    private boolean mandatory;
+
+    /**
+     * Removes the <code>authenticated</code> group and the user ID from the
+     * principal set.
+     *
+     * @param messageInfo
+     *            message info
+     * @param subject
+     *            subject
+     */
+    @Override
+    public void cleanSubject(final MessageInfo messageInfo,
+        final Subject subject) throws AuthException {
+
+        final HttpServletRequest req = (HttpServletRequest) messageInfo.getRequestMessage();
+        String subjectCookie = null;
+        if (req.getCookies() != null) {
+            for (final Cookie cookie : req.getCookies()) {
+                if (SUBJECT_COOKIE_KEY.equals(cookie.getName())) {
+                    subjectCookie = cookie.getValue();
+                }
+            }
+        }
+
+        final Iterator<Principal> iterator = subject.getPrincipals().iterator();
+        while (iterator.hasNext()) {
+            final Principal principal = iterator.next();
+            if ("authenticated".equals(principal.getName())) {
+                iterator.remove();
+            }
+            if (principal.getName().equals(subjectCookie)) {
+                iterator.remove();
+            }
+        }
+        // Does nothing.
+    }
+
+    /**
+     * <p>
+     * Supported message types. For our case we only need to deal with HTTP
+     * servlet request and responses. On Java EE 7 this will handle WebSockets
+     * as well.
+     * </p>
+     * <p>
+     * This creates a new array for security at the expense of performance.
+     * </p>
+     *
+     * @return {@link HttpServletRequest} and {@link HttpServletResponse}
+     *         classes.
+     */
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Class[] getSupportedMessageTypes() {
+
+        return new Class<?>[] {
+            HttpServletRequest.class,
+            HttpServletResponse.class
+        };
     }
 
     /**

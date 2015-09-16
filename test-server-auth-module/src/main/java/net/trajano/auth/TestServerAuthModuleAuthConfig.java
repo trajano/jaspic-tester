@@ -166,7 +166,8 @@ public class TestServerAuthModuleAuthConfig implements
      */
     @Override
     public void refresh() {
-
+        
+        // does nothing
     }
 
     @Override
