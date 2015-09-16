@@ -12,7 +12,6 @@ import javax.security.auth.message.MessagePolicy;
 import javax.security.auth.message.MessagePolicy.TargetPolicy;
 import javax.security.auth.message.config.ServerAuthConfig;
 import javax.security.auth.message.config.ServerAuthContext;
-import javax.security.auth.message.module.ServerAuthModule;
 
 /**
  * Common methods for ServerAuthConfig and ClientAuthConfig.
@@ -22,27 +21,25 @@ public class TestServerAuthModuleAuthConfig implements
 
     /**
      * &lt;p&gt;
-     * The {@link MessageInfo} map must contain this key and its associated
-     * value, if and only if authentication is required to perform the resource
-     * access corresponding to the HttpServletRequest to which the
-     * ServerAuthContext will be applied. Authentication is required if use of
-     * the HTTP method of the HttpServletRequest at the resource identified by
-     * the HttpServletRequest is covered by a Servlet authconstraint, or in a
-     * JSR 115 compatible runtime, if the corresponding WebResourcePermission is
-     * NOT granted to an unauthenticated caller. In a JSR 115 compatible
-     * runtime, the corresponding WebResourcePermission may be constructed
-     * directly from the HttpServletRequest as follows:
+     * The {@link javax.security.auth.message.MessageInfo} map must contain this
+     * key and its associated value, if and only if authentication is required
+     * to perform the resource access corresponding to the HttpServletRequest to
+     * which the ServerAuthContext will be applied. Authentication is required
+     * if use of the HTTP method of the HttpServletRequest at the resource
+     * identified by the HttpServletRequest is covered by a Servlet auth
+     * constraint, or in a JSR 115 compatible runtime, if the corresponding
+     * WebResourcePermission is NOT granted to an unauthenticated caller. In a
+     * JSR 115 compatible runtime, the corresponding WebResourcePermission may
+     * be constructed directly from the HttpServletRequest as follows:
      * &lt;/p&gt;
-     *
-     * &lt;pre&gt;
-     * public WebResourcePermission(HttpServletRequest request);
-     * &lt;/pre&gt;
+     * &lt;blockquote&gt; public WebResourcePermission(HttpServletRequest
+     * request); &lt;/blockquote&gt; *
      * &lt;p&gt;
      * The authentication context configuration system must use the value of
      * this property to establish the corresponding value within the
      * requestPolicy passed to the authentication modules of the
      * {@link javax.security.auth.message.config.ServerAuthContext} acquired to
-     * process the {@link MessageInfo}.
+     * process the {@link javax.security.auth.message.MessageInfo}.
      * &lt;/p&gt;
      */
     private static final String JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY = &quot;javax.security.auth.message.MessagePolicy.isMandatory&quot;;
@@ -50,12 +47,12 @@ public class TestServerAuthModuleAuthConfig implements
     /**
      * Mandatory message policy.
      */
-<span class="fc" id="L53">    protected static final MessagePolicy MANDATORY = new MessagePolicy(new TargetPolicy[0], true);</span>
+<span class="fc" id="L50">    protected static final MessagePolicy MANDATORY = new MessagePolicy(new TargetPolicy[0], true);</span>
 
     /**
      * Non-mandatory message policy.
      */
-<span class="fc" id="L58">    protected static final MessagePolicy NON_MANDATORY = new MessagePolicy(new TargetPolicy[0], false);</span>
+<span class="fc" id="L55">    protected static final MessagePolicy NON_MANDATORY = new MessagePolicy(new TargetPolicy[0], false);</span>
 
     /**
      * Application context.
@@ -78,6 +75,8 @@ public class TestServerAuthModuleAuthConfig implements
     private final Map&lt;String, String&gt; options;
 
     /**
+     * Builds the config.
+     *
      * @param options
      *            options
      * @param layer
@@ -85,18 +84,18 @@ public class TestServerAuthModuleAuthConfig implements
      * @param appContext
      *            application context
      * @param handler
-     *            handler
+     *            callback handler
      */
     public TestServerAuthModuleAuthConfig(final Map&lt;String, String&gt; options,
         final String layer,
         final String appContext,
-<span class="fc" id="L93">        final CallbackHandler handler) {</span>
+<span class="fc" id="L92">        final CallbackHandler handler) {</span>
 
-<span class="fc" id="L95">        this.appContext = appContext;</span>
-<span class="fc" id="L96">        this.layer = layer;</span>
-<span class="fc" id="L97">        this.options = options;</span>
-<span class="fc" id="L98">        this.handler = handler;</span>
-<span class="fc" id="L99">    }</span>
+<span class="fc" id="L94">        this.appContext = appContext;</span>
+<span class="fc" id="L95">        this.layer = layer;</span>
+<span class="fc" id="L96">        this.options = options;</span>
+<span class="fc" id="L97">        this.handler = handler;</span>
+<span class="fc" id="L98">    }</span>
 
     /**
      * Augments the properties with additional properties.
@@ -107,6 +106,7 @@ public class TestServerAuthModuleAuthConfig implements
      */
     @SuppressWarnings(&quot;unchecked&quot;)
     protected Map&lt;?, ?&gt; augmentProperties(@SuppressWarnings(&quot;rawtypes&quot;) final Map properties) {
+
 <span class="fc bfc" id="L110" title="All 2 branches covered.">        if (properties == null) {</span>
 <span class="fc" id="L111">            return options;</span>
         }
@@ -116,10 +116,37 @@ public class TestServerAuthModuleAuthConfig implements
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getAppContext() {
 
-<span class="fc" id="L122">        return appContext;</span>
+<span class="fc" id="L125">        return appContext;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     * &lt;p&gt;
+     * Augments the options with the properties specified and initializes the
+     * module as mandatory or non-mandatory depending on whether the
+     * authContextID is &lt;code&gt;null&lt;/code&gt;.
+     * &lt;/p&gt;
+     */
+    @Override
+    public ServerAuthContext getAuthContext(final String authContextID,
+        final Subject serviceSubject,
+        @SuppressWarnings(&quot;rawtypes&quot;) final Map properties) throws AuthException {
+
+<span class="fc" id="L141">        final Map&lt;?, ?&gt; augmentedOptions = augmentProperties(properties);</span>
+<span class="fc" id="L142">        final TestServerAuthModule context = new TestServerAuthModule();</span>
+
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        if (authContextID == null) {</span>
+<span class="fc" id="L145">            context.initialize(NON_MANDATORY, NON_MANDATORY, handler, augmentedOptions);</span>
+        } else {
+<span class="fc" id="L147">            context.initialize(MANDATORY, MANDATORY, handler, augmentedOptions);</span>
+        }
+<span class="fc" id="L149">        return context;</span>
     }
 
     /**
@@ -136,29 +163,32 @@ public class TestServerAuthModuleAuthConfig implements
     @Override
     public String getAuthContextID(final MessageInfo messageInfo) {
 
-<span class="fc" id="L139">        final Object isMandatory = messageInfo.getMap()</span>
+<span class="fc" id="L166">        final Object isMandatory = messageInfo.getMap()</span>
             .get(JAVAX_SECURITY_AUTH_MESSAGE_MESSAGE_POLICY_IS_MANDATORY);
-<span class="pc bpc" id="L141" title="2 of 6 branches missed.">        if (isMandatory != null &amp;&amp; isMandatory instanceof String &amp;&amp; Boolean.valueOf((String) isMandatory)) {</span>
-<span class="fc" id="L142">            return messageInfo.toString();</span>
+<span class="pc bpc" id="L168" title="2 of 6 branches missed.">        if (isMandatory != null &amp;&amp; isMandatory instanceof String &amp;&amp; Boolean.valueOf((String) isMandatory)) {</span>
+<span class="fc" id="L169">            return messageInfo.toString();</span>
         }
-<span class="fc" id="L144">        return null;</span>
+<span class="fc" id="L171">        return null;</span>
     }
 
-    protected CallbackHandler getHandler() {
-
-<span class="fc" id="L149">        return handler;</span>
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getMessageLayer() {
 
-<span class="fc" id="L155">        return layer;</span>
+<span class="fc" id="L180">        return layer;</span>
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return &lt;code&gt;true&lt;/code&gt;
+     */
     @Override
     public boolean isProtected() {
 
-<span class="fc" id="L161">        return true;</span>
+<span class="fc" id="L191">        return true;</span>
     }
 
     /**
@@ -166,27 +196,9 @@ public class TestServerAuthModuleAuthConfig implements
      */
     @Override
     public void refresh() {
-        
+
         // does nothing
-<span class="fc" id="L171">    }</span>
+<span class="fc" id="L201">    }</span>
 
-    @Override
-    public ServerAuthContext getAuthContext(final String authContextID,
-        final Subject serviceSubject,
-        @SuppressWarnings(&quot;rawtypes&quot;) final Map properties) throws AuthException {
-
-<span class="fc" id="L178">        final Map&lt;?, ?&gt; augmentedOptions = augmentProperties(properties);</span>
-<span class="fc" id="L179">        final ServerAuthContext context = new TestServerAuthModule();</span>
-<span class="pc bpc" id="L180" title="1 of 2 branches missed.">        if (context instanceof ServerAuthModule) {</span>
-
-<span class="fc" id="L182">            final ServerAuthModule module = (ServerAuthModule) context;</span>
-<span class="fc bfc" id="L183" title="All 2 branches covered.">            if (authContextID == null) {</span>
-<span class="fc" id="L184">                module.initialize(NON_MANDATORY, NON_MANDATORY, getHandler(), augmentedOptions);</span>
-            } else {
-<span class="fc" id="L186">                module.initialize(MANDATORY, MANDATORY, getHandler(), augmentedOptions);</span>
-            }
-        }
-<span class="fc" id="L189">        return context;</span>
-    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
