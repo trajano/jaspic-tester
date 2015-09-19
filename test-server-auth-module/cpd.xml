@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <pmd-cpd>
-   <duplication lines="200" tokens="569">
+   <duplication lines="202" tokens="569">
       <file line="282"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
       <file line="315"
@@ -25,7 +25,9 @@
      * </ul>
      *
      * @param stateUri
+     *            URI to evaluate
      * @throws AuthException
+     *             validation failure
      */
     private static void validateStateUri(final URI stateUri) throws AuthException {
 
