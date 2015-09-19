@@ -4,7 +4,7 @@
     <parent>
         <groupId>net.trajano.auth</groupId>
         <artifactId>jaspic-tester</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.1</version>
     </parent>
     <artifactId>test-server-auth-module</artifactId>
     <name>Test Server Auth Module</name>
