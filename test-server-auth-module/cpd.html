@@ -76,10 +76,10 @@
 <th>Line</th></tr>
 <tr class="b">
 <td>net/trajano/auth/TestServerAuthModule.java</td>
-<td><a href="./xref/net/trajano/auth/TestServerAuthModule.html#L290">290</a></td></tr>
+<td><a href="./xref/net/trajano/auth/TestServerAuthModule.html#L282">282</a></td></tr>
 <tr class="a">
 <td>net/trajano/auth/session/TestServerAuthModule.java</td>
-<td><a href="./xref/net/trajano/auth/session/TestServerAuthModule.html#L323">323</a></td></tr>
+<td><a href="./xref/net/trajano/auth/session/TestServerAuthModule.html#L315">315</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>            URLEncoder.encode(stateBuilder.toString(), &quot;US-ASCII&quot;));
@@ -89,6 +89,35 @@
         // SEND_SUCCESS works on the top three application servers.
 
         return AuthStatus.SEND_SUCCESS;
+    }
+
+    /**
+     * Validates the state URI. It ensures that it is:
+     * &lt;ul&gt;
+     * &lt;li&gt;an absolute URI, no &lt;code&gt;http:&lt;/code&gt; or any other scheme
+     * definition.
+     * &lt;li&gt;It has no host component.
+     * &lt;li&gt;Path must start with &lt;code&gt;/&lt;/code&gt;
+     * &lt;li&gt;Path must not contain &lt;code&gt;/..&lt;/code&gt;
+     * &lt;/ul&gt;
+     *
+     * @param stateUri
+     * @throws AuthException
+     */
+    private static void validateStateUri(final URI stateUri) throws AuthException {
+
+        if (stateUri.isAbsolute()) {
+            throw new AuthException(&quot;'state' must not be an absolute URI&quot;);
+        }
+        if (stateUri.getHost() != null) {
+            throw new AuthException(&quot;'state' must not have a host component&quot;);
+        }
+        if (!stateUri.getPath().startsWith(&quot;/&quot;)) {
+            throw new AuthException(&quot;'state' must start with '/'&quot;);
+        }
+        if (stateUri.getPath().contains(&quot;/..&quot;)) {
+            throw new AuthException(&quot;'state' must not resolve to a parent path&quot;);
+        }
     }
 
     /**
@@ -459,61 +488,6 @@
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
-<td>net/trajano/auth/TestServerAuthModule.java</td>
-<td><a href="./xref/net/trajano/auth/TestServerAuthModule.html#L110">110</a></td></tr>
-<tr class="a">
-<td>net/trajano/auth/session/TestServerAuthModule.java</td>
-<td><a href="./xref/net/trajano/auth/session/TestServerAuthModule.html#L119">119</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>    }
-
-    /**
-     * Handle the login endpoint. This will display the login page and will
-     * handle login POST action.
-     *
-     * @param req
-     *            request
-     * @param resp
-     *            response
-     * @return authentication status
-     * @throws AuthException
-     *             happens when there is invalid request data
-     * @throws IOException
-     *             servlet error
-     * @throws ServletException
-     *             servlet error
-     */
-    private static AuthStatus handleLoginEndpoint(final HttpServletRequest req,
-        final HttpServletResponse resp) throws ServletException,
-            AuthException,
-            IOException {
-
-        if (!req.isSecure()) {
-            throw new AuthException(&quot;Secure connection is required&quot;);
-        }
-
-        final String state = req.getParameter(STATE);
-        if (state == null) {
-            throw new AuthException(&quot;missing 'state' parameter&quot;);
-        }
-
-        // Ensure that the state is valid, it should be relative
-        final URI stateUri = URI.create(state).normalize();
-        if (stateUri.isAbsolute()) {
-            throw new AuthException(&quot;'state' must not be an absolute URI&quot;);
-        }
-        if (!stateUri.getPath().startsWith(&quot;/&quot;)) {
-            throw new AuthException(&quot;'state' must start with '/'&quot;);
-        }
-        if (stateUri.getPath().contains(&quot;/..&quot;)) {
-            throw new AuthException(&quot;'state' must not resolve to a parent path&quot;);
-        }</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
 <td>net/trajano/auth/AuthModuleConfigProvider.java</td>
 <td><a href="./xref/net/trajano/auth/AuthModuleConfigProvider.html#L16">16</a></td></tr>
 <tr class="a">
@@ -595,10 +569,10 @@
 <th>Line</th></tr>
 <tr class="b">
 <td>net/trajano/auth/TestServerAuthModule.java</td>
-<td><a href="./xref/net/trajano/auth/TestServerAuthModule.html#L213">213</a></td></tr>
+<td><a href="./xref/net/trajano/auth/TestServerAuthModule.html#L205">205</a></td></tr>
 <tr class="a">
 <td>net/trajano/auth/session/TestServerAuthModule.java</td>
-<td><a href="./xref/net/trajano/auth/session/TestServerAuthModule.html#L238">238</a></td></tr>
+<td><a href="./xref/net/trajano/auth/session/TestServerAuthModule.html#L230">230</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>        resp.sendRedirect(URI.create(req.getContextPath() + stateUri.toASCIIString()).normalize().toASCIIString());
@@ -643,10 +617,10 @@
 <th>Line</th></tr>
 <tr class="b">
 <td>net/trajano/auth/TestServerAuthModule.java</td>
-<td><a href="./xref/net/trajano/auth/TestServerAuthModule.html#L252">252</a></td></tr>
+<td><a href="./xref/net/trajano/auth/TestServerAuthModule.html#L244">244</a></td></tr>
 <tr class="a">
 <td>net/trajano/auth/session/TestServerAuthModule.java</td>
-<td><a href="./xref/net/trajano/auth/session/TestServerAuthModule.html#L278">278</a></td></tr>
+<td><a href="./xref/net/trajano/auth/session/TestServerAuthModule.html#L270">270</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>            resp.sendRedirect(postLogoutRedirectUriNormalized);

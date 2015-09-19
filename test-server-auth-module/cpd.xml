@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <pmd-cpd>
-   <duplication lines="171" tokens="479">
-      <file line="290"
+   <duplication lines="200" tokens="569">
+      <file line="282"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
-      <file line="323"
+      <file line="315"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
       <codefragment><![CDATA[            URLEncoder.encode(stateBuilder.toString(), "US-ASCII"));
         resp.sendRedirect(URI.create(redirectUriBuilder.toString()).normalize().toASCIIString());
@@ -12,6 +12,35 @@
         // SEND_SUCCESS works on the top three application servers.
 
         return AuthStatus.SEND_SUCCESS;
+    }
+
+    /**
+     * Validates the state URI. It ensures that it is:
+     * <ul>
+     * <li>an absolute URI, no <code>http:</code> or any other scheme
+     * definition.
+     * <li>It has no host component.
+     * <li>Path must start with <code>/</code>
+     * <li>Path must not contain <code>/..</code>
+     * </ul>
+     *
+     * @param stateUri
+     * @throws AuthException
+     */
+    private static void validateStateUri(final URI stateUri) throws AuthException {
+
+        if (stateUri.isAbsolute()) {
+            throw new AuthException("'state' must not be an absolute URI");
+        }
+        if (stateUri.getHost() != null) {
+            throw new AuthException("'state' must not have a host component");
+        }
+        if (!stateUri.getPath().startsWith("/")) {
+            throw new AuthException("'state' must start with '/'");
+        }
+        if (stateUri.getPath().contains("/..")) {
+            throw new AuthException("'state' must not resolve to a parent path");
+        }
     }
 
     /**
@@ -372,55 +401,6 @@
 
 }]]></codefragment>
    </duplication>
-   <duplication lines="43" tokens="135">
-      <file line="110"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
-      <file line="119"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
-      <codefragment><![CDATA[    }
-
-    /**
-     * Handle the login endpoint. This will display the login page and will
-     * handle login POST action.
-     *
-     * @param req
-     *            request
-     * @param resp
-     *            response
-     * @return authentication status
-     * @throws AuthException
-     *             happens when there is invalid request data
-     * @throws IOException
-     *             servlet error
-     * @throws ServletException
-     *             servlet error
-     */
-    private static AuthStatus handleLoginEndpoint(final HttpServletRequest req,
-        final HttpServletResponse resp) throws ServletException,
-            AuthException,
-            IOException {
-
-        if (!req.isSecure()) {
-            throw new AuthException("Secure connection is required");
-        }
-
-        final String state = req.getParameter(STATE);
-        if (state == null) {
-            throw new AuthException("missing 'state' parameter");
-        }
-
-        // Ensure that the state is valid, it should be relative
-        final URI stateUri = URI.create(state).normalize();
-        if (stateUri.isAbsolute()) {
-            throw new AuthException("'state' must not be an absolute URI");
-        }
-        if (!stateUri.getPath().startsWith("/")) {
-            throw new AuthException("'state' must start with '/'");
-        }
-        if (stateUri.getPath().contains("/..")) {
-            throw new AuthException("'state' must not resolve to a parent path");
-        }]]></codefragment>
-   </duplication>
    <duplication lines="68" tokens="126">
       <file line="16"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/AuthModuleConfigProvider.java"/>
@@ -496,9 +476,9 @@
 }]]></codefragment>
    </duplication>
    <duplication lines="36" tokens="120">
-      <file line="213"
+      <file line="205"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
-      <file line="238"
+      <file line="230"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
       <codefragment><![CDATA[        resp.sendRedirect(URI.create(req.getContextPath() + stateUri.toASCIIString()).normalize().toASCIIString());
         return AuthStatus.SEND_SUCCESS;
@@ -538,9 +518,9 @@
             final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, "");]]></codefragment>
    </duplication>
    <duplication lines="35" tokens="115">
-      <file line="252"
+      <file line="244"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
-      <file line="278"
+      <file line="270"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
       <codefragment><![CDATA[            resp.sendRedirect(postLogoutRedirectUriNormalized);
             return AuthStatus.SEND_SUCCESS;

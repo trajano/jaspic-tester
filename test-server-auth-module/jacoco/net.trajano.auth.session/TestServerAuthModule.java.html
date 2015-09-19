@@ -150,27 +150,19 @@ import javax.xml.bind.DatatypeConverter;
 
         // Ensure that the state is valid, it should be relative
 <span class="fc" id="L152">        final URI stateUri = URI.create(state).normalize();</span>
-<span class="fc bfc" id="L153" title="All 2 branches covered.">        if (stateUri.isAbsolute()) {</span>
-<span class="fc" id="L154">            throw new AuthException(&quot;'state' must not be an absolute URI&quot;);</span>
-        }
-<span class="fc bfc" id="L156" title="All 2 branches covered.">        if (!stateUri.getPath().startsWith(&quot;/&quot;)) {</span>
-<span class="fc" id="L157">            throw new AuthException(&quot;'state' must start with '/'&quot;);</span>
-        }
-<span class="fc bfc" id="L159" title="All 2 branches covered.">        if (stateUri.getPath().contains(&quot;/..&quot;)) {</span>
-<span class="fc" id="L160">            throw new AuthException(&quot;'state' must not resolve to a parent path&quot;);</span>
+<span class="fc" id="L153">        validateStateUri(stateUri);</span>
+
+<span class="fc" id="L155">        final String nonce = req.getParameter(NONCE);</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        if (nonce == null) {</span>
+<span class="fc" id="L157">            throw new AuthException(&quot;missing 'nonce' parameter&quot;);</span>
         }
 
-<span class="fc" id="L163">        final String nonce = req.getParameter(NONCE);</span>
-<span class="fc bfc" id="L164" title="All 2 branches covered.">        if (nonce == null) {</span>
-<span class="fc" id="L165">            throw new AuthException(&quot;missing 'nonce' parameter&quot;);</span>
-        }
-
-<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (&quot;GET&quot;.equals(req.getMethod())) {</span>
-<span class="fc" id="L169">            return handleLoginGet(req, resp);</span>
-<span class="fc bfc" id="L170" title="All 2 branches covered.">        } else if (&quot;POST&quot;.equals(req.getMethod())) {</span>
-<span class="fc" id="L171">            return handleLoginPost(req, resp, stateUri, nonce);</span>
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        if (&quot;GET&quot;.equals(req.getMethod())) {</span>
+<span class="fc" id="L161">            return handleLoginGet(req, resp);</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        } else if (&quot;POST&quot;.equals(req.getMethod())) {</span>
+<span class="fc" id="L163">            return handleLoginPost(req, resp, stateUri, nonce);</span>
         } else {
-<span class="fc" id="L173">            throw new AuthException(&quot;unsupported method&quot;);</span>
+<span class="fc" id="L165">            throw new AuthException(&quot;unsupported method&quot;);</span>
         }
     }
 
@@ -191,8 +183,8 @@ import javax.xml.bind.DatatypeConverter;
         final HttpServletResponse resp) throws ServletException,
             IOException {
 
-<span class="fc" id="L194">        req.getRequestDispatcher(&quot;/WEB-INF/login.jsp&quot;).forward(req, resp);</span>
-<span class="fc" id="L195">        return AuthStatus.SEND_SUCCESS;</span>
+<span class="fc" id="L186">        req.getRequestDispatcher(&quot;/WEB-INF/login.jsp&quot;).forward(req, resp);</span>
+<span class="fc" id="L187">        return AuthStatus.SEND_SUCCESS;</span>
     }
 
     /**
@@ -221,22 +213,22 @@ import javax.xml.bind.DatatypeConverter;
             IOException,
             AuthException {
 
-<span class="fc" id="L224">        final HttpSession session = req.getSession(false);</span>
-<span class="fc bfc" id="L225" title="All 2 branches covered.">        if (session == null) {</span>
-<span class="fc" id="L226">            throw new AuthException(&quot;session is required&quot;);</span>
+<span class="fc" id="L216">        final HttpSession session = req.getSession(false);</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        if (session == null) {</span>
+<span class="fc" id="L218">            throw new AuthException(&quot;session is required&quot;);</span>
         }
-<span class="fc bfc" id="L228" title="All 2 branches covered.">        if (!nonce.equals(session.getAttribute(NONCE_SESSION_KEY))) {</span>
-<span class="fc" id="L229">            throw new AuthException(&quot;nonce mismatch&quot;);</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">        if (!nonce.equals(session.getAttribute(NONCE_SESSION_KEY))) {</span>
+<span class="fc" id="L221">            throw new AuthException(&quot;nonce mismatch&quot;);</span>
         }
-<span class="fc" id="L231">        final String subject = UriBuilder.fromUri(&quot;https://test-server-auth-module&quot;).userInfo(req.getParameter(&quot;j_username&quot;))</span>
+<span class="fc" id="L223">        final String subject = UriBuilder.fromUri(&quot;https://test-server-auth-module&quot;).userInfo(req.getParameter(&quot;j_username&quot;))</span>
             .build().toASCIIString();
-<span class="fc" id="L233">        session.setAttribute(SUBJECT_SESSION_KEY, subject);</span>
+<span class="fc" id="L225">        session.setAttribute(SUBJECT_SESSION_KEY, subject);</span>
 
         // Remove nonce as it is no longer required
-<span class="fc" id="L236">        session.removeAttribute(NONCE_SESSION_KEY);</span>
-<span class="fc" id="L237">        final String redirectUri = req.getContextPath() + stateUri.toASCIIString();</span>
-<span class="fc" id="L238">        resp.sendRedirect(URI.create(redirectUri).normalize().toASCIIString());</span>
-<span class="fc" id="L239">        return AuthStatus.SEND_SUCCESS;</span>
+<span class="fc" id="L228">        session.removeAttribute(NONCE_SESSION_KEY);</span>
+<span class="fc" id="L229">        final String redirectUri = req.getContextPath() + stateUri.toASCIIString();</span>
+<span class="fc" id="L230">        resp.sendRedirect(URI.create(redirectUri).normalize().toASCIIString());</span>
+<span class="fc" id="L231">        return AuthStatus.SEND_SUCCESS;</span>
     }
 
     /**
@@ -260,25 +252,25 @@ import javax.xml.bind.DatatypeConverter;
             ServletException,
             IOException {
 
-<span class="fc" id="L263">        final String postLogoutRedirectUri = req.getParameter(POST_LOGOUT_REDIRECT_URI);</span>
-<span class="fc bfc" id="L264" title="All 2 branches covered.">        if (postLogoutRedirectUri != null) {</span>
+<span class="fc" id="L255">        final String postLogoutRedirectUri = req.getParameter(POST_LOGOUT_REDIRECT_URI);</span>
+<span class="fc bfc" id="L256" title="All 2 branches covered.">        if (postLogoutRedirectUri != null) {</span>
 
-<span class="fc" id="L266">            final String postLogoutRedirectUriNormalized = URI.create(postLogoutRedirectUri).normalize().toASCIIString();</span>
+<span class="fc" id="L258">            final String postLogoutRedirectUriNormalized = URI.create(postLogoutRedirectUri).normalize().toASCIIString();</span>
             // Check that the post logout redirect uri is relative to the application if not fail.
-<span class="fc" id="L268">            final String contextUri = URI.create(req.getRequestURL().toString()).resolve(req.getContextPath()).toASCIIString();</span>
-<span class="fc bfc" id="L269" title="All 2 branches covered.">            if (!postLogoutRedirectUriNormalized.startsWith(contextUri)) {</span>
-<span class="fc" id="L270">                throw new AuthException(&quot;invalid post_logout_redirect_uri&quot;);</span>
+<span class="fc" id="L260">            final String contextUri = URI.create(req.getRequestURL().toString()).resolve(req.getContextPath()).toASCIIString();</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">            if (!postLogoutRedirectUriNormalized.startsWith(contextUri)) {</span>
+<span class="fc" id="L262">                throw new AuthException(&quot;invalid post_logout_redirect_uri&quot;);</span>
             }
 
-<span class="fc" id="L273">            final HttpSession session = req.getSession(false);</span>
-<span class="fc bfc" id="L274" title="All 2 branches covered.">            if (session != null) {</span>
-<span class="fc" id="L275">                session.removeAttribute(SUBJECT_SESSION_KEY);</span>
-<span class="fc" id="L276">                session.removeAttribute(NONCE_SESSION_KEY);</span>
+<span class="fc" id="L265">            final HttpSession session = req.getSession(false);</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">            if (session != null) {</span>
+<span class="fc" id="L267">                session.removeAttribute(SUBJECT_SESSION_KEY);</span>
+<span class="fc" id="L268">                session.removeAttribute(NONCE_SESSION_KEY);</span>
             }
-<span class="fc" id="L278">            resp.sendRedirect(postLogoutRedirectUriNormalized);</span>
-<span class="fc" id="L279">            return AuthStatus.SEND_SUCCESS;</span>
+<span class="fc" id="L270">            resp.sendRedirect(postLogoutRedirectUriNormalized);</span>
+<span class="fc" id="L271">            return AuthStatus.SEND_SUCCESS;</span>
         }
-<span class="fc" id="L281">        throw new AuthException(&quot;missing post_logout_redirect_uri&quot;);</span>
+<span class="fc" id="L273">        throw new AuthException(&quot;missing post_logout_redirect_uri&quot;);</span>
     }
 
     /**
@@ -301,33 +293,62 @@ import javax.xml.bind.DatatypeConverter;
             ServletException,
             IOException {
 
-<span class="fc bfc" id="L304" title="All 2 branches covered.">        if (!&quot;GET&quot;.equals(req.getMethod())) {</span>
-<span class="fc" id="L305">            throw new AuthException(&quot;Only 'GET' method is supported when redirecting to the endpoint&quot;);</span>
+<span class="fc bfc" id="L296" title="All 2 branches covered.">        if (!&quot;GET&quot;.equals(req.getMethod())) {</span>
+<span class="fc" id="L297">            throw new AuthException(&quot;Only 'GET' method is supported when redirecting to the endpoint&quot;);</span>
         }
-<span class="fc" id="L307">        final StringBuilder stateBuilder = new StringBuilder(req.getRequestURI().substring(req.getContextPath().length()));</span>
-<span class="fc bfc" id="L308" title="All 2 branches covered.">        if (req.getQueryString() != null) {</span>
-<span class="fc" id="L309">            stateBuilder.append('?');</span>
-<span class="fc" id="L310">            stateBuilder.append(req.getQueryString());</span>
+<span class="fc" id="L299">        final StringBuilder stateBuilder = new StringBuilder(req.getRequestURI().substring(req.getContextPath().length()));</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">        if (req.getQueryString() != null) {</span>
+<span class="fc" id="L301">            stateBuilder.append('?');</span>
+<span class="fc" id="L302">            stateBuilder.append(req.getQueryString());</span>
         }
-<span class="fc" id="L312">        final byte[] nonce = new byte[8];</span>
-<span class="fc" id="L313">        ThreadLocalRandom.current().nextBytes(nonce);</span>
+<span class="fc" id="L304">        final byte[] nonce = new byte[8];</span>
+<span class="fc" id="L305">        ThreadLocalRandom.current().nextBytes(nonce);</span>
 
-<span class="fc" id="L315">        final String nonceString = DatatypeConverter.printHexBinary(nonce);</span>
-<span class="fc" id="L316">        req.getSession().setAttribute(NONCE_SESSION_KEY, nonceString);</span>
-<span class="fc" id="L317">        final StringBuilder redirectUriBuilder = new StringBuilder(req.getContextPath());</span>
-<span class="fc" id="L318">        redirectUriBuilder.append(LOGIN_ENDPOINT);</span>
-<span class="fc" id="L319">        redirectUriBuilder.append(&quot;?state=&quot;);</span>
-<span class="fc" id="L320">        redirectUriBuilder.append(</span>
+<span class="fc" id="L307">        final String nonceString = DatatypeConverter.printHexBinary(nonce);</span>
+<span class="fc" id="L308">        req.getSession().setAttribute(NONCE_SESSION_KEY, nonceString);</span>
+<span class="fc" id="L309">        final StringBuilder redirectUriBuilder = new StringBuilder(req.getContextPath());</span>
+<span class="fc" id="L310">        redirectUriBuilder.append(LOGIN_ENDPOINT);</span>
+<span class="fc" id="L311">        redirectUriBuilder.append(&quot;?state=&quot;);</span>
+<span class="fc" id="L312">        redirectUriBuilder.append(</span>
             URLEncoder.encode(stateBuilder.toString(), &quot;US-ASCII&quot;));
-<span class="fc" id="L322">        redirectUriBuilder.append(&quot;&amp;nonce=&quot;);</span>
-<span class="fc" id="L323">        redirectUriBuilder.append(nonceString);</span>
-<span class="fc" id="L324">        resp.sendRedirect(URI.create(redirectUriBuilder.toString()).normalize().toASCIIString());</span>
+<span class="fc" id="L314">        redirectUriBuilder.append(&quot;&amp;nonce=&quot;);</span>
+<span class="fc" id="L315">        redirectUriBuilder.append(nonceString);</span>
+<span class="fc" id="L316">        resp.sendRedirect(URI.create(redirectUriBuilder.toString()).normalize().toASCIIString());</span>
 
         // The JASPIC spec is ambiguous for this scenario, however
         // SEND_SUCCESS works on the top three application servers.
 
-<span class="fc" id="L329">        return AuthStatus.SEND_SUCCESS;</span>
+<span class="fc" id="L321">        return AuthStatus.SEND_SUCCESS;</span>
     }
+
+    /**
+     * Validates the state URI. It ensures that it is:
+     * &lt;ul&gt;
+     * &lt;li&gt;an absolute URI, no &lt;code&gt;http:&lt;/code&gt; or any other scheme
+     * definition.
+     * &lt;li&gt;It has no host component.
+     * &lt;li&gt;Path must start with &lt;code&gt;/&lt;/code&gt;
+     * &lt;li&gt;Path must not contain &lt;code&gt;/..&lt;/code&gt;
+     * &lt;/ul&gt;
+     *
+     * @param stateUri
+     * @throws AuthException
+     */
+    private static void validateStateUri(final URI stateUri) throws AuthException {
+
+<span class="fc bfc" id="L339" title="All 2 branches covered.">        if (stateUri.isAbsolute()) {</span>
+<span class="fc" id="L340">            throw new AuthException(&quot;'state' must not be an absolute URI&quot;);</span>
+        }
+<span class="fc bfc" id="L342" title="All 2 branches covered.">        if (stateUri.getHost() != null) {</span>
+<span class="fc" id="L343">            throw new AuthException(&quot;'state' must not have a host component&quot;);</span>
+        }
+<span class="fc bfc" id="L345" title="All 2 branches covered.">        if (!stateUri.getPath().startsWith(&quot;/&quot;)) {</span>
+<span class="fc" id="L346">            throw new AuthException(&quot;'state' must start with '/'&quot;);</span>
+        }
+<span class="fc bfc" id="L348" title="All 2 branches covered.">        if (stateUri.getPath().contains(&quot;/..&quot;)) {</span>
+<span class="fc" id="L349">            throw new AuthException(&quot;'state' must not resolve to a parent path&quot;);</span>
+        }
+<span class="fc" id="L351">    }</span>
 
     /**
      * Callback handler that is passed in initialize by the container. This
@@ -353,21 +374,21 @@ import javax.xml.bind.DatatypeConverter;
     public void cleanSubject(final MessageInfo messageInfo,
         final Subject subject) throws AuthException {
 
-<span class="fc" id="L356">        final HttpServletRequest req = (HttpServletRequest) messageInfo.getRequestMessage();</span>
-<span class="fc" id="L357">        final String subjectCookie = getSubject(req);</span>
+<span class="fc" id="L377">        final HttpServletRequest req = (HttpServletRequest) messageInfo.getRequestMessage();</span>
+<span class="fc" id="L378">        final String subjectCookie = getSubject(req);</span>
 
-<span class="fc" id="L359">        final Iterator&lt;Principal&gt; iterator = subject.getPrincipals().iterator();</span>
-<span class="fc bfc" id="L360" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
-<span class="fc" id="L361">            final Principal principal = iterator.next();</span>
-<span class="fc bfc" id="L362" title="All 2 branches covered.">            if (&quot;authenticated&quot;.equals(principal.getName())) {</span>
-<span class="fc" id="L363">                iterator.remove();</span>
+<span class="fc" id="L380">        final Iterator&lt;Principal&gt; iterator = subject.getPrincipals().iterator();</span>
+<span class="fc bfc" id="L381" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L382">            final Principal principal = iterator.next();</span>
+<span class="fc bfc" id="L383" title="All 2 branches covered.">            if (&quot;authenticated&quot;.equals(principal.getName())) {</span>
+<span class="fc" id="L384">                iterator.remove();</span>
             }
-<span class="fc bfc" id="L365" title="All 2 branches covered.">            if (principal.getName().equals(subjectCookie)) {</span>
-<span class="fc" id="L366">                iterator.remove();</span>
+<span class="fc bfc" id="L386" title="All 2 branches covered.">            if (principal.getName().equals(subjectCookie)) {</span>
+<span class="fc" id="L387">                iterator.remove();</span>
             }
-<span class="fc" id="L368">        }</span>
+<span class="fc" id="L389">        }</span>
         // Does nothing.
-<span class="fc" id="L370">    }</span>
+<span class="fc" id="L391">    }</span>
 
     /**
      * &lt;p&gt;
@@ -386,7 +407,7 @@ import javax.xml.bind.DatatypeConverter;
     @Override
     public Class[] getSupportedMessageTypes() {
 
-<span class="fc" id="L389">        return new Class&lt;?&gt;[] {</span>
+<span class="fc" id="L410">        return new Class&lt;?&gt;[] {</span>
             HttpServletRequest.class,
             HttpServletResponse.class
         };
@@ -410,9 +431,9 @@ import javax.xml.bind.DatatypeConverter;
         final CallbackHandler h,
         @SuppressWarnings(&quot;rawtypes&quot;) final Map options) throws AuthException {
 
-<span class="fc" id="L413">        handler = h;</span>
-<span class="fc" id="L414">        mandatory = requestPolicy.isMandatory();</span>
-<span class="fc" id="L415">    }</span>
+<span class="fc" id="L434">        handler = h;</span>
+<span class="fc" id="L435">        mandatory = requestPolicy.isMandatory();</span>
+<span class="fc" id="L436">    }</span>
 
     /**
      * Return {@link AuthStatus#SEND_SUCCESS}.
@@ -429,7 +450,7 @@ import javax.xml.bind.DatatypeConverter;
     public AuthStatus secureResponse(final MessageInfo messageInfo,
         final Subject subject) throws AuthException {
 
-<span class="fc" id="L432">        return AuthStatus.SEND_SUCCESS;</span>
+<span class="fc" id="L453">        return AuthStatus.SEND_SUCCESS;</span>
     }
 
     /**
@@ -445,49 +466,49 @@ import javax.xml.bind.DatatypeConverter;
         final Subject serviceSubject)
             throws AuthException {
 
-<span class="fc" id="L448">        final HttpServletRequest req = (HttpServletRequest) messageInfo.getRequestMessage();</span>
-<span class="fc" id="L449">        final HttpServletResponse resp = (HttpServletResponse) messageInfo.getResponseMessage();</span>
+<span class="fc" id="L469">        final HttpServletRequest req = (HttpServletRequest) messageInfo.getRequestMessage();</span>
+<span class="fc" id="L470">        final HttpServletResponse resp = (HttpServletResponse) messageInfo.getResponseMessage();</span>
         try {
 
-<span class="fc" id="L452">            final String localRequestUri = req.getRequestURI().substring(req.getContextPath().length());</span>
+<span class="fc" id="L473">            final String localRequestUri = req.getRequestURI().substring(req.getContextPath().length());</span>
 
-<span class="fc bfc" id="L454" title="All 2 branches covered.">            if (LOGIN_ENDPOINT.equals(localRequestUri)) {</span>
-<span class="fc" id="L455">                return handleLoginEndpoint(req, resp);</span>
+<span class="fc bfc" id="L475" title="All 2 branches covered.">            if (LOGIN_ENDPOINT.equals(localRequestUri)) {</span>
+<span class="fc" id="L476">                return handleLoginEndpoint(req, resp);</span>
             }
 
-<span class="fc bfc" id="L458" title="All 2 branches covered.">            if (LOGOUT_ENDPOINT.equals(localRequestUri)) {</span>
-<span class="fc" id="L459">                return handleLogoutEndpoint(req, resp);</span>
+<span class="fc bfc" id="L479" title="All 2 branches covered.">            if (LOGOUT_ENDPOINT.equals(localRequestUri)) {</span>
+<span class="fc" id="L480">                return handleLogoutEndpoint(req, resp);</span>
             }
 
             // Allow if authentication is not required.
-<span class="fc bfc" id="L463" title="All 2 branches covered.">            if (!mandatory) {</span>
-<span class="fc" id="L464">                return AuthStatus.SUCCESS;</span>
+<span class="fc bfc" id="L484" title="All 2 branches covered.">            if (!mandatory) {</span>
+<span class="fc" id="L485">                return AuthStatus.SUCCESS;</span>
             }
 
             // require SSL if mandatory
-<span class="fc bfc" id="L468" title="All 2 branches covered.">            if (!req.isSecure()) {</span>
-<span class="fc" id="L469">                resp.sendError(HttpURLConnection.HTTP_FORBIDDEN, &quot;SSL Required&quot;);</span>
-<span class="fc" id="L470">                return AuthStatus.SEND_FAILURE;</span>
+<span class="fc bfc" id="L489" title="All 2 branches covered.">            if (!req.isSecure()) {</span>
+<span class="fc" id="L490">                resp.sendError(HttpURLConnection.HTTP_FORBIDDEN, &quot;SSL Required&quot;);</span>
+<span class="fc" id="L491">                return AuthStatus.SEND_FAILURE;</span>
             }
 
-<span class="fc" id="L473">            final String subject = getSubject(req);</span>
+<span class="fc" id="L494">            final String subject = getSubject(req);</span>
 
             // Check if there is no subject then redirect to login endpoint
-<span class="fc bfc" id="L476" title="All 2 branches covered.">            if (subject == null) {</span>
-<span class="fc" id="L477">                return handleRedirectToLoginEndpoint(req, resp);</span>
+<span class="fc bfc" id="L497" title="All 2 branches covered.">            if (subject == null) {</span>
+<span class="fc" id="L498">                return handleRedirectToLoginEndpoint(req, resp);</span>
             }
 
-<span class="fc" id="L480">            handler.handle(new Callback[] {</span>
+<span class="fc" id="L501">            handler.handle(new Callback[] {</span>
                 new CallerPrincipalCallback(client, subject),
                 new GroupPrincipalCallback(client, GROUPS)
             });
-<span class="fc" id="L484">            return AuthStatus.SUCCESS;</span>
+<span class="fc" id="L505">            return AuthStatus.SUCCESS;</span>
 
-<span class="fc" id="L486">        } catch (final IOException</span>
+<span class="fc" id="L507">        } catch (final IOException</span>
             | ServletException
             | UnsupportedCallbackException e) {
-<span class="fc" id="L489">            LOG.throwing(TestServerAuthModule.class.getName(), &quot;validateRequest&quot;, e);</span>
-<span class="fc" id="L490">            throw new AuthException(e.getMessage());</span>
+<span class="fc" id="L510">            LOG.throwing(TestServerAuthModule.class.getName(), &quot;validateRequest&quot;, e);</span>
+<span class="fc" id="L511">            throw new AuthException(e.getMessage());</span>
         }
     }
 }
