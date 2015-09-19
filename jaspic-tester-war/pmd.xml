@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pmd version="5.2.3" timestamp="2015-09-19T03:39:38.484">
+<pmd version="5.2.3" timestamp="2015-09-19T14:49:24.077">
 <file name="/var/lib/jenkins/jobs/jaspic-tester/workspace/jaspic-tester-war/src/main/java/net/trajano/auth/sample/SessionListener.java">
 <violation beginline="30" endline="30" begincolumn="9" endcolumn="16" rule="GuardLogStatementJavaUtil" ruleset="Java Logging" package="net.trajano.auth.sample" class="SessionListener" method="sessionCreated" externalInfoUrl="http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/java/logging-java.html#GuardLogStatementJavaUtil" priority="2">
 There is log block not surrounded by if
