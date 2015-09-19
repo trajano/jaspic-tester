@@ -3,7 +3,7 @@
    <duplication lines="171" tokens="479">
       <file line="244"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
-      <file line="274"
+      <file line="323"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
       <codefragment><![CDATA[            URLEncoder.encode(stateBuilder.toString(), "US-ASCII"));
         resp.sendRedirect(URI.create(redirectUriBuilder.toString()).normalize().toASCIIString());
@@ -421,51 +421,6 @@
             throw new AuthException("'state' must not resolve to a parent path");
         }]]></codefragment>
    </duplication>
-   <duplication lines="39" tokens="130">
-      <file line="164"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
-      <file line="186"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
-      <codefragment><![CDATA[            resp.sendRedirect(URI.create(req.getContextPath() + stateUri.toASCIIString()).normalize().toASCIIString());
-            return AuthStatus.SEND_SUCCESS;
-        } else {
-            throw new AuthException("unsupported method");
-        }
-    }
-
-    /**
-     * Handle the logout endpoint. This will clear the cookie and redirect to
-     * the URI that has been specified.
-     *
-     * @param req
-     *            request
-     * @param resp
-     *            response
-     * @return authentication status
-     * @throws AuthException
-     *             happens when there is invalid request data
-     * @throws IOException
-     *             servlet error
-     * @throws ServletException
-     *             servlet error
-     */
-    private static AuthStatus handleLogoutEndpoint(final HttpServletRequest req,
-        final HttpServletResponse resp) throws AuthException,
-            ServletException,
-            IOException {
-
-        final String postLogoutRedirectUri = req.getParameter(POST_LOGOUT_REDIRECT_URI);
-        if (postLogoutRedirectUri != null) {
-
-            final String postLogoutRedirectUriNormalized = URI.create(postLogoutRedirectUri).normalize().toASCIIString();
-            // Check that the post logout redirect uri is relative to the application if not fail.
-            final String contextUri = URI.create(req.getRequestURL().toString()).resolve(req.getContextPath()).toASCIIString();
-            if (!postLogoutRedirectUriNormalized.startsWith(contextUri)) {
-                throw new AuthException("invalid post_logout_redirect_uri");
-            }
-
-            final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, "");]]></codefragment>
-   </duplication>
    <duplication lines="68" tokens="126">
       <file line="16"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/AuthModuleConfigProvider.java"/>
@@ -543,7 +498,7 @@
    <duplication lines="35" tokens="115">
       <file line="206"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
-      <file line="229"
+      <file line="278"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
       <codefragment><![CDATA[            resp.sendRedirect(postLogoutRedirectUriNormalized);
             return AuthStatus.SEND_SUCCESS;
@@ -580,5 +535,45 @@
             stateBuilder.append(req.getQueryString());
         }
         final StringBuilder redirectUriBuilder = new StringBuilder(req.getContextPath());]]></codefragment>
+   </duplication>
+   <duplication lines="34" tokens="106">
+      <file line="169"
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
+      <file line="240"
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
+      <codefragment><![CDATA[    }
+
+    /**
+     * Handle the logout endpoint. This will clear the cookie and redirect to
+     * the URI that has been specified.
+     *
+     * @param req
+     *            request
+     * @param resp
+     *            response
+     * @return authentication status
+     * @throws AuthException
+     *             happens when there is invalid request data
+     * @throws IOException
+     *             servlet error
+     * @throws ServletException
+     *             servlet error
+     */
+    private static AuthStatus handleLogoutEndpoint(final HttpServletRequest req,
+        final HttpServletResponse resp) throws AuthException,
+            ServletException,
+            IOException {
+
+        final String postLogoutRedirectUri = req.getParameter(POST_LOGOUT_REDIRECT_URI);
+        if (postLogoutRedirectUri != null) {
+
+            final String postLogoutRedirectUriNormalized = URI.create(postLogoutRedirectUri).normalize().toASCIIString();
+            // Check that the post logout redirect uri is relative to the application if not fail.
+            final String contextUri = URI.create(req.getRequestURL().toString()).resolve(req.getContextPath()).toASCIIString();
+            if (!postLogoutRedirectUriNormalized.startsWith(contextUri)) {
+                throw new AuthException("invalid post_logout_redirect_uri");
+            }
+
+            final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, "");]]></codefragment>
    </duplication>
 </pmd-cpd>
