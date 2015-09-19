@@ -222,7 +222,7 @@ import javax.xml.bind.DatatypeConverter;
             }
 
 <span class="fc" id="L224">            final HttpSession session = req.getSession(false);</span>
-<span class="pc bpc" id="L225" title="1 of 2 branches missed.">            if (session != null) {</span>
+<span class="fc bfc" id="L225" title="All 2 branches covered.">            if (session != null) {</span>
 <span class="fc" id="L226">                session.removeAttribute(SUBJECT_SESSION_KEY);</span>
 <span class="fc" id="L227">                session.removeAttribute(NONCE_SESSION_KEY);</span>
             }
