@@ -25,9 +25,9 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2015 Trajano</copyright>
     <item>
-      <title>File: 6,
+      <title>File: 11,
              Errors: 0,
-             Warnings: 2,
+             Warnings: 3,
              Infos: 0
       </title>
             <link>http://site.trajano.net/trajano/jaspic-tester//checkstyle.html</link>
@@ -46,6 +46,20 @@ under the License.
           <tbody>
                           <tr>
                 <td>
+                  <a href="http://site.trajano.net/trajano/jaspic-tester//checkstyle.html#net.trajano.auth.session.package-info.java">net/trajano/auth/session/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://site.trajano.net/trajano/jaspic-tester//checkstyle.html#net.trajano.auth.sample.SessionListener.java">net/trajano/auth/sample/SessionListener.java</a>
                 </td>
                 <td>
@@ -60,7 +74,49 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://site.trajano.net/trajano/jaspic-tester//checkstyle.html#net.trajano.auth.session.AuthModuleConfigProvider.java">net/trajano/auth/session/AuthModuleConfigProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://site.trajano.net/trajano/jaspic-tester//checkstyle.html#net.trajano.auth.TestServerAuthModule.java">net/trajano/auth/TestServerAuthModule.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://site.trajano.net/trajano/jaspic-tester//checkstyle.html#net.trajano.auth.session.Initializer.java">net/trajano/auth/session/Initializer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://site.trajano.net/trajano/jaspic-tester//checkstyle.html#net.trajano.auth.session.TestServerAuthModuleAuthConfig.java">net/trajano/auth/session/TestServerAuthModuleAuthConfig.java</a>
                 </td>
                 <td>
                   0
@@ -103,6 +159,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://site.trajano.net/trajano/jaspic-tester//checkstyle.html#net.trajano.auth.package-info.java">net/trajano/auth/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://site.trajano.net/trajano/jaspic-tester//checkstyle.html#net.trajano.auth.session.TestServerAuthModule.java">net/trajano/auth/session/TestServerAuthModule.java</a>
                 </td>
                 <td>
                   0
