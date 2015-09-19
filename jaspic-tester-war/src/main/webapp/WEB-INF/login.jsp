@@ -3,6 +3,7 @@
 <body>
 	<form method="post" action="j_security_check">
 		<input type="hidden" name="state" value="${param['state']}" />
+		<input type="hidden" name="nonce" value="${param['nonce']}" />
 		<div>
 			<label for="username">User name:</label> <input type="text"
 				name="j_username" />

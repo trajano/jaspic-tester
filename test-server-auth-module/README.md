@@ -9,8 +9,27 @@ form that asks for a user name.  It forms a subject with the pattern
 
     https://[username]@test-server-auth-module
 
-The module does not make use of `HttpSession` but instead uses a cookie 
-`X-Subject` to store the subject.
+There are two modes of operation for the module.
+
+* cookie based where the module does not make use of `HttpSession` but 
+  instead uses a cookie `X-Subject` to store the subject.  This allows
+  better use for RESTful applications.
+* session based where the subject is stored in the session and has an
+  added security of using a nonce.
+
+### Usage
+
+To use the cookie based module add the following to `web.xml` 
+
+	<listener>
+		<listener-class>net.trajano.auth.Initializer</listener-class>
+	</listener>
+
+To use the session based module add the following to `web.xml` 
+
+	<listener>
+		<listener-class>net.trajano.auth.session.Initializer</listener-class>
+	</listener>
 
 ### Scope
 
@@ -31,3 +50,6 @@ production systems.
 * If using a session, handle the `POST` method when a redirect is needed
   by storing the `POST` data into a session variable temporarily and then
   dispatching it later when recovering.
+* Encrypting the subject combined with a time based nonce in the cookie.
+  At present the implementation will allow anyone who can change the cookie
+  to get authenticated as someone else.
