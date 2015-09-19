@@ -220,6 +220,33 @@ public class TestServerAuthModuleTest {
      * Tests the login endpoint GET operation.
      */
     @Test(expected = AuthException.class)
+    public void testFailLoginInvalidState4() throws Exception {
+
+        final TestServerAuthModule module = new TestServerAuthModule();
+        final MessagePolicy mockRequestPolicy = mock(MessagePolicy.class);
+        when(mockRequestPolicy.isMandatory()).thenReturn(true);
+
+        final CallbackHandler h = mock(CallbackHandler.class);
+        module.initialize(mockRequestPolicy, null, h, options);
+
+        final MessageInfo messageInfo = mock(MessageInfo.class);
+
+        final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getMethod()).thenReturn("GET");
+        when(servletRequest.isSecure()).thenReturn(true);
+        when(servletRequest.getRequestURI()).thenReturn("/util/j_security_check");
+        when(servletRequest.getContextPath()).thenReturn("/util");
+        when(servletRequest.getParameter("state")).thenReturn("//url.com/foo/../../../abc");
+        when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+
+        final Subject client = new Subject();
+        module.validateRequest(messageInfo, client, null);
+    }
+
+    /**
+     * Tests the login endpoint GET operation.
+     */
+    @Test(expected = AuthException.class)
     public void testFailLoginMissingState() throws Exception {
 
         final TestServerAuthModule module = new TestServerAuthModule();

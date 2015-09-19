@@ -150,15 +150,7 @@ public class TestServerAuthModule implements
 
         // Ensure that the state is valid, it should be relative
         final URI stateUri = URI.create(state).normalize();
-        if (stateUri.isAbsolute()) {
-            throw new AuthException("'state' must not be an absolute URI");
-        }
-        if (!stateUri.getPath().startsWith("/")) {
-            throw new AuthException("'state' must start with '/'");
-        }
-        if (stateUri.getPath().contains("/..")) {
-            throw new AuthException("'state' must not resolve to a parent path");
-        }
+        validateStateUri(stateUri);
 
         final String nonce = req.getParameter(NONCE);
         if (nonce == null) {
@@ -327,6 +319,37 @@ public class TestServerAuthModule implements
         // SEND_SUCCESS works on the top three application servers.
 
         return AuthStatus.SEND_SUCCESS;
+    }
+
+    /**
+     * Validates the state URI. It ensures that it is:
+     * <ul>
+     * <li>an absolute URI, no <code>http:</code> or any other scheme
+     * definition.
+     * <li>It has no host component.
+     * <li>Path must start with <code>/</code>
+     * <li>Path must not contain <code>/..</code>
+     * </ul>
+     *
+     * @param stateUri
+     *            URI to evaluate
+     * @throws AuthException
+     *             validation failure
+     */
+    private static void validateStateUri(final URI stateUri) throws AuthException {
+
+        if (stateUri.isAbsolute()) {
+            throw new AuthException("'state' must not be an absolute URI");
+        }
+        if (stateUri.getHost() != null) {
+            throw new AuthException("'state' must not have a host component");
+        }
+        if (!stateUri.getPath().startsWith("/")) {
+            throw new AuthException("'state' must start with '/'");
+        }
+        if (stateUri.getPath().contains("/..")) {
+            throw new AuthException("'state' must not resolve to a parent path");
+        }
     }
 
     /**
