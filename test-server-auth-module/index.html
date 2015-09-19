@@ -99,7 +99,8 @@
 <pre>&lt;listener&gt;
     &lt;listener-class&gt;net.trajano.auth.session.Initializer&lt;/listener-class&gt;
 &lt;/listener&gt;
-</pre></div></div></div>
+</pre></div></div>
+<p>Note session based module has only been confirmed to work with Glassfish and WildFly, it does not work with WebSphere Liberty Profile as it commits the response at an earlier period thus preventing the session cookie from being sent correctly in the response.</p></div>
 <div class="section">
 <h3><a name="Scope"></a>Scope</h3>
 <p>In order to keep this project small as to allow easier bug reports against JASPIC implementations of various application servers, some things had to be removed.</p>
