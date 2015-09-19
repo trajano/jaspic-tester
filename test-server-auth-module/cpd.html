@@ -76,7 +76,7 @@
 <th>Line</th></tr>
 <tr class="b">
 <td>net/trajano/auth/TestServerAuthModule.java</td>
-<td><a href="./xref/net/trajano/auth/TestServerAuthModule.html#L244">244</a></td></tr>
+<td><a href="./xref/net/trajano/auth/TestServerAuthModule.html#L290">290</a></td></tr>
 <tr class="a">
 <td>net/trajano/auth/session/TestServerAuthModule.java</td>
 <td><a href="./xref/net/trajano/auth/session/TestServerAuthModule.html#L323">323</a></td></tr>
@@ -595,7 +595,55 @@
 <th>Line</th></tr>
 <tr class="b">
 <td>net/trajano/auth/TestServerAuthModule.java</td>
-<td><a href="./xref/net/trajano/auth/TestServerAuthModule.html#L206">206</a></td></tr>
+<td><a href="./xref/net/trajano/auth/TestServerAuthModule.html#L213">213</a></td></tr>
+<tr class="a">
+<td>net/trajano/auth/session/TestServerAuthModule.java</td>
+<td><a href="./xref/net/trajano/auth/session/TestServerAuthModule.html#L238">238</a></td></tr>
+<tr class="b"><td colspan='2'>
+<div>
+<pre>        resp.sendRedirect(URI.create(req.getContextPath() + stateUri.toASCIIString()).normalize().toASCIIString());
+        return AuthStatus.SEND_SUCCESS;
+    }
+
+    /**
+     * Handle the logout endpoint. This will clear the cookie and redirect to
+     * the URI that has been specified.
+     *
+     * @param req
+     *            request
+     * @param resp
+     *            response
+     * @return authentication status
+     * @throws AuthException
+     *             happens when there is invalid request data
+     * @throws IOException
+     *             servlet error
+     * @throws ServletException
+     *             servlet error
+     */
+    private static AuthStatus handleLogoutEndpoint(final HttpServletRequest req,
+        final HttpServletResponse resp) throws AuthException,
+            ServletException,
+            IOException {
+
+        final String postLogoutRedirectUri = req.getParameter(POST_LOGOUT_REDIRECT_URI);
+        if (postLogoutRedirectUri != null) {
+
+            final String postLogoutRedirectUriNormalized = URI.create(postLogoutRedirectUri).normalize().toASCIIString();
+            // Check that the post logout redirect uri is relative to the application if not fail.
+            final String contextUri = URI.create(req.getRequestURL().toString()).resolve(req.getContextPath()).toASCIIString();
+            if (!postLogoutRedirectUriNormalized.startsWith(contextUri)) {
+                throw new AuthException(&quot;invalid post_logout_redirect_uri&quot;);
+            }
+
+            final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, &quot;&quot;);</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="b">
+<td>net/trajano/auth/TestServerAuthModule.java</td>
+<td><a href="./xref/net/trajano/auth/TestServerAuthModule.html#L252">252</a></td></tr>
 <tr class="a">
 <td>net/trajano/auth/session/TestServerAuthModule.java</td>
 <td><a href="./xref/net/trajano/auth/session/TestServerAuthModule.html#L278">278</a></td></tr>
@@ -635,53 +683,7 @@
             stateBuilder.append('?');
             stateBuilder.append(req.getQueryString());
         }
-        final StringBuilder redirectUriBuilder = new StringBuilder(req.getContextPath());</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
-<td>net/trajano/auth/TestServerAuthModule.java</td>
-<td><a href="./xref/net/trajano/auth/TestServerAuthModule.html#L169">169</a></td></tr>
-<tr class="a">
-<td>net/trajano/auth/session/TestServerAuthModule.java</td>
-<td><a href="./xref/net/trajano/auth/session/TestServerAuthModule.html#L240">240</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>    }
-
-    /**
-     * Handle the logout endpoint. This will clear the cookie and redirect to
-     * the URI that has been specified.
-     *
-     * @param req
-     *            request
-     * @param resp
-     *            response
-     * @return authentication status
-     * @throws AuthException
-     *             happens when there is invalid request data
-     * @throws IOException
-     *             servlet error
-     * @throws ServletException
-     *             servlet error
-     */
-    private static AuthStatus handleLogoutEndpoint(final HttpServletRequest req,
-        final HttpServletResponse resp) throws AuthException,
-            ServletException,
-            IOException {
-
-        final String postLogoutRedirectUri = req.getParameter(POST_LOGOUT_REDIRECT_URI);
-        if (postLogoutRedirectUri != null) {
-
-            final String postLogoutRedirectUriNormalized = URI.create(postLogoutRedirectUri).normalize().toASCIIString();
-            // Check that the post logout redirect uri is relative to the application if not fail.
-            final String contextUri = URI.create(req.getRequestURL().toString()).resolve(req.getContextPath()).toASCIIString();
-            if (!postLogoutRedirectUriNormalized.startsWith(contextUri)) {
-                throw new AuthException(&quot;invalid post_logout_redirect_uri&quot;);
-            }
-
-            final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, &quot;&quot;);</pre></div></td></tr></table></div>
+        final StringBuilder redirectUriBuilder = new StringBuilder(req.getContextPath());</pre></div></td></tr></table></div>
 	      </div>
 	    </article>
 	  </div>

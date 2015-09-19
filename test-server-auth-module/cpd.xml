@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <pmd-cpd>
    <duplication lines="171" tokens="479">
-      <file line="244"
+      <file line="290"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
       <file line="323"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
@@ -495,8 +495,50 @@
 
 }]]></codefragment>
    </duplication>
+   <duplication lines="36" tokens="120">
+      <file line="213"
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
+      <file line="238"
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
+      <codefragment><![CDATA[        resp.sendRedirect(URI.create(req.getContextPath() + stateUri.toASCIIString()).normalize().toASCIIString());
+        return AuthStatus.SEND_SUCCESS;
+    }
+
+    /**
+     * Handle the logout endpoint. This will clear the cookie and redirect to
+     * the URI that has been specified.
+     *
+     * @param req
+     *            request
+     * @param resp
+     *            response
+     * @return authentication status
+     * @throws AuthException
+     *             happens when there is invalid request data
+     * @throws IOException
+     *             servlet error
+     * @throws ServletException
+     *             servlet error
+     */
+    private static AuthStatus handleLogoutEndpoint(final HttpServletRequest req,
+        final HttpServletResponse resp) throws AuthException,
+            ServletException,
+            IOException {
+
+        final String postLogoutRedirectUri = req.getParameter(POST_LOGOUT_REDIRECT_URI);
+        if (postLogoutRedirectUri != null) {
+
+            final String postLogoutRedirectUriNormalized = URI.create(postLogoutRedirectUri).normalize().toASCIIString();
+            // Check that the post logout redirect uri is relative to the application if not fail.
+            final String contextUri = URI.create(req.getRequestURL().toString()).resolve(req.getContextPath()).toASCIIString();
+            if (!postLogoutRedirectUriNormalized.startsWith(contextUri)) {
+                throw new AuthException("invalid post_logout_redirect_uri");
+            }
+
+            final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, "");]]></codefragment>
+   </duplication>
    <duplication lines="35" tokens="115">
-      <file line="206"
+      <file line="252"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
       <file line="278"
             path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
@@ -535,45 +577,5 @@
             stateBuilder.append(req.getQueryString());
         }
         final StringBuilder redirectUriBuilder = new StringBuilder(req.getContextPath());]]></codefragment>
-   </duplication>
-   <duplication lines="34" tokens="106">
-      <file line="169"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
-      <file line="240"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
-      <codefragment><![CDATA[    }
-
-    /**
-     * Handle the logout endpoint. This will clear the cookie and redirect to
-     * the URI that has been specified.
-     *
-     * @param req
-     *            request
-     * @param resp
-     *            response
-     * @return authentication status
-     * @throws AuthException
-     *             happens when there is invalid request data
-     * @throws IOException
-     *             servlet error
-     * @throws ServletException
-     *             servlet error
-     */
-    private static AuthStatus handleLogoutEndpoint(final HttpServletRequest req,
-        final HttpServletResponse resp) throws AuthException,
-            ServletException,
-            IOException {
-
-        final String postLogoutRedirectUri = req.getParameter(POST_LOGOUT_REDIRECT_URI);
-        if (postLogoutRedirectUri != null) {
-
-            final String postLogoutRedirectUriNormalized = URI.create(postLogoutRedirectUri).normalize().toASCIIString();
-            // Check that the post logout redirect uri is relative to the application if not fail.
-            final String contextUri = URI.create(req.getRequestURL().toString()).resolve(req.getContextPath()).toASCIIString();
-            if (!postLogoutRedirectUriNormalized.startsWith(contextUri)) {
-                throw new AuthException("invalid post_logout_redirect_uri");
-            }
-
-            final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, "");]]></codefragment>
    </duplication>
 </pmd-cpd>
