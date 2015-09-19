@@ -193,6 +193,33 @@ public class TestServerAuthModuleTest {
      * Tests the login endpoint GET operation.
      */
     @Test(expected = AuthException.class)
+    public void testFailLoginInvalidState3() throws Exception {
+
+        final TestServerAuthModule module = new TestServerAuthModule();
+        final MessagePolicy mockRequestPolicy = mock(MessagePolicy.class);
+        when(mockRequestPolicy.isMandatory()).thenReturn(true);
+
+        final CallbackHandler h = mock(CallbackHandler.class);
+        module.initialize(mockRequestPolicy, null, h, options);
+
+        final MessageInfo messageInfo = mock(MessageInfo.class);
+
+        final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getMethod()).thenReturn("GET");
+        when(servletRequest.isSecure()).thenReturn(true);
+        when(servletRequest.getRequestURI()).thenReturn("/util/j_security_check");
+        when(servletRequest.getContextPath()).thenReturn("/util");
+        when(servletRequest.getParameter("state")).thenReturn("/foo/../../abc");
+        when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+
+        final Subject client = new Subject();
+        module.validateRequest(messageInfo, client, null);
+    }
+
+    /**
+     * Tests the login endpoint GET operation.
+     */
+    @Test(expected = AuthException.class)
     public void testFailLoginMissingState() throws Exception {
 
         final TestServerAuthModule module = new TestServerAuthModule();
@@ -401,6 +428,44 @@ public class TestServerAuthModuleTest {
     }
 
     /**
+     * Tests the login endpoint POST operation with .. in state that resolves
+     * cleanly.
+     */
+    @Test
+    public void testLoginPostWithParen() throws Exception {
+
+        final TestServerAuthModule module = new TestServerAuthModule();
+        final MessagePolicy mockRequestPolicy = mock(MessagePolicy.class);
+        when(mockRequestPolicy.isMandatory()).thenReturn(true);
+
+        final CallbackHandler h = mock(CallbackHandler.class);
+        module.initialize(mockRequestPolicy, null, h, options);
+
+        final MessageInfo messageInfo = mock(MessageInfo.class);
+
+        final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getMethod()).thenReturn("POST");
+        when(servletRequest.isSecure()).thenReturn(true);
+        when(servletRequest.getRequestURI()).thenReturn("/util/j_security_check");
+        when(servletRequest.getContextPath()).thenReturn("/util");
+        when(servletRequest.getParameter("state")).thenReturn("/abc/../abc/../abc/abc/../abc/../aaaa");
+        when(servletRequest.getParameter("j_username")).thenReturn("foofoo");
+        when(servletRequest.getRequestDispatcher(Matchers.anyString())).thenReturn(mock(RequestDispatcher.class));
+        when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+
+        final HttpServletResponse servletResponse = mock(HttpServletResponse.class);
+        when(messageInfo.getResponseMessage()).thenReturn(servletResponse);
+
+        final Subject client = new Subject();
+        assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, null));
+
+        final ArgumentCaptor<String> redirectUri = ArgumentCaptor.forClass(String.class);
+        verify(servletResponse).sendRedirect(redirectUri.capture());
+        assertEquals("/util/abc/aaaa", redirectUri.getValue());
+        verifyZeroInteractions(h);
+    }
+
+    /**
      * Tests the login endpoint POST operation.
      */
     @Test
@@ -554,7 +619,7 @@ public class TestServerAuthModuleTest {
         final ArgumentCaptor<String> redirectUri = ArgumentCaptor.forClass(String.class);
         assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, null));
         verify(servletResponse).sendRedirect(redirectUri.capture());
-        assertEquals("/util/j_security_check?state=%2Futil%2FsecurePage", redirectUri.getValue());
+        assertEquals("/util/j_security_check?state=%2FsecurePage", redirectUri.getValue());
         verifyZeroInteractions(h);
     }
 
@@ -588,9 +653,9 @@ public class TestServerAuthModuleTest {
         final ArgumentCaptor<String> redirectUri = ArgumentCaptor.forClass(String.class);
         assertEquals(AuthStatus.SEND_SUCCESS, module.validateRequest(messageInfo, client, null));
         verify(servletResponse).sendRedirect(redirectUri.capture());
-        assertEquals("/util/j_security_check?state=%2Futil%2FsecurePage%3Fabc%3D123%26doremi%3Dabc123", redirectUri.getValue());
+        assertEquals("/util/j_security_check?state=%2FsecurePage%3Fabc%3D123%26doremi%3Dabc123", redirectUri.getValue());
         final String decoded = URLDecoder.decode(URI.create(redirectUri.getValue()).getRawQuery().substring("state=".length()), "US-ASCII");
-        assertEquals("/util/securePage?abc=123&doremi=abc123", decoded);
+        assertEquals("/securePage?abc=123&doremi=abc123", decoded);
         verifyZeroInteractions(h);
     }
 

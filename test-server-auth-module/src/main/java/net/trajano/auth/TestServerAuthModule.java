@@ -147,6 +147,9 @@ public class TestServerAuthModule implements
         if (!stateUri.getPath().startsWith("/")) {
             throw new AuthException("'state' must start with '/'");
         }
+        if (stateUri.getPath().contains("/..")) {
+            throw new AuthException("'state' must not resolve to a parent path");
+        }
 
         if ("GET".equals(req.getMethod())) {
             req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
@@ -229,7 +232,7 @@ public class TestServerAuthModule implements
         if (!"GET".equals(req.getMethod())) {
             throw new AuthException("Only 'GET' method is supported when redirecting to the endpoint");
         }
-        final StringBuilder stateBuilder = new StringBuilder(req.getRequestURI());
+        final StringBuilder stateBuilder = new StringBuilder(req.getRequestURI().substring(req.getContextPath().length()));
         if (req.getQueryString() != null) {
             stateBuilder.append('?');
             stateBuilder.append(req.getQueryString());
