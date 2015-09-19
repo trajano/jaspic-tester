@@ -152,20 +152,66 @@ public class TestServerAuthModule implements
         }
 
         if ("GET".equals(req.getMethod())) {
-            req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
-            return AuthStatus.SEND_SUCCESS;
+            return handleLoginGet(req, resp);
         } else if ("POST".equals(req.getMethod())) {
-            final String subject = UriBuilder.fromUri("https://test-server-auth-module").userInfo(req.getParameter("j_username"))
-                .build().toASCIIString();
-            final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, subject);
-            cookie.setSecure(true);
-            cookie.setHttpOnly(true);
-            resp.addCookie(cookie);
-            resp.sendRedirect(URI.create(req.getContextPath() + stateUri.toASCIIString()).normalize().toASCIIString());
-            return AuthStatus.SEND_SUCCESS;
+            return handleLoginPost(req, resp, stateUri);
         } else {
             throw new AuthException("unsupported method");
         }
+    }
+
+    /**
+     * Handles the GET method for login endpoint.
+     *
+     * @param req
+     *            request
+     * @param resp
+     *            response
+     * @return {@link AuthStatus#SEND_SUCCESS}
+     * @throws IOException
+     *             servlet error
+     * @throws ServletException
+     *             servlet error
+     */
+    private static AuthStatus handleLoginGet(final HttpServletRequest req,
+        final HttpServletResponse resp) throws ServletException,
+            IOException {
+
+        req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
+        return AuthStatus.SEND_SUCCESS;
+    }
+
+    /**
+     * Handles the POST method for login endpoint.
+     *
+     * @param req
+     *            request
+     * @param resp
+     *            response
+     * @param stateUri
+     *            URI for the state
+     * @return {@link AuthStatus#SEND_SUCCESS}
+     * @throws IOException
+     *             servlet error
+     * @throws ServletException
+     *             servlet error
+     * @throws AuthException
+     *             authentication error
+     */
+    private static AuthStatus handleLoginPost(final HttpServletRequest req,
+        final HttpServletResponse resp,
+        final URI stateUri) throws ServletException,
+            IOException,
+            AuthException {
+
+        final String subject = UriBuilder.fromUri("https://test-server-auth-module").userInfo(req.getParameter("j_username"))
+            .build().toASCIIString();
+        final Cookie cookie = new Cookie(SUBJECT_COOKIE_KEY, subject);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        resp.addCookie(cookie);
+        resp.sendRedirect(URI.create(req.getContextPath() + stateUri.toASCIIString()).normalize().toASCIIString());
+        return AuthStatus.SEND_SUCCESS;
     }
 
     /**

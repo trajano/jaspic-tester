@@ -166,28 +166,77 @@ public class TestServerAuthModule implements
         }
 
         if ("GET".equals(req.getMethod())) {
-            req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
-            return AuthStatus.SEND_SUCCESS;
+            return handleLoginGet(req, resp);
         } else if ("POST".equals(req.getMethod())) {
-            final HttpSession session = req.getSession(false);
-            if (session == null) {
-                throw new AuthException("session is required");
-            }
-            if (!nonce.equals(session.getAttribute(NONCE_SESSION_KEY))) {
-                throw new AuthException("nonce mismatch");
-            }
-            final String subject = UriBuilder.fromUri("https://test-server-auth-module").userInfo(req.getParameter("j_username"))
-                .build().toASCIIString();
-            session.setAttribute(SUBJECT_SESSION_KEY, subject);
-
-            // Remove nonce as it is no longer required
-            session.removeAttribute(NONCE_SESSION_KEY);
-            final String redirectUri = req.getContextPath() + stateUri.toASCIIString();
-            resp.sendRedirect(URI.create(redirectUri).normalize().toASCIIString());
-            return AuthStatus.SEND_SUCCESS;
+            return handleLoginPost(req, resp, stateUri, nonce);
         } else {
             throw new AuthException("unsupported method");
         }
+    }
+
+    /**
+     * Handles the GET method for login endpoint.
+     *
+     * @param req
+     *            request
+     * @param resp
+     *            response
+     * @return {@link AuthStatus#SEND_SUCCESS}
+     * @throws IOException
+     *             servlet error
+     * @throws ServletException
+     *             servlet error
+     */
+    private static AuthStatus handleLoginGet(final HttpServletRequest req,
+        final HttpServletResponse resp) throws ServletException,
+            IOException {
+
+        req.getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
+        return AuthStatus.SEND_SUCCESS;
+    }
+
+    /**
+     * Handles the POST method for login endpoint.
+     *
+     * @param req
+     *            request
+     * @param resp
+     *            response
+     * @param stateUri
+     *            URI for the state
+     * @param nonce
+     *            nonce
+     * @return {@link AuthStatus#SEND_SUCCESS}
+     * @throws IOException
+     *             servlet error
+     * @throws ServletException
+     *             servlet error
+     * @throws AuthException
+     *             authentication error
+     */
+    private static AuthStatus handleLoginPost(final HttpServletRequest req,
+        final HttpServletResponse resp,
+        final URI stateUri,
+        final String nonce) throws ServletException,
+            IOException,
+            AuthException {
+
+        final HttpSession session = req.getSession(false);
+        if (session == null) {
+            throw new AuthException("session is required");
+        }
+        if (!nonce.equals(session.getAttribute(NONCE_SESSION_KEY))) {
+            throw new AuthException("nonce mismatch");
+        }
+        final String subject = UriBuilder.fromUri("https://test-server-auth-module").userInfo(req.getParameter("j_username"))
+            .build().toASCIIString();
+        session.setAttribute(SUBJECT_SESSION_KEY, subject);
+
+        // Remove nonce as it is no longer required
+        session.removeAttribute(NONCE_SESSION_KEY);
+        final String redirectUri = req.getContextPath() + stateUri.toASCIIString();
+        resp.sendRedirect(URI.create(redirectUri).normalize().toASCIIString());
+        return AuthStatus.SEND_SUCCESS;
     }
 
     /**
