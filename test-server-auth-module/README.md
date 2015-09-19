@@ -31,6 +31,11 @@ To use the session based module add the following to `web.xml`
 		<listener-class>net.trajano.auth.session.Initializer</listener-class>
 	</listener>
 
+Note session based module has only been confirmed to work with Glassfish
+and WildFly, it does not work with WebSphere Liberty Profile as it commits
+the response at an earlier period thus preventing the session cookie from
+being sent correctly in the response.
+
 ### Scope
 
 In order to keep this project small as to allow easier bug reports against
