@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AuthModuleConfigProvider.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test Server Auth Module</a> &gt; <a href="index.source.html" class="el_package">net.trajano.auth.session</a> &gt; <span class="el_source">AuthModuleConfigProvider.java</span></div><h1>AuthModuleConfigProvider.java</h1><pre class="source lang-java linenums">package net.trajano.auth.session;
+
+import java.util.Map;
+
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.message.AuthException;
+import javax.security.auth.message.config.AuthConfigFactory;
+import javax.security.auth.message.config.AuthConfigProvider;
+import javax.security.auth.message.config.ClientAuthConfig;
+import javax.security.auth.message.config.ServerAuthConfig;
+
+/**
+ * This is used to provide the server auth module on the application rather than
+ * being globally configured in a container.
+ */
+public class AuthModuleConfigProvider implements
+    AuthConfigProvider {
+
+    /**
+     * Options.
+     */
+    private final Map&lt;String, String&gt; options;
+
+    /**
+     * This is called by
+     * {@link AuthConfigFactory#registerConfigProvider(String, Map, String, String, String)}
+     * when registering the provider.
+     *
+     * @param options
+     *            options to pass to the modules and the name of the module
+     *            classes
+     * @param factory
+     *            configuration factory
+     */
+    public AuthModuleConfigProvider(final Map&lt;String, String&gt; options,
+<span class="fc" id="L36">        final AuthConfigFactory factory) {</span>
+
+<span class="fc" id="L38">        this.options = options;</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (factory != null) {</span>
+<span class="fc" id="L40">            factory.registerConfigProvider(this, null, null, &quot;Auto registration&quot;);</span>
+        }
+<span class="fc" id="L42">    }</span>
+
+    /**
+     * &lt;p&gt;
+     * Client authentication is not provided.
+     * &lt;/p&gt;
+     * {@inheritDoc}
+     *
+     * @return &lt;code&gt;null&lt;/code&gt;
+     */
+    @Override
+    public ClientAuthConfig getClientAuthConfig(final String layer,
+        final String appContext,
+        final CallbackHandler handler) throws AuthException {
+
+<span class="fc" id="L57">        return null;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@link TestServerAuthModuleAuthConfig} with the data that was
+     *         provided.
+     */
+    @Override
+    public ServerAuthConfig getServerAuthConfig(final String layer,
+        final String appContext,
+        final CallbackHandler handler) throws AuthException {
+
+<span class="fc" id="L71">        return new TestServerAuthModuleAuthConfig(options, layer, appContext, handler);</span>
+    }
+
+    /**
+     * Does nothing.
+     */
+    @Override
+    public void refresh() {
+
+        // does nothing
+<span class="fc" id="L81">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -73,8 +73,33 @@
 <div class="source">
 <pre>https://[username]@test-server-auth-module
 </pre></div></div>
-<p>The module does not make use of <tt>HttpSession</tt> but instead uses a cookie <tt>X-Subject</tt> to store the subject.</p>
+<p>There are two modes of operation for the module.</p>
+
+<ul>
+  
+<li>cookie based where the module does not make use of <tt>HttpSession</tt> but  instead uses a cookie <tt>X-Subject</tt> to store the subject. This allows  better use for RESTful applications.</li>
+  
+<li>session based where the subject is stored in the session and has an  added security of using a nonce.</li>
+</ul>
 <div class="section">
+<div class="section">
+<h3><a name="Usage"></a>Usage</h3>
+<p>To use the cookie based module add the following to <tt>web.xml</tt> </p>
+
+<div class="source">
+<div class="source">
+<pre>&lt;listener&gt;
+    &lt;listener-class&gt;net.trajano.auth.Initializer&lt;/listener-class&gt;
+&lt;/listener&gt;
+</pre></div></div>
+<p>To use the session based module add the following to <tt>web.xml</tt> </p>
+
+<div class="source">
+<div class="source">
+<pre>&lt;listener&gt;
+    &lt;listener-class&gt;net.trajano.auth.session.Initializer&lt;/listener-class&gt;
+&lt;/listener&gt;
+</pre></div></div></div>
 <div class="section">
 <h3><a name="Scope"></a>Scope</h3>
 <p>In order to keep this project small as to allow easier bug reports against JASPIC implementations of various application servers, some things had to be removed.</p>
@@ -89,6 +114,8 @@
 <li>if you are already using sessions, you can store the subject as a  session attribute</li>
   
 <li>If using a session, handle the <tt>POST</tt> method when a redirect is needed  by storing the <tt>POST</tt> data into a session variable temporarily and then  dispatching it later when recovering.</li>
+  
+<li>Encrypting the subject combined with a time based nonce in the cookie.  At present the implementation will allow anyone who can change the cookie  to get authenticated as someone else.</li>
 </ul></div></div>
 	      </div>
 	    </article>
@@ -101,7 +128,7 @@
                     
                 <div class="xleft">
         <span id="publishDate">Last Published: 2015-09-19</span>
-                   <br /> <span id="projectVersion">Version: 1.0.2-SNAPSHOT</span>
+                   <br /> <span id="projectVersion">Version: 1.1.0-SNAPSHOT</span>
                       </div>
       	</h2>
         <div id="primary-sidebar" class="primary-sidebar widget-area" role="complementary">
@@ -127,7 +154,7 @@
                                                                                                                                                                                                                                                                                                 <li class="collapsed">
                           <a href="project-info.html" title="Project Information">Project Information</a>
                   </li>
-                                                                                                                                                                                                                                                                              <li class="collapsed">
+                                                                                                                                                                                                                                                                                                <li class="collapsed">
                           <a href="project-reports.html" title="Project Reports">Project Reports</a>
                   </li>
           </ul>

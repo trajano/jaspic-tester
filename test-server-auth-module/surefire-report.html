@@ -96,12 +96,12 @@ function toggleDisplay(elementId) {
 <th>Success Rate</th>
 <th>Time</th></tr>
 <tr class="b">
-<td>30</td>
+<td>63</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>1.918</td></tr></table><br />
+<td>1.85</td></tr></table><br />
 <p>Note: failures are anticipated and checked for with assertions while errors are unanticipated.</p><br /></div>
 <div class="section">
 <h2><a name="Package_List"></a>Package List</h2><a name="Package_List"></a>
@@ -116,14 +116,52 @@ function toggleDisplay(elementId) {
 <th>Success Rate</th>
 <th>Time</th></tr>
 <tr class="b">
+<td><a href="#net.trajano.auth.session.test">net.trajano.auth.session.test</a></td>
+<td>33</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.823</td></tr>
+<tr class="a">
 <td><a href="#net.trajano.auth.test">net.trajano.auth.test</a></td>
 <td>30</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>1.918</td></tr></table><br />
+<td>0.027</td></tr></table><br />
 <p>Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.</p>
+<div class="section">
+<h3><a name="net.trajano.auth.session.test"></a>net.trajano.auth.session.test</h3><a name="net.trajano.auth.session.test"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#net.trajano.auth.session.testTestServerAuthModuleTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#net.trajano.auth.session.testTestServerAuthModuleTest">TestServerAuthModuleTest</a></td>
+<td>26</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.823</td></tr>
+<tr class="a">
+<td><a href="#net.trajano.auth.session.testApplicationManagedJaspicTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#net.trajano.auth.session.testApplicationManagedJaspicTest">ApplicationManagedJaspicTest</a></td>
+<td>7</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0</td></tr></table></div>
 <div class="section">
 <h3><a name="net.trajano.auth.test"></a>net.trajano.auth.test</h3><a name="net.trajano.auth.test"></a>
 <table border="1" class="bodyTable">
@@ -144,7 +182,7 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>1.897</td></tr>
+<td>0.019</td></tr>
 <tr class="a">
 <td><a href="#net.trajano.auth.testApplicationManagedJaspicTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
 <td><a href="#net.trajano.auth.testApplicationManagedJaspicTest">ApplicationManagedJaspicTest</a></td>
@@ -153,21 +191,21 @@ function toggleDisplay(elementId) {
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.021</td></tr></table></div><br /></div>
+<td>0.008</td></tr></table></div><br /></div>
 <div class="section">
 <h2><a name="Test_Cases"></a>Test Cases</h2><a name="Test_Cases"></a>
 <p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p>
 <div class="section">
-<h3><a name="TestServerAuthModuleTest"></a>TestServerAuthModuleTest</h3><a name="net.trajano.auth.testTestServerAuthModuleTest"></a>
+<h3><a name="TestServerAuthModuleTest"></a>TestServerAuthModuleTest</h3><a name="net.trajano.auth.session.testTestServerAuthModuleTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testRedirectToLogin</td>
-<td>1.13</td></tr>
+<td>1.061</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testFailLogoutInvalidRedirect</td>
-<td>0.013</td></tr>
+<td>0.011</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testSupportedMessageTypes</td>
@@ -179,43 +217,181 @@ function toggleDisplay(elementId) {
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testNoAuthNeededWithoutSSL</td>
-<td>0.001</td></tr>
+<td>0.002</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testLoginPost</td>
-<td>0.67</td></tr>
+<td>0.687</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testFailFromIOException</td>
-<td>0.02</td></tr>
+<td>0.009</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testFailRedirectToLoginWithPOST</td>
-<td>0.003</td></tr>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFailLoginPostNonceMismatch</td>
+<td>0.005</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testSSLRequired</td>
+<td>0.002</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFailLoginMissingNonce</td>
 <td>0.002</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testFailLoginMissingState</td>
-<td>0.002</td></tr>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testNoAuthNeededWithSSL</td>
-<td>0.001</td></tr>
+<td>0.003</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testFailLoginInvalidMethod</td>
-<td>0.002</td></tr>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testFailLoginInvalidState2</td>
-<td>0.002</td></tr>
+<td>0</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testFailLoginInvalidState3</td>
+<td>0.002</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFailLogoutMissingRedirect</td>
 <td>0.003</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testCleanSubject</td>
+<td>0.008</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFailLoginPostMissingSession</td>
+<td>0.002</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testRedirectToLoginWithQueryString</td>
+<td>0.003</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFailLoginNotSecure</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFailLoginInvalidState</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testLoginPostWithParen</td>
+<td>0.004</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testLoginPostWithQuery</td>
+<td>0.004</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testLogout</td>
+<td>0.003</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testSecureMessage</td>
+<td>0.005</td></tr></table></div>
+<div class="section">
+<h3><a name="ApplicationManagedJaspicTest"></a>ApplicationManagedJaspicTest</h3><a name="net.trajano.auth.session.testApplicationManagedJaspicTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testContextWithInvalidPolicyType</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testContextNonMandatory</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testProvider</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testProviderAutoRegistration</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testContext1</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testContext2</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testInitializer</td>
+<td>0</td></tr></table></div>
+<div class="section">
+<h3><a name="TestServerAuthModuleTest"></a>TestServerAuthModuleTest</h3><a name="net.trajano.auth.testTestServerAuthModuleTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testRedirectToLogin</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFailLogoutInvalidRedirect</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testSupportedMessageTypes</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testLogin</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testNoAuthNeededWithoutSSL</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testLoginPost</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFailFromIOException</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFailRedirectToLoginWithPOST</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testSSLRequired</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFailLoginMissingState</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testNoAuthNeededWithSSL</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFailLoginInvalidMethod</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFailLoginInvalidState2</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFailLoginInvalidState3</td>
+<td>0</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testFailLogoutMissingRedirect</td>
@@ -223,15 +399,15 @@ function toggleDisplay(elementId) {
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testCleanSubject</td>
-<td>0.016</td></tr>
+<td>0.003</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testRedirectToLoginWithQueryString</td>
-<td>0.006</td></tr>
+<td>0.003</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testFailLoginNotSecure</td>
-<td>0.001</td></tr>
+<td>0</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testFailLoginInvalidState</td>
@@ -243,42 +419,42 @@ function toggleDisplay(elementId) {
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testLoginPostWithQuery</td>
-<td>0.007</td></tr>
+<td>0.003</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testLogout</td>
-<td>0.003</td></tr>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testSecureMessage</td>
-<td>0.005</td></tr></table></div>
+<td>0.002</td></tr></table></div>
 <div class="section">
 <h3><a name="ApplicationManagedJaspicTest"></a>ApplicationManagedJaspicTest</h3><a name="net.trajano.auth.testApplicationManagedJaspicTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testContextWithInvalidPolicyType</td>
-<td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testContextNonMandatory</td>
-<td>0.002</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testProvider</td>
 <td>0.003</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testContextNonMandatory</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testProvider</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testProviderAutoRegistration</td>
-<td>0.013</td></tr>
+<td>0</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testContext1</td>
-<td>0.002</td></tr>
+<td>0.001</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testContext2</td>
-<td>0</td></tr>
+<td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>testInitializer</td>
@@ -294,7 +470,7 @@ function toggleDisplay(elementId) {
                     
                 <div class="xleft">
         <span id="publishDate">Last Published: 2015-09-19</span>
-                   <br /> <span id="projectVersion">Version: 1.0.2-SNAPSHOT</span>
+                   <br /> <span id="projectVersion">Version: 1.1.0-SNAPSHOT</span>
                       </div>
       	</h2>
         <div id="primary-sidebar" class="primary-sidebar widget-area" role="complementary">
@@ -320,7 +496,7 @@ function toggleDisplay(elementId) {
                                                                                                                                                                                                                                                                                                 <li class="collapsed">
                           <a href="project-info.html" title="Project Information">Project Information</a>
                   </li>
-                                                                                                                                                                                                                                                                                        <li class="expanded">
+                                                                                                                                                                                                                                                                                                          <li class="expanded">
                           <a href="project-reports.html" title="Project Reports">Project Reports</a>
                     <ul>
                           <li class="none">
@@ -346,6 +522,9 @@ function toggleDisplay(elementId) {
             </li>
                           <li class="none">
                           <a href="xref/index.html" title="Source Xref">Source Xref</a>
+            </li>
+                          <li class="none">
+                          <a href="cpd.html" title="CPD">CPD</a>
             </li>
                           <li class="none">
                           <a href="pmd.html" title="PMD">PMD</a>

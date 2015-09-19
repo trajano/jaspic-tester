@@ -10,13 +10,13 @@ digraph G {
 	nodesep=0.25;
 	ranksep=0.5;
 	// net.trajano.auth.test.ApplicationManagedJaspicTest
-	c0 [label=<<table title="net.trajano.auth.test.ApplicationManagedJaspicTest" border="0" cellborder="1" cellspacing="0" cellpadding="2" port="p" href="./ApplicationManagedJaspicTest.html">
+	c6 [label=<<table title="net.trajano.auth.test.ApplicationManagedJaspicTest" border="0" cellborder="1" cellspacing="0" cellpadding="2" port="p" href="./ApplicationManagedJaspicTest.html">
 		<tr><td><table border="0" cellspacing="0" cellpadding="1">
 <tr><td align="center" balign="center"> ApplicationManagedJaspicTest </td></tr>
 		</table></td></tr>
 		</table>>, URL="./ApplicationManagedJaspicTest.html", fontname="Helvetica", fontcolor="black", fontsize=10.0];
 	// net.trajano.auth.test.TestServerAuthModuleTest
-	c1 [label=<<table title="net.trajano.auth.test.TestServerAuthModuleTest" border="0" cellborder="1" cellspacing="0" cellpadding="2" port="p" href="./TestServerAuthModuleTest.html">
+	c7 [label=<<table title="net.trajano.auth.test.TestServerAuthModuleTest" border="0" cellborder="1" cellspacing="0" cellpadding="2" port="p" href="./TestServerAuthModuleTest.html">
 		<tr><td><table border="0" cellspacing="0" cellpadding="1">
 <tr><td align="center" balign="center"> TestServerAuthModuleTest </td></tr>
 		</table></td></tr>
