@@ -2,9 +2,9 @@
 <pmd-cpd>
    <duplication lines="202" tokens="569">
       <file line="282"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/target/checkout/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
       <file line="315"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/target/checkout/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
       <codefragment><![CDATA[            URLEncoder.encode(stateBuilder.toString(), "US-ASCII"));
         resp.sendRedirect(URI.create(redirectUriBuilder.toString()).normalize().toASCIIString());
 
@@ -210,9 +210,9 @@
    </duplication>
    <duplication lines="189" tokens="344">
       <file line="19"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModuleAuthConfig.java"/>
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/target/checkout/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModuleAuthConfig.java"/>
       <file line="19"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModuleAuthConfig.java"/>
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/target/checkout/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModuleAuthConfig.java"/>
       <codefragment><![CDATA[public class TestServerAuthModuleAuthConfig implements
     ServerAuthConfig {
 
@@ -405,9 +405,9 @@
    </duplication>
    <duplication lines="68" tokens="126">
       <file line="16"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/AuthModuleConfigProvider.java"/>
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/target/checkout/test-server-auth-module/src/main/java/net/trajano/auth/AuthModuleConfigProvider.java"/>
       <file line="16"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/AuthModuleConfigProvider.java"/>
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/target/checkout/test-server-auth-module/src/main/java/net/trajano/auth/session/AuthModuleConfigProvider.java"/>
       <codefragment><![CDATA[public class AuthModuleConfigProvider implements
     AuthConfigProvider {
 
@@ -479,9 +479,9 @@
    </duplication>
    <duplication lines="36" tokens="120">
       <file line="205"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/target/checkout/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
       <file line="230"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/target/checkout/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
       <codefragment><![CDATA[        resp.sendRedirect(URI.create(req.getContextPath() + stateUri.toASCIIString()).normalize().toASCIIString());
         return AuthStatus.SEND_SUCCESS;
     }
@@ -521,9 +521,9 @@
    </duplication>
    <duplication lines="35" tokens="115">
       <file line="244"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/target/checkout/test-server-auth-module/src/main/java/net/trajano/auth/TestServerAuthModule.java"/>
       <file line="270"
-            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
+            path="/var/lib/jenkins/jobs/jaspic-tester/workspace/target/checkout/test-server-auth-module/src/main/java/net/trajano/auth/session/TestServerAuthModule.java"/>
       <codefragment><![CDATA[            resp.sendRedirect(postLogoutRedirectUriNormalized);
             return AuthStatus.SEND_SUCCESS;
         }
